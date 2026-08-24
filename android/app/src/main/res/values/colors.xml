@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand Primary Colors (Fresh Green & Rich Gold) -->
+    <color name="brand_primary">#0f766e</color>
+    <color name="brand_primary_dark">#115e59</color>
+    <color name="brand_primary_light">#14b8a6</color>
+    
+    <color name="brand_gold">#d97706</color>
+    <color name="brand_gold_dark">#b45309</color>
+    
+    <!-- Neutral Colors -->
+    <color name="background_light">#f8fafc</color>
+    <color name="background_dark">#0f172a</color>
+    <color name="surface_light">#ffffff</color>
+    <color name="surface_dark">#1e293b</color>
+    
+    <color name="status_bar_color">#0f766e</color>
+    <color name="nav_bar_color">#ffffff</color>
+</resources>
