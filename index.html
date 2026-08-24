@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Al Sadiq Milk & Fresh Drinks | الصادق ملک اینڈ فریش ڈرنکس - Pure Milk & Beverage Booking</title>
+  <meta name="description" content="Online booking and counter orders for Al Sadiq Dairy Farm & Fresh Drinks in Dina. 100% Pure Cow & Buffalo Milk, Dahi, Desi Ghee, Fresh Fruit Milkshakes, Protein Shakes, Mojitos, and Special Drinks.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Canvas Confetti & QR Code Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="theme-light" data-lang="en">
+
+  <!-- Top Announcement Header -->
+  <header class="top-announcement">
+    <div class="container announcement-inner">
+      <div class="announcement-left">
+        <span class="live-dot-pulse"></span>
+        <span class="announcement-text" id="topStoreHours">
+          <i class="fa-solid fa-clock"></i> <strong>Open Today:</strong> 6:00 AM – 11:30 PM &nbsp;|&nbsp; 
+          <i class="fa-solid fa-location-dot"></i> GT Road, Dina (With Focus College)
+        </span>
+      </div>
+      <div class="announcement-right">
+        <a href="tel:03709589018" class="contact-pill"><i class="fa-solid fa-phone"></i> 0370-9589018</a>
+        <a href="https://wa.me/923709589018" target="_blank" class="contact-pill whatsapp-pill"><i class="fa-brands fa-whatsapp"></i> 0370-9589018</a>
+        <a href="https://wa.me/923421008375" target="_blank" class="contact-pill whatsapp-pill"><i class="fa-brands fa-whatsapp"></i> 0342-1008375</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Navigation Bar -->
+  <nav class="main-navbar">
+    <div class="container nav-content">
+      <!-- Brand Logo -->
+      <div class="brand-wrapper" id="navBrand">
+        <img src="assets/alsadiq_logo.jpg" alt="Al Sadiq Milk & Fresh Drinks Logo" class="brand-logo-img">
+        <div class="brand-text">
+          <div class="brand-title">
+            <span class="brand-name">Al Sadiq</span>
+            <span class="brand-badge">EST. 2023</span>
+          </div>
+          <div class="brand-subtitle">
+            <span class="en-sub">MILK & FRESH DRINKS</span>
+            <span class="ur-sub">الصادق ملک اینڈ فریش ڈرنکس</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- View Switcher Tabs (Customer vs Staff Dashboard) -->
+      <div class="view-switch-control">
+        <button type="button" class="view-btn active" id="btnViewCustomer">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="btn-lbl-en">Customer Order</span>
+          <span class="btn-lbl-ur">گاہک مینو</span>
+        </button>
+        <button type="button" class="view-btn" id="btnViewStaff">
+          <i class="fa-solid fa-cash-register"></i>
+          <span class="btn-lbl-en">Shop Counter Dashboard</span>
+          <span class="btn-lbl-ur">اسٹاف ڈیش بورڈ</span>
+          <span class="badge-order-count" id="staffLiveOrderBadge">0</span>
+        </button>
+      </div>
+
+      <!-- Nav Actions -->
+      <div class="nav-actions">
+        <!-- Language Switcher -->
+        <button type="button" class="lang-toggle-btn" id="langToggleBtn" title="Switch Language">
+          <i class="fa-solid fa-globe"></i>
+          <span id="currentLangLabel">اردو</span>
+        </button>
+
+        <!-- Track My Order -->
+        <button type="button" class="action-btn track-btn" id="openTrackModalBtn">
+          <i class="fa-solid fa-magnifying-glass-location"></i>
+          <span class="btn-lbl-en">Track Order</span>
+          <span class="btn-lbl-ur">آرڈر ٹریک کریں</span>
+        </button>
+
+        <!-- Cart Button -->
+        <button type="button" class="cart-trigger-btn" id="openCartBtn" aria-label="View Cart">
+          <div class="cart-icon-wrap">
+            <i class="fa-solid fa-basket-shopping"></i>
+            <span class="cart-badge" id="cartCountBadge">0</span>
+          </div>
+          <div class="cart-btn-price">
+            <span class="cart-label">Rs.</span>
+            <span id="cartTotalPriceNav">0</span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========================================================================= -->
+  <!-- 1. CUSTOMER VIEW SECTION -->
+  <!-- ========================================================================= -->
+  <main class="view-container active" id="customerView">
+    
+    <!-- Hero Banner -->
+    <section class="hero-section">
+      <div class="container hero-grid">
+        <div class="hero-text-col">
+          <div class="hero-pill">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span class="en-text">100% Pure & Adulteration Free • Local Farm Fresh</span>
+            <span class="ur-text">خالص دودھ، ملاوٹ سے پاک، قدرت کے قریب!</span>
+          </div>
+          <h1 class="hero-title">
+            <span class="en-heading">Pure Milk & Refreshing Drinks <br><span class="accent-gold">Direct From Farm To You!</span></span>
+            <span class="ur-heading">خالص دودھ، تازہ دم زندگی! <br><span class="accent-gold">الصادق ڈیری فارم و فریش ڈرنکس</span></span>
+          </h1>
+          <p class="hero-description">
+            <span class="en-text">Book fresh pure Cow & Buffalo milk, rich creamy Dahi, Desi Ghee, wholesome fruit milkshakes, protein gym shakes, and refreshing mojitos for quick shop pickup or home delivery in Dina.</span>
+            <span class="ur-text">گائے اور بھینس کا خالص دودھ، ملائی دار دہی، دیسی گھی، لذیذ فروٹ شیکس، پروٹین شیکس اور ٹھنڈے موجیتوز آن لائن بک کریں اور دکان سے حاصل کریں یا گھر ڈیلیوری کروائیں۔</span>
+          </p>
+
+          <!-- Quick Feature Highlights -->
+          <div class="hero-features-row">
+            <div class="feat-card">
+              <div class="feat-icon"><i class="fa-solid fa-cow"></i></div>
+              <div class="feat-text">
+                <strong class="en-text">Fresh Morning & Evening Milk</strong>
+                <strong class="ur-text">صبح اور شام کا تازہ دودھ</strong>
+                <small class="en-text">Bacteria-Free & Chilled</small>
+                <small class="ur-text">بیکٹیریا سے پاک اور ٹھنڈا</small>
+              </div>
+            </div>
+            <div class="feat-card">
+              <div class="feat-icon"><i class="fa-solid fa-motorcycle"></i></div>
+              <div class="feat-text">
+                <strong class="en-text">Counter Pickup & Delivery</strong>
+                <strong class="ur-text">دکان سے وصولی و ڈیلیوری</strong>
+                <small class="en-text">Pay at shop upon pickup</small>
+                <small class="ur-text">وصولی پر ادائیگی</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Action Buttons -->
+          <div class="hero-cta-btns">
+            <a href="#menuMainSection" class="btn-hero-primary" onclick="window.filterCategoryDirect('dairy')">
+              <i class="fa-solid fa-bottle-droplet"></i>
+              <span class="en-text">Book Pure Milk & Dairy</span>
+              <span class="ur-text">خالص دودھ و ڈیری بک کریں</span>
+            </a>
+            <a href="#menuMainSection" class="btn-hero-secondary" onclick="window.filterCategoryDirect('all')">
+              <i class="fa-solid fa-glass-water-droplet"></i>
+              <span class="en-text">Explore Drinks Menu</span>
+              <span class="ur-text">ڈرنکس مینو دیکھیں</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Hero Media Column -->
+        <div class="hero-media-col">
+          <div class="hero-card-showcase">
+            <img src="assets/alsadiq_farm_banner.jpg" alt="Al Sadiq Dairy Farm & Fresh Drinks" class="hero-main-img" id="heroBannerImg">
+            <div class="hero-floating-badge badge-top-right">
+              <span class="badge-icon">🥛</span>
+              <div>
+                <strong>Cow Milk: Rs. 220 / L</strong>
+                <small>Buffalo Milk: Rs. 280 / L</small>
+              </div>
+            </div>
+            <div class="hero-floating-badge badge-bottom-left">
+              <span class="badge-icon">⚡</span>
+              <div>
+                <strong>Instant Counter Prep</strong>
+                <small>Freshly blended on order</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Highlight Daily Rates Bar -->
+    <section class="daily-rates-bar">
+      <div class="container">
+        <div class="rates-header">
+          <div class="rates-title">
+            <i class="fa-solid fa-tag"></i>
+            <span class="en-text">Today's Fresh Farm Milk & Dairy Rates</span>
+            <span class="ur-text">آج کے تازہ دودھ اور خالص ڈیری کے ریٹس</span>
+          </div>
+          <span class="rates-sub"><i class="fa-solid fa-circle-check"></i> Quality Assured</span>
+        </div>
+        <div class="rates-grid" id="dailyRatesGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- SPECIAL PROMOTIONAL AD & SHOP SHOWCASE BANNER -->
+    <!-- ========================================================================= -->
+    <section class="promo-ad-section">
+      <div class="container">
+        <div class="promo-ad-header">
+          <div class="promo-badge-tag">
+            <i class="fa-solid fa-fire"></i>
+            <span class="en-text">SPECIAL STORE PROMOTIONS & LIVE OUTLET</span>
+            <span class="ur-text">خصوصی پروموشن اور الصادق آؤٹ لیٹ</span>
+          </div>
+          <h2 class="promo-ad-title">
+            <span class="en-text">The Best From Nature — 100% Pure Guaranteed!</span>
+            <span class="ur-text">قدرت کا انمول تحفہ — 100% خالص اور معیاری!</span>
+          </h2>
+          <p class="promo-ad-subtitle">
+            <span class="en-text">Visit our physical outlet on GT Road, Dina or order online for guaranteed pure dairy & fresh healthy drinks.</span>
+            <span class="ur-text">جی ٹی روڈ دینہ پر الصادق کی دکان پر تشریف لائیں یا گھر بیٹھے تازہ دودھ، خالص دہی اور ٹھنڈے شیکس آرڈر کریں۔</span>
+          </p>
+        </div>
+
+        <div class="promo-cards-grid">
+          <!-- Main Ad Card: Real Shop Outlet Dina -->
+          <div class="ad-card-large">
+            <img src="assets/alsadiq_shop_front.jpg" alt="Al Sadiq Milk and Fresh Drinks Shop Front Dina">
+            <div class="ad-card-overlay">
+              <div class="ad-pill-info">
+                <i class="fa-solid fa-location-dot"></i> GT Road Dina (With Focus College)
+              </div>
+              <h3>
+                <span class="en-text">Visit Our Shop & Experience Farm Freshness</span>
+                <span class="ur-text">الصادق شاپ تشریف لائیں • جی ٹی روڈ دینہ</span>
+              </h3>
+              <p>
+                <span class="en-text">Enjoy our signature outdoor seating with umbrella tables, chilled live ice bar, and instant parcel packing. Daily 6:00 AM to 11:30 PM.</span>
+                <span class="ur-text">کھلی ہوا میں بیٹھنے کی بہترین جگہ، لائیو ٹھنڈے شیکس اور فوری پارسل سروس۔ صبح 6:00 سے رات 11:30 بجے تک۔</span>
+              </p>
+              <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+                <a href="https://wa.me/923421008375" target="_blank" class="contact-pill whatsapp-pill" style="padding:0.45rem 1rem; font-size:0.85rem;">
+                  <i class="fa-brands fa-whatsapp"></i> WhatsApp: 0342-1008375
+                </a>
+                <a href="tel:03709589018" class="contact-pill" style="padding:0.45rem 1rem; font-size:0.85rem; background:rgba(255,255,255,0.25);">
+                  <i class="fa-solid fa-phone"></i> Call: 0370-9589018
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Side Ad Cards -->
+          <div class="ad-cards-side-column">
+            <!-- Ad 1: Farm Milk Nature -->
+            <div class="ad-card-small">
+              <img src="assets/alsadiq_farm_banner.jpg" alt="Pure Dairy Cows Farm Dina">
+              <div class="ad-small-body">
+                <span class="ad-small-tag">100% PURE MILK</span>
+                <h4>
+                  <span class="en-text">Farm Fresh Cow & Buffalo Milk</span>
+                  <span class="ur-text">گائے و بھینس کا خالص دودھ</span>
+                </h4>
+                <p>
+                  <span class="en-text">Directly from our lush pastures. Zero adulteration, cold-stored.</span>
+                  <span class="ur-text">ملاوٹ سے پاک، صبح و شام کا تازہ اور قدرتی دودھ۔</span>
+                </p>
+                <a href="#menuMainSection" class="ad-small-cta" onclick="window.filterCategoryDirect('dairy')">
+                  <span class="en-text">Book Now</span><span class="ur-text">ابھی بک کریں</span> <i class="fa-solid fa-arrow-right"></i>
+                </a>
+              </div>
+            </div>
+
+            <!-- Ad 2: Fresh Mojito & Gym Protein Shakes -->
+            <div class="ad-card-small">
+              <img src="assets/alsadiq_fresh_drink.jpg" alt="Fresh Mojito and Milkshake Drinks">
+              <div class="ad-small-body">
+                <span class="ad-small-tag" style="background:#fef3c7; color:#b45309;">SPECIAL REFRESHMENT</span>
+                <h4>
+                  <span class="en-text">Signature Mojitos & Gym Shakes</span>
+                  <span class="ur-text">اسپیشل موجیتو و جم پروٹین شیکس</span>
+                </h4>
+                <p>
+                  <span class="en-text">Handcrafted with fresh mint, lemon, dry fruits, and pure milk.</span>
+                  <span class="ur-text">پستے بادام، کھویا کھجور اور تازہ منٹ لیمن موجیتو۔</span>
+                </p>
+                <a href="#menuMainSection" class="ad-small-cta" onclick="window.filterCategoryDirect('mojitos')">
+                  <span class="en-text">View Drinks</span><span class="ur-text">ڈرنکس مینو</span> <i class="fa-solid fa-arrow-right"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section class="menu-section" id="menuMainSection">
+      <div class="container">
+        
+        <!-- Category Navigation Tabs & Search -->
+        <div class="menu-controls-header">
+          <div class="category-tabs-scroll" id="categoryTabs">
+            <button type="button" class="cat-tab active" data-category="all">
+              <i class="fa-solid fa-border-all"></i>
+              <span class="en-text">All Items</span>
+              <span class="ur-text">تمام آئٹمز</span>
+            </button>
+            <button type="button" class="cat-tab" data-category="dairy">
+              <i class="fa-solid fa-cow"></i>
+              <span class="en-text">Pure Dairy & Milk</span>
+              <span class="ur-text">خالص دودھ و ڈیری</span>
+            </button>
+            <button type="button" class="cat-tab" data-category="milkshakes">
+              <i class="fa-solid fa-blender"></i>
+              <span class="en-text">Milk Shakes</span>
+              <span class="ur-text">ملک شیکس</span>
+            </button>
+            <button type="button" class="cat-tab" data-category="protein">
+              <i class="fa-solid fa-dumbbell"></i>
+              <span class="en-text">Protein & Energy Shakes</span>
+              <span class="ur-text">پروٹین شیکس</span>
+            </button>
+            <button type="button" class="cat-tab" data-category="mojitos">
+              <i class="fa-solid fa-champagne-glasses"></i>
+              <span class="en-text">Mojitos & Fresh Juices</span>
+              <span class="ur-text">موجیتوز و جوسز</span>
+            </button>
+            <button type="button" class="cat-tab" data-category="specials">
+              <i class="fa-solid fa-star"></i>
+              <span class="en-text">Special Drinks</span>
+              <span class="ur-text">اسپیشل مشروبات</span>
+            </button>
+          </div>
+
+          <!-- Search & Filter Row -->
+          <div class="search-filter-row">
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="menuSearchInput" placeholder="Search milk, shakes, mojitos... / تلاش کریں" autocomplete="off">
+              <button type="button" class="search-clear-btn" id="searchClearBtn" style="display:none;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="quick-filter-pills">
+              <button type="button" class="pill-filter active" data-filter="all">All</button>
+              <button type="button" class="pill-filter" data-filter="popular">⭐ Popular</button>
+              <button type="button" class="pill-filter" data-filter="fitness">💪 Gym / Fitness</button>
+              <button type="button" class="pill-filter" data-filter="chilled">🧊 Chilled Mojitos</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Menu Product Cards Grid -->
+        <div class="menu-products-container" id="menuProductsGrid">
+          <!-- Dynamically populated products -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Shop Information & Location Section -->
+    <section class="shop-info-section">
+      <div class="container">
+        <div class="shop-info-card">
+          <div class="shop-info-text">
+            <div class="badge-pill"><i class="fa-solid fa-location-dot"></i> GT Road, Dina</div>
+            <h2>
+              <span class="en-text">Visit Al Sadiq Milk & Fresh Drinks</span>
+              <span class="ur-text">الصادق ملک اینڈ فریش ڈرنکس تشریف لائیں</span>
+            </h2>
+            <p>
+              <span class="en-text">Conveniently located on GT Road, Dina (With Focus College). Experience pure, bacteria-free dairy fresh from farm and enjoy fresh, refreshing fruit shakes and signature mojitos prepared on the spot!</span>
+              <span class="ur-text">جی ٹی روڈ، دینہ (فوکس کالج کے ساتھ)۔ خالص، بیکٹیریا سے پاک دودھ اور تازہ پھلوں کے لذیذ شیکس اور خاص موجیتوز کے لیے تشریف لائیں۔</span>
+            </p>
+            <div class="contact-details-grid">
+              <div class="contact-item">
+                <i class="fa-solid fa-clock"></i>
+                <div>
+                  <strong>Daily Timings</strong>
+                  <span>6:00 AM – 11:30 PM (7 Days a week)</span>
+                </div>
+              </div>
+              <div class="contact-item">
+                <i class="fa-solid fa-phone"></i>
+                <div>
+                  <strong>Phone Booking</strong>
+                  <span>0370-9589018 | 0342-1008375</span>
+                </div>
+              </div>
+              <div class="contact-item">
+                <i class="fa-brands fa-whatsapp"></i>
+                <div>
+                  <strong>WhatsApp Orders</strong>
+                  <span>0370-9589018 | 0342-1008375</span>
+                </div>
+              </div>
+              <div class="contact-item">
+                <i class="fa-solid fa-truck"></i>
+                <div>
+                  <strong>Home Delivery</strong>
+                  <span>Fast delivery across Dina area</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="shop-info-visual">
+            <div class="farm-tag-box" style="padding:1.5rem; text-align:center;">
+              <img src="assets/alsadiq_logo.jpg" alt="Al Sadiq Logo" style="width:100px; height:100px; border-radius:50%; margin:0 auto 0.75rem auto; border:3px solid var(--brand-gold); box-shadow:var(--shadow-md);">
+              <h3>AL SADIQ DAIRY FARM</h3>
+              <p>EST. 2023 • QUALITY ASSURED</p>
+              <div class="pure-quote">
+                "Pure Milk, Refreshing Life! - خالص دودھ، تازہ دم زندگی!"
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- 2. STAFF / SHOP COUNTER DASHBOARD VIEW -->
+  <!-- ========================================================================= -->
+  <section class="view-container" id="staffView">
+    <div class="container staff-dashboard-inner">
+      
+      <!-- Staff Top Dashboard Header -->
+      <div class="staff-header-banner">
+        <div class="staff-header-info">
+          <div class="staff-badge">
+            <i class="fa-solid fa-cash-register"></i>
+            <span>COUNTER POS & ORDER DISPATCH</span>
+          </div>
+          <h1>
+            <span class="en-text">Al Sadiq Shop Live Orders Manager</span>
+            <span class="ur-text">الصادق لائیو آرڈرز ڈیش بورڈ</span>
+          </h1>
+          <p>
+            <span class="en-text">Live incoming online bookings, kitchen prep queue, counter tickets, and instant price manager.</span>
+            <span class="ur-text">آن لائن موصول ہونے والی بکنگز، کچن و کاؤنٹر آرڈر سلپس، اور ریٹس اپ ڈیٹ۔</span>
+          </p>
+        </div>
+        <div class="staff-header-actions">
+          <button type="button" class="btn-sound-toggle" id="soundToggleBtn" title="Toggle Sound Chime">
+            <i class="fa-solid fa-volume-high" id="soundIcon"></i>
+            <span id="soundLabel">Sound: ON</span>
+          </button>
+          <button type="button" class="btn-staff-quick-action" id="openMilkInwardModalBtn" style="background:#059669; color:#fff;">
+            <i class="fa-solid fa-plus-circle"></i> Record Milk Inward (دودھ آمد)
+          </button>
+          <button type="button" class="btn-staff-quick-action" id="openMilkUsageModalBtn" style="background:#8b5cf6; color:#fff;">
+            <i class="fa-solid fa-blender"></i> Dahi / Usage Prep (دہی میں استعمال)
+          </button>
+          <button type="button" class="btn-staff-quick-action" id="openCounterSaleModalBtn" style="background:#f59e0b; color:#fff;">
+            <i class="fa-solid fa-cash-register"></i> Quick Counter Sale (کاؤنٹر سیل)
+          </button>
+          <button type="button" class="btn-edit-whatsapp" id="openWhatsAppSettingsBtn" style="background:#25d366; color:#fff; border-color:#25d366;">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp Dispatch
+          </button>
+          <button type="button" class="btn-edit-prices" id="openPriceManagerBtn">
+            <i class="fa-solid fa-tags"></i> Update Prices
+          </button>
+          <button type="button" class="btn-export-orders" id="exportDailySummaryBtn">
+            <i class="fa-solid fa-file-invoice"></i> Daily Full Sheet
+          </button>
+        </div>
+      </div>
+
+      <!-- Staff Dashboard Module Tabs (Bookings vs Milk Register vs Sales Register) -->
+      <div class="staff-module-tabs">
+        <button type="button" class="module-nav-btn active" id="tabBtnOrders" onclick="switchStaffModule('orders')">
+          <i class="fa-solid fa-clipboard-list"></i>
+          <span>1. Customer Bookings (<strong id="badgeOrdersCount">0</strong>)</span>
+        </button>
+        <button type="button" class="module-nav-btn" id="tabBtnMilk" onclick="switchStaffModule('milk')">
+          <i class="fa-solid fa-bottle-droplet"></i>
+          <span>2. Daily Milk Inward & Stock Register (دودھ آمد و اخراج)</span>
+        </button>
+        <button type="button" class="module-nav-btn" id="tabBtnSales" onclick="switchStaffModule('sales')">
+          <i class="fa-solid fa-coins"></i>
+          <span>3. Daily Sales & Revenue Register (روزانہ سیلز کھاتہ)</span>
+        </button>
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- MODULE 1: CUSTOMER ONLINE BOOKINGS QUEUE -->
+      <!-- ========================================================================= -->
+      <div class="staff-module-content active" id="staffModuleOrders">
+        
+        <!-- Summary KPI Metrics for Orders -->
+        <div class="staff-kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon icon-blue"><i class="fa-solid fa-cart-shopping"></i></div>
+            <div class="kpi-body">
+              <span class="kpi-title">Today's Total Bookings</span>
+              <h3 class="kpi-value" id="kpiTotalBookings">0</h3>
+              <span class="kpi-sub" id="kpiActiveCount">0 Active Now</span>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon icon-gold"><i class="fa-solid fa-bottle-droplet"></i></div>
+            <div class="kpi-body">
+              <span class="kpi-title">Fresh Milk Volume</span>
+              <h3 class="kpi-value" id="kpiMilkVolume">0 L</h3>
+              <span class="kpi-sub" id="kpiMilkBreakdown">Cow: 0L | Buffalo: 0L</span>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon icon-purple"><i class="fa-solid fa-blender"></i></div>
+            <div class="kpi-body">
+              <span class="kpi-title">Shakes & Drinks</span>
+              <h3 class="kpi-value" id="kpiDrinksCount">0 Items</h3>
+              <span class="kpi-sub" id="kpiShakesBreakdown">Milkshakes & Mojitos</span>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon icon-green"><i class="fa-solid fa-money-bill-wave"></i></div>
+            <div class="kpi-body">
+              <span class="kpi-title">Bookings Value</span>
+              <h3 class="kpi-value" id="kpiTotalRevenue">Rs. 0</h3>
+              <span class="kpi-sub">Pay at Shop / COD</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="staff-orders-section">
+          <div class="orders-toolbar">
+            <div class="orders-status-filters" id="staffStatusFilters">
+              <button type="button" class="filter-tab active" data-status="all">
+                All Orders (<span id="countAll">0</span>)
+              </button>
+              <button type="button" class="filter-tab tab-pending" data-status="pending">
+                <span class="status-indicator yellow"></span> New Bookings (<span id="countPending">0</span>)
+              </button>
+              <button type="button" class="filter-tab tab-preparing" data-status="preparing">
+                <span class="status-indicator blue"></span> Preparing (<span id="countPreparing">0</span>)
+              </button>
+              <button type="button" class="filter-tab tab-ready" data-status="ready">
+                <span class="status-indicator green"></span> Ready for Pickup (<span id="countReady">0</span>)
+              </button>
+              <button type="button" class="filter-tab tab-completed" data-status="completed">
+                <span class="status-indicator gray"></span> Completed (<span id="countCompleted">0</span>)
+              </button>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+              <button type="button" class="btn-clear-completed" onclick="clearCompletedBookings()" title="Clear Finished Orders">
+                <i class="fa-solid fa-trash-can"></i>
+                <span class="en-text">Clear Completed</span>
+                <span class="ur-text">مکمل آرڈرز صاف کریں</span>
+              </button>
+
+              <div class="orders-search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="staffOrderSearchInput" placeholder="Filter by Token, Name, Phone...">
+              </div>
+            </div>
+          </div>
+
+          <!-- Orders Grid -->
+          <div class="staff-orders-grid" id="staffOrdersList">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- MODULE 2: DAILY MILK INWARD / OUTWARD & STOCK REGISTER (دودھ آمد و اخراج) -->
+      <!-- ========================================================================= -->
+      <div class="staff-module-content" id="staffModuleMilk" style="display:none;">
+        
+        <!-- Milk Inventory KPI Cards -->
+        <div class="staff-kpi-grid">
+          <div class="kpi-card" style="border-top: 4px solid #059669;">
+            <div class="kpi-icon icon-green"><i class="fa-solid fa-arrow-down-long"></i></div>
+            <div class="kpi-body">
+              <span class="kpi-title">Total Milk Received (آمد)</span>
+              <h3 class="kpi-value" id="kpiMilkInTotal">0 L</h3>
+              <span class="kpi-sub" id="kpiMilkInBreakdown">Cow: 0L | Buffalo: 0L</span>
+            </div>
+          </div>
+
+          <div class="kpi-card" style="border-top: 4px solid #ef4444;">
+            <div class="kpi-icon" style="background:#fee2e2; color:#ef4444;"><i class="fa-solid fa-arrow-up-long"></i></div>
+            <div class="kpi-body">
+              <span class="kpi-title">Total Milk Dispatched / Sold (اخراج)</span>
+              <h3 class="kpi-value" id="kpiMilkOutTotal">0 L</h3>
+              <span class="kpi-sub" id="kpiMilkOutBreakdown">Bookings + Counter Sales</span>
+            </div>
+          </div>
+
+          <div class="kpi-card" style="border-top: 4px solid #8b5cf6;">
+            <div class="kpi-icon icon-purple"><i class="fa-solid fa-bowl-food"></i></div>
+            <div class="kpi-body">
+              <span class="kpi-title">Converted to Dahi (دہی تیاری)</span>
+              <h3 class="kpi-value" id="kpiMilkDahiTotal">0 L</h3>
+              <span class="kpi-sub" id="kpiDahiMatkaYield">Approx ~0 KG Dahi</span>
+            </div>
+          </div>
+
+          <div class="kpi-card" style="border-top: 4px solid var(--brand-gold);">
+            <div class="kpi-icon icon-gold"><i class="fa-solid fa-warehouse"></i></div>
+            <div class="kpi-body">
+              <span class="kpi-title">Current Tank Stock (موجودہ سٹاک)</span>
+              <h3 class="kpi-value" id="kpiMilkBalanceTotal">0 L</h3>
+              <span class="kpi-sub" id="kpiMilkBalBreakdown">Cow: 0L | Buffalo: 0L</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Tank Level Visual Gauges -->
+        <div class="milk-tanks-visual-panel">
+          <div class="tank-card">
+            <div class="tank-header">
+              <div>
+                <h4><i class="fa-solid fa-glass-water"></i> Cow Milk Tank (گائے کا دودھ)</h4>
+                <span class="tank-rate-tag">Rs. 220 / Liter</span>
+              </div>
+              <span class="tank-status-badge in-stock" id="badgeCowTankStatus">Available</span>
+            </div>
+            <div class="tank-meter-bar">
+              <div class="tank-meter-fill cow-fill" id="meterFillCow" style="width: 65%;"></div>
+            </div>
+            <div class="tank-details-row">
+              <span>Received: <strong id="lblCowIn">0 L</strong></span>
+              <span>Dispatched: <strong id="lblCowOut">0 L</strong></span>
+              <span>Available Balance: <strong class="text-gold" id="lblCowBal">0 L</strong></span>
+            </div>
+          </div>
+
+          <div class="tank-card">
+            <div class="tank-header">
+              <div>
+                <h4><i class="fa-solid fa-glass-water"></i> Buffalo Milk Tank (بھینس کا دودھ)</h4>
+                <span class="tank-rate-tag">Rs. 280 / Liter</span>
+              </div>
+              <span class="tank-status-badge in-stock" id="badgeBuffaloTankStatus">Available</span>
+            </div>
+            <div class="tank-meter-bar">
+              <div class="tank-meter-fill buffalo-fill" id="meterFillBuffalo" style="width: 75%;"></div>
+            </div>
+            <div class="tank-details-row">
+              <span>Received: <strong id="lblBuffaloIn">0 L</strong></span>
+              <span>Dahi & Sold: <strong id="lblBuffaloOut">0 L</strong></span>
+              <span>Available Balance: <strong class="text-gold" id="lblBuffaloBal">0 L</strong></span>
+            </div>
+          </div>
+
+          <div class="tank-card">
+            <div class="tank-header">
+              <div>
+                <h4><i class="fa-solid fa-glass-water"></i> Mixed Pure Milk (مکس دودھ)</h4>
+                <span class="tank-rate-tag">Rs. 240 / Liter</span>
+              </div>
+              <span class="tank-status-badge in-stock" id="badgeMixedTankStatus">Available</span>
+            </div>
+            <div class="tank-meter-bar">
+              <div class="tank-meter-fill mixed-fill" id="meterFillMixed" style="width: 50%;"></div>
+            </div>
+            <div class="tank-details-row">
+              <span>Received: <strong id="lblMixedIn">0 L</strong></span>
+              <span>Dispatched: <strong id="lblMixedOut">0 L</strong></span>
+              <span>Available Balance: <strong class="text-gold" id="lblMixedBal">0 L</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Milk Ledger Transactions Section -->
+        <div class="staff-orders-section">
+          <div class="orders-toolbar">
+            <div class="orders-status-filters" id="milkLedgerFilters">
+              <button type="button" class="filter-tab active" data-filter="all">All Entries</button>
+              <button type="button" class="filter-tab" data-filter="IN"><i class="fa-solid fa-arrow-down"></i> Inward (آمد)</button>
+              <button type="button" class="filter-tab" data-filter="OUT"><i class="fa-solid fa-arrow-up"></i> Outward (اخراج)</button>
+              <button type="button" class="filter-tab" data-filter="DAHI"><i class="fa-solid fa-bowl-food"></i> Dahi Prep</button>
+              <button type="button" class="filter-tab" data-filter="USAGE"><i class="fa-solid fa-blender"></i> Shakes Prep</button>
+            </div>
+
+            <div class="ledger-action-btns">
+              <button type="button" class="btn-sm-action green" id="btnQuickMilkIn">
+                <i class="fa-solid fa-plus"></i> Add Inward (آمد)
+              </button>
+              <button type="button" class="btn-sm-action purple" id="btnQuickDahiPrep">
+                <i class="fa-solid fa-blender"></i> Set Dahi (دہی)
+              </button>
+              <button type="button" class="btn-sm-action blue" id="btnPrintMilkReport">
+                <i class="fa-solid fa-print"></i> Print Stock Sheet
+              </button>
+            </div>
+          </div>
+
+          <!-- Milk Ledger Table -->
+          <div class="ledger-table-wrapper">
+            <table class="styled-table">
+              <thead>
+                <tr>
+                  <th>Time & Batch</th>
+                  <th>Entry Type (آمد / اخراج)</th>
+                  <th>Milk Variety (دودھ کی قسم)</th>
+                  <th>Volume (Liters)</th>
+                  <th>Closing Tank Stock</th>
+                  <th>Source / Details / Customer</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="milkLedgerTableBody">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- MODULE 3: DAILY SALES & REVENUE REGISTER (روزانہ سیلز و بکری کھاتہ) -->
+      <!-- ========================================================================= -->
+      <div class="staff-module-content" id="staffModuleSales" style="display:none;">
+        
+        <!-- Sales & Revenue KPI Cards -->
+        <div class="staff-kpi-grid">
+          <div class="kpi-card" style="border-top: 4px solid var(--brand-gold);">
+            <div class="kpi-icon icon-gold"><i class="fa-solid fa-coins"></i></div>
+            <div class="kpi-body">
+              <span class="kpi-title">Total Daily Sales (کل یومیہ بکری)</span>
+              <h3 class="kpi-value" id="kpiSalesGrossTotal">Rs. 0</h3>
+              <span class="kpi-sub" id="kpiSalesCountTotal">0 Total Invoices / Slips</span>
+            </div>
+          </div>
+
+          <div class="kpi-card" style="border-top: 4px solid #0284c7;">
+            <div class="kpi-icon icon-blue"><i class="fa-solid fa-bottle-droplet"></i></div>
+            <div class="kpi-body">
+              <span class="kpi-title">Milk Sales Revenue</span>
+              <h3 class="kpi-value" id="kpiSalesMilkTotal">Rs. 0</h3>
+              <span class="kpi-sub" id="kpiSalesMilkLiters">0 Liters Sold</span>
+            </div>
+          </div>
+
+          <div class="kpi-card" style="border-top: 4px solid #8b5cf6;">
+            <div class="kpi-icon icon-purple"><i class="fa-solid fa-bowl-food"></i></div>
+            <div class="kpi-body">
+              <span class="kpi-title">Dahi & Dairy Products</span>
+              <h3 class="kpi-value" id="kpiSalesDahiTotal">Rs. 0</h3>
+              <span class="kpi-sub">Fresh Dahi, Kheer, Bottles</span>
+            </div>
+          </div>
+
+          <div class="kpi-card" style="border-top: 4px solid #059669;">
+            <div class="kpi-icon icon-green"><i class="fa-solid fa-blender"></i></div>
+            <div class="kpi-body">
+              <span class="kpi-title">Shakes & Mojitos</span>
+              <h3 class="kpi-value" id="kpiSalesDrinksTotal">Rs. 0</h3>
+              <span class="kpi-sub">Protein, Fruit Shakes & Mojitos</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sales Ledger Section -->
+        <div class="staff-orders-section">
+          <div class="orders-toolbar">
+            <div class="orders-status-filters" id="salesLedgerFilters">
+              <button type="button" class="filter-tab active" data-sale-type="all">All Sales (<span id="salesCountAll">0</span>)</button>
+              <button type="button" class="filter-tab" data-sale-type="booking">Online Bookings (<span id="salesCountBookings">0</span>)</button>
+              <button type="button" class="filter-tab" data-sale-type="walkin">Counter Walk-in (<span id="salesCountWalkin">0</span>)</button>
+            </div>
+
+            <div class="ledger-action-btns">
+              <button type="button" class="btn-sm-action gold" id="btnOpenWalkinSaleModal">
+                <i class="fa-solid fa-plus-circle"></i> + Add Counter Cash Sale (نقد سیل)
+              </button>
+              <button type="button" class="btn-sm-action green" id="btnShareSalesWhatsApp">
+                <i class="fa-brands fa-whatsapp"></i> Share Daily Sales on WhatsApp
+              </button>
+              <button type="button" class="btn-sm-action blue" id="btnPrintSalesLedger">
+                <i class="fa-solid fa-print"></i> Print Sales Sheet
+              </button>
+            </div>
+          </div>
+
+          <!-- Sales Ledger Table -->
+          <div class="ledger-table-wrapper">
+            <table class="styled-table">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Slip / Token #</th>
+                  <th>Customer / Source</th>
+                  <th>Type (نوعیت)</th>
+                  <th>Items Breakdown</th>
+                  <th>Payment Mode</th>
+                  <th>Total Amount (PKR)</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="salesLedgerTableBody">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 3. CART DRAWER (SLIDE OVER) -->
+  <!-- ========================================================================= -->
+  <div class="cart-drawer-overlay" id="cartOverlay">
+    <div class="cart-drawer">
+      
+      <div class="cart-drawer-header">
+        <div class="cart-hdr-title">
+          <i class="fa-solid fa-basket-shopping"></i>
+          <div>
+            <h3>Your Fresh Order</h3>
+            <span class="ur-sub">آپ کا آرڈر اور بکنگ</span>
+          </div>
+        </div>
+        <button type="button" class="btn-close-drawer" id="closeCartBtn" aria-label="Close Cart">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Order Mode Toggle: Shop Pickup vs Home Delivery -->
+      <div class="order-mode-toggle-wrap">
+        <div class="mode-btn-group">
+          <button type="button" class="mode-btn active" id="modePickupBtn">
+            <i class="fa-solid fa-store"></i>
+            <span>Shop Pickup (دکان سے وصولی)</span>
+          </button>
+          <button type="button" class="mode-btn" id="modeDeliveryBtn">
+            <i class="fa-solid fa-motorcycle"></i>
+            <span>Home Delivery (ہوم ڈیلیوری)</span>
+          </button>
+        </div>
+        <div class="mode-hint" id="modeHintText">
+          <i class="fa-solid fa-circle-info"></i> Ready for pickup at our GT Road Dina counter.
+        </div>
+      </div>
+
+      <!-- Cart Items List -->
+      <div class="cart-items-scroll" id="cartItemsList">
+        <!-- Populated by JS -->
+      </div>
+
+      <!-- Cart Summary & Checkout Trigger -->
+      <div class="cart-drawer-footer" id="cartFooter">
+        <div class="cart-calculations">
+          <div class="calc-row">
+            <span>Items Subtotal:</span>
+            <strong>Rs. <span id="cartSubtotalText">0</span></strong>
+          </div>
+          <div class="calc-row" id="deliveryFeeRow" style="display:none;">
+            <span>Delivery Fee (Dina City):</span>
+            <strong class="delivery-free-badge">FREE / مفت</strong>
+          </div>
+          <div class="calc-row total-row">
+            <span>Total Payable at Pickup:</span>
+            <strong class="total-amount">Rs. <span id="cartTotalText">0</span></strong>
+          </div>
+        </div>
+
+        <button type="button" class="btn-proceed-checkout" id="proceedCheckoutBtn">
+          <span>Proceed to Booking Details</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 4. ITEM CUSTOMIZATION & WEIGHT MODAL -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="customizationModal">
+    <div class="modal-card customize-modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="category-badge" id="modalCategoryBadge">Fresh Dairy</span>
+          <h3 id="modalItemTitle">Pure Cow Milk</h3>
+          <span class="modal-item-urdu" id="modalItemUrdu">گائے کا خالص دودھ</span>
+        </div>
+        <button type="button" class="btn-modal-close" id="closeCustomizeModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-product-summary">
+          <img src="" alt="" id="modalItemImage" class="modal-img-preview">
+          <div class="modal-product-details">
+            <p id="modalItemDesc">100% pure cow milk directly from local dairy farm. Freshly chilled and free from chemicals.</p>
+            <div class="modal-base-price">
+              <span class="rate-label">Unit Rate:</span>
+              <strong id="modalRateDisplay">Rs. 220 / Liter</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Quantity / Weight Selector -->
+        <div class="custom-field-group">
+          <label class="field-title">
+            <i class="fa-solid fa-scale-balanced"></i>
+            <span id="qtySectionTitle">Select Quantity (Liters / KG)</span>
+          </label>
+          <div class="quick-qty-pills" id="quickQtyPills">
+            <!-- Populated dynamically (e.g. 1 L, 2 L, 3 L, 5 L or 1 Glass, 2 Glasses) -->
+          </div>
+          <div class="custom-qty-row">
+            <button type="button" class="qty-btn" id="modalQtyMinus"><i class="fa-solid fa-minus"></i></button>
+            <div class="qty-input-wrap">
+              <input type="number" id="modalQtyInput" value="1" min="1" max="50" step="1">
+              <span class="qty-unit-label" id="modalQtyUnit">Liter</span>
+            </div>
+            <button type="button" class="qty-btn" id="modalQtyPlus"><i class="fa-solid fa-plus"></i></button>
+          </div>
+        </div>
+
+        <!-- Custom Preparation Options (Sugar, Ice, Extra Malai, Khoya, Protein scoop, Packaging) -->
+        <div class="custom-options-container" id="customOptionsContainer">
+          <!-- Populated by JS according to category -->
+        </div>
+
+        <!-- Special Instructions / Counter Note -->
+        <div class="custom-field-group">
+          <label class="field-title" for="modalItemNotes">
+            <i class="fa-regular fa-comment-dots"></i> Special Counter Request / اضافی ہدایات
+          </label>
+          <input type="text" id="modalItemNotes" class="styled-input" placeholder="e.g., Less sweet, extra ice, packing in glass bottle...">
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div class="modal-calc-preview">
+          <span>Item Total:</span>
+          <strong>Rs. <span id="modalItemCalcTotal">220</span></strong>
+        </div>
+        <button type="button" class="btn-add-to-cart-confirm" id="confirmAddToCartBtn">
+          <i class="fa-solid fa-plus"></i> Add to Order
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 5. CHECKOUT & PICKUP SCHEDULING MODAL -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="checkoutModal">
+    <div class="modal-card checkout-modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="badge-pill"><i class="fa-solid fa-calendar-check"></i> Final Step</span>
+          <h3>Complete Your Booking</h3>
+          <span class="modal-item-urdu">بکنگ کی معلومات درج کریں</span>
+        </div>
+        <button type="button" class="btn-modal-close" id="closeCheckoutModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form id="checkoutForm" class="checkout-form">
+        <div class="modal-body">
+          
+          <!-- Order Mode Reminder -->
+          <div class="checkout-mode-banner" id="checkoutModeBanner">
+            <i class="fa-solid fa-store"></i>
+            <div>
+              <strong id="checkoutModeTitle">Shop Counter Pickup</strong>
+              <p id="checkoutModeSub">Al Sadiq Milk & Fresh Drinks, GT Road, Dina</p>
+            </div>
+          </div>
+
+          <!-- Customer Contact Fields -->
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="custName"><i class="fa-solid fa-user"></i> Your Full Name / آپ کا نام *</label>
+              <input type="text" id="custName" class="styled-input" placeholder="e.g. Muhammad Ali" required>
+            </div>
+            <div class="form-group">
+              <label for="custPhone"><i class="fa-solid fa-phone"></i> Mobile / WhatsApp No. *</label>
+              <input type="tel" id="custPhone" class="styled-input" placeholder="0342-1234567" required>
+            </div>
+          </div>
+
+          <!-- Date & Time Slot Selection -->
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="custDate"><i class="fa-solid fa-calendar-day"></i> Preferred Date *</label>
+              <select id="custDate" class="styled-input" required>
+                <!-- Populated by JS: Today, Tomorrow, etc. -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="custTimeSlot"><i class="fa-solid fa-clock"></i> Preferred Time Slot *</label>
+              <select id="custTimeSlot" class="styled-input" required>
+                <option value="ASAP (Within 15-20 Mins)">⚡ ASAP (Within 15-20 Mins)</option>
+                <option value="Morning (6:30 AM - 9:00 AM)">🌅 Morning (6:30 AM - 9:00 AM)</option>
+                <option value="Noon (12:00 PM - 2:30 PM)">☀️ Noon (12:00 PM - 2:30 PM)</option>
+                <option value="Evening (5:00 PM - 8:00 PM)">🌆 Evening (5:00 PM - 8:00 PM)</option>
+                <option value="Night (8:30 PM - 11:30 PM)">🌙 Night (8:30 PM - 11:30 PM)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Delivery Address (Shown only if Home Delivery is active) -->
+          <div class="form-group" id="deliveryAddressGroup" style="display:none;">
+            <label for="custAddress"><i class="fa-solid fa-location-dot"></i> Delivery Address in Dina / پتہ *</label>
+            <input type="text" id="custAddress" class="styled-input" placeholder="House/Shop #, Street, Mohallah or Landmark in Dina">
+          </div>
+
+          <!-- Special Note -->
+          <div class="form-group">
+            <label for="custSpecialNote"><i class="fa-solid fa-pen-to-square"></i> Order Note / ہدایات (Optional)</label>
+            <textarea id="custSpecialNote" class="styled-input" rows="2" placeholder="Any special packaging or pickup requests..."></textarea>
+          </div>
+
+          <!-- Payment Policy Notice -->
+          <div class="payment-policy-box">
+            <div class="policy-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+            <div class="policy-text">
+              <strong>Payment on Pickup / Delivery (ادائیگی وصولی کے وقت)</strong>
+              <p>No online prepayment required. Pay easily via Cash, JazzCash, EasyPaisa, or Counter Card when collecting your order at our Dina shop!</p>
+            </div>
+          </div>
+
+          <!-- Total Summary -->
+          <div class="checkout-grand-total">
+            <span>Total Payable Amount:</span>
+            <strong>Rs. <span id="checkoutTotalAmount">0</span></strong>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-modal-cancel" id="cancelCheckoutBtn">Back to Cart</button>
+          <button type="submit" class="btn-confirm-order-submit" id="submitOrderBtn">
+            <i class="fa-solid fa-check-circle"></i> Confirm Booking Now
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 6. BOOKING CONFIRMATION & LIVE TRACKER MODAL -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="confirmationModal">
+    <div class="modal-card confirmation-modal-card">
+      <div class="modal-header confirmation-header">
+        <div class="success-ring">
+          <i class="fa-solid fa-check"></i>
+        </div>
+        <h2>Booking Confirmed Successfully!</h2>
+        <span class="modal-item-urdu">آپ کا آرڈر موصول ہو چکا ہے اور بکنگ کنفرم ہے</span>
+        <button type="button" class="btn-modal-close" id="closeConfirmationModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body" id="confirmationBody">
+        
+        <!-- Booking Token Card -->
+        <div class="booking-token-card">
+          <div class="token-left">
+            <span class="token-label">Booking Token #</span>
+            <h1 class="token-number" id="confirmTokenNumber">ASD-101</h1>
+            <div class="token-meta" id="confirmTokenMeta">
+              <span><i class="fa-solid fa-user"></i> <strong id="confirmCustName">Ali</strong></span>
+              <span><i class="fa-solid fa-clock"></i> <strong id="confirmTimeSlot">ASAP</strong></span>
+            </div>
+          </div>
+          <div class="token-right">
+            <div id="confirmQrCode" class="qr-box"></div>
+            <small>Show at Counter</small>
+          </div>
+        </div>
+
+        <!-- Live Visual Order Tracker -->
+        <div class="live-tracker-wrap">
+          <h4 class="tracker-heading">
+            <i class="fa-solid fa-satellite-dish"></i> Live Counter Status: 
+            <span class="status-pill-badge" id="confirmStatusBadge">Order Placed</span>
+          </h4>
+          <div class="stepper-track" id="orderStatusStepper">
+            <div class="step-node active" data-step="pending">
+              <div class="step-circle"><i class="fa-solid fa-receipt"></i></div>
+              <span class="step-name">Booked</span>
+            </div>
+            <div class="step-line" id="stepLine1"></div>
+            <div class="step-node" data-step="preparing">
+              <div class="step-circle"><i class="fa-solid fa-blender"></i></div>
+              <span class="step-name">Preparing</span>
+            </div>
+            <div class="step-line" id="stepLine2"></div>
+            <div class="step-node" data-step="ready">
+              <div class="step-circle"><i class="fa-solid fa-bell-concierge"></i></div>
+              <span class="step-name">Ready for Pickup</span>
+            </div>
+            <div class="step-line" id="stepLine3"></div>
+            <div class="step-node" data-step="completed">
+              <div class="step-circle"><i class="fa-solid fa-circle-check"></i></div>
+              <span class="step-name">Completed</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Booking Summary Items List -->
+        <div class="confirm-items-summary">
+          <h5>Ordered Items:</h5>
+          <div class="confirm-items-list" id="confirmItemsList">
+            <!-- Populated by JS -->
+          </div>
+          <div class="confirm-total-row">
+            <span>Total Payable:</span>
+            <strong class="total-badge">Rs. <span id="confirmTotalDisplay">0</span></strong>
+          </div>
+        </div>
+
+        <!-- Auto Dispatch Status Notice -->
+        <div class="whatsapp-auto-banner" id="whatsappAutoBanner">
+          <div class="banner-icon-pulse"><i class="fa-brands fa-whatsapp"></i></div>
+          <div class="banner-text">
+            <strong>WhatsApp Message Auto-Triggered!</strong>
+            <span>Order slip ready to send to shop counter WhatsApp: <strong>0370-9589018</strong> & <strong>0342-1008375</strong></span>
+          </div>
+        </div>
+
+        <!-- Quick Communication Triggers -->
+        <div class="confirmation-cta-actions">
+          <a href="#" target="_blank" class="btn-whatsapp-direct" id="sendWhatsAppOrderBtn1">
+            <i class="fa-brands fa-whatsapp"></i> Send to WhatsApp 1 (0370-9589018)
+          </a>
+          <a href="#" target="_blank" class="btn-whatsapp-direct btn-whatsapp-secondary" id="sendWhatsAppOrderBtn2">
+            <i class="fa-brands fa-whatsapp"></i> Send to WhatsApp 2 (0342-1008375)
+          </a>
+          <button type="button" class="btn-whatsapp-dual" id="sendWhatsAppDualBtn">
+            <i class="fa-solid fa-paper-plane"></i> Send to Both Numbers (دونوں پر بھیجیں)
+          </button>
+          <button type="button" class="btn-print-slip" id="printCustomerSlipBtn">
+            <i class="fa-solid fa-print"></i> Print Booking Token
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 7. TRACK ORDER LOOKUP MODAL -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="trackOrderModal">
+    <div class="modal-card track-modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="badge-pill"><i class="fa-solid fa-magnifying-glass"></i> Live Status</span>
+          <h3>Track Your Booking</h3>
+          <span class="modal-item-urdu">اپنا آرڈر یا بکنگ تلاش کریں</span>
+        </div>
+        <button type="button" class="btn-modal-close" id="closeTrackModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="track-search-form">
+          <label for="trackLookupInput">Enter Mobile Number or Booking Token #</label>
+          <div class="track-input-group">
+            <input type="text" id="trackLookupInput" class="styled-input" placeholder="e.g. 03421234567 or ASD-101">
+            <button type="button" class="btn-lookup-search" id="btnExecuteTrack">Search</button>
+          </div>
+        </div>
+
+        <!-- Track Results Container -->
+        <div class="track-results-wrap" id="trackResultsContainer">
+          <div class="track-empty-state">
+            <i class="fa-solid fa-receipt"></i>
+            <p>Enter your phone number or token number above to view active status and history.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 8. KITCHEN ORDER TICKET (KOT) / COUNTER SLIP MODAL FOR STAFF -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="kitchenSlipModal">
+    <div class="modal-card kitchen-slip-card">
+      <div class="modal-header no-print">
+        <div class="modal-title-group">
+          <span class="badge-pill">Staff Print</span>
+          <h3>Counter / Kitchen Order Ticket</h3>
+        </div>
+        <button type="button" class="btn-modal-close" id="closeKitchenSlipBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body printable-slip-body" id="printableKitchenSlip">
+        <div class="kot-slip">
+          <div class="kot-header">
+            <h2>AL SADIQ DAIRY & FRESH DRINKS</h2>
+            <p>GT Road, Dina (With Focus College) • 0370-9589018</p>
+            <div class="kot-divider">================================</div>
+            <div class="kot-token-row">
+              <span class="kot-token-badge" id="kotTokenNumber">TOKEN # ASD-101</span>
+              <span class="kot-order-type" id="kotOrderType">PICKUP</span>
+            </div>
+            <div class="kot-meta-row">
+              <span>Date: <strong id="kotDate">16-Aug-2026</strong></span>
+              <span>Time Slot: <strong id="kotTime">ASAP</strong></span>
+            </div>
+            <div class="kot-meta-row">
+              <span>Customer: <strong id="kotCustomer">Ali</strong></span>
+              <span>Phone: <strong id="kotPhone">0342-1234567</strong></span>
+            </div>
+            <div class="kot-divider">--------------------------------</div>
+          </div>
+
+          <div class="kot-items-table">
+            <div class="kot-th-row">
+              <span class="kot-col-qty">QTY</span>
+              <span class="kot-col-item">ITEM & CUSTOMIZATION</span>
+              <span class="kot-col-amt">PRICE</span>
+            </div>
+            <div class="kot-divider">--------------------------------</div>
+            <div id="kotItemsList">
+              <!-- Populated by JS -->
+            </div>
+            <div class="kot-divider">================================</div>
+            <div class="kot-total-row">
+              <span>TOTAL PAYABLE:</span>
+              <strong id="kotGrandTotal">Rs. 0</strong>
+            </div>
+            <div class="kot-notes-box" id="kotNotesBox" style="display:none;">
+              <strong>CUSTOMER NOTE:</strong>
+              <p id="kotNotesText"></p>
+            </div>
+            <div class="kot-footer">
+              <p>*** THANK YOU FOR VISITING AL SADIQ ***</p>
+              <p>Pure Milk, Refreshing Life!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer no-print">
+        <button type="button" class="btn-modal-cancel" id="cancelKitchenSlipBtn">Close</button>
+        <button type="button" class="btn-print-slip" onclick="window.print();">
+          <i class="fa-solid fa-print"></i> Print Ticket (Thermal / A4)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 9. LIVE MENU & PRICE MANAGER MODAL FOR STAFF -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="priceManagerModal">
+    <div class="modal-card price-manager-modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="badge-pill"><i class="fa-solid fa-tags"></i> Counter Rates</span>
+          <h3>Live Menu & Price Manager</h3>
+          <span class="modal-item-urdu">ریٹس اور دستیابی کو فوری تبدیل کریں</span>
+        </div>
+        <button type="button" class="btn-modal-close" id="closePriceManagerBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <p class="manager-sub-note">Changes made here update immediately across the entire customer ordering catalog and price cards.</p>
+        <div class="price-manager-table-wrap">
+          <table class="price-manager-table">
+            <thead>
+              <tr>
+                <th>Item Name (English / Urdu)</th>
+                <th>Category</th>
+                <th>Current Price (PKR)</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="priceManagerTableBody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-modal-cancel" id="resetDefaultPricesBtn">
+          <i class="fa-solid fa-rotate-left"></i> Reset Menu Defaults
+        </button>
+        <button type="button" class="btn-save-prices" id="savePriceChangesBtn">
+          <i class="fa-solid fa-check"></i> Save & Apply Changes
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 10. WHATSAPP AUTO-DISPATCH SETTINGS MODAL -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="whatsappSettingsModal">
+    <div class="modal-card" style="max-width: 520px;">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="badge-pill" style="background:#25d366; color:#fff;"><i class="fa-brands fa-whatsapp"></i> Settings</span>
+          <h3>WhatsApp Dispatch Numbers</h3>
+          <span class="modal-item-urdu">واٹس ایپ بکنگ نمبرز کی ترتیبات</span>
+        </div>
+        <button type="button" class="btn-modal-close" id="closeWhatsAppSettingsBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <p class="manager-sub-note">
+          When any customer clicks "Confirm Booking", their order slip is instantly dispatched to these shop WhatsApp counter numbers.
+        </p>
+
+        <div class="custom-field-group">
+          <label class="field-title"><i class="fa-solid fa-mobile-screen-button"></i> Shop Primary WhatsApp (Number 1)</label>
+          <input type="text" id="settingWhatsApp1" class="styled-input" value="0370-9589018" placeholder="0370-9589018">
+        </div>
+
+        <div class="custom-field-group">
+          <label class="field-title"><i class="fa-solid fa-mobile-screen-button"></i> Shop Secondary WhatsApp (Number 2)</label>
+          <input type="text" id="settingWhatsApp2" class="styled-input" value="0342-1008375" placeholder="0342-1008375">
+        </div>
+
+        <div class="custom-field-group" style="background:var(--bg-card-subtle); padding:0.85rem; border-radius:var(--radius-md); margin-top:1rem;">
+          <label style="display:flex; align-items:center; gap:0.65rem; cursor:pointer; font-weight:700; font-size:0.9rem;">
+            <input type="checkbox" id="settingAutoOpenWhatsApp" checked style="width:18px; height:18px; accent-color:#25d366; cursor:pointer;">
+            <span>Automatically open WhatsApp window when customer confirms booking</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-modal-cancel" id="cancelWhatsAppSettingsBtn">Cancel</button>
+        <button type="button" class="btn-save-prices" id="saveWhatsAppSettingsBtn" style="background:#25d366;">
+          <i class="fa-solid fa-check"></i> Save WhatsApp Settings
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 11. RECORD MILK INWARD MODAL (فارم سے دودھ کی آمد) -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="milkInwardModal">
+    <div class="modal-card" style="max-width: 540px;">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="badge-pill" style="background:#059669; color:#fff;"><i class="fa-solid fa-arrow-down-long"></i> Stock Inward</span>
+          <h3>Record Milk Inward (دودھ آمد)</h3>
+          <span class="modal-item-urdu">ڈیری فارم / سپلائی گاڑی سے دودھ موصولی کا اندراج</span>
+        </div>
+        <button type="button" class="btn-modal-close" id="closeMilkInwardModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form id="milkInwardForm">
+        <div class="modal-body">
+          <div class="custom-field-group">
+            <label class="field-title"><i class="fa-solid fa-cow"></i> Milk Variety (دودھ کی قسم)</label>
+            <div class="radio-pill-group" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.5rem;">
+              <label class="radio-pill active">
+                <input type="radio" name="inwardMilkType" value="buffalo" checked>
+                <span>🐃 Buffalo (بھینس)</span>
+              </label>
+              <label class="radio-pill">
+                <input type="radio" name="inwardMilkType" value="cow">
+                <span>🐄 Cow (گائے)</span>
+              </label>
+              <label class="radio-pill">
+                <input type="radio" name="inwardMilkType" value="mixed">
+                <span>🥛 Mixed (مکس)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="custom-field-group">
+            <label class="field-title"><i class="fa-solid fa-bottle-droplet"></i> Liters Received (آمد لیٹرز)</label>
+            <div style="display:flex; gap:0.5rem; margin-bottom:0.5rem;">
+              <button type="button" class="btn-quick-qty" dir="ltr" onclick="setInwardQty(50)">50 L</button>
+              <button type="button" class="btn-quick-qty" dir="ltr" onclick="setInwardQty(100)">100 L</button>
+              <button type="button" class="btn-quick-qty" dir="ltr" onclick="setInwardQty(150)">150 L</button>
+              <button type="button" class="btn-quick-qty" dir="ltr" onclick="setInwardQty(200)">200 L</button>
+            </div>
+            <input type="number" id="inwardLiters" class="styled-input" placeholder="e.g. 100" min="1" max="5000" step="0.5" required>
+          </div>
+
+          <div class="custom-field-group">
+            <label class="field-title"><i class="fa-solid fa-clock"></i> Receiving Batch (ٹائم / شفٹ)</label>
+            <select id="inwardBatch" class="styled-input">
+              <option value="Morning (صبح کی شفٹ)" selected>Morning Batch (صبح 6:00 بجے والی گاڑی)</option>
+              <option value="Evening (شام کی شفٹ)">Evening Batch (شام 4:30 بجے والی گاڑی)</option>
+              <option value="Afternoon (دوپہر)">Afternoon Extra Supply</option>
+            </select>
+          </div>
+
+          <div class="custom-field-group">
+            <label class="field-title"><i class="fa-solid fa-truck"></i> Dairy Farm / Source Note</label>
+            <input type="text" id="inwardSource" class="styled-input" placeholder="e.g. Al Sadiq Dairy Farm Dina - Vehicle 1" value="Al Sadiq Dairy Farm (GT Road Dina)">
+          </div>
+
+          <div class="custom-field-group">
+            <label class="field-title"><i class="fa-solid fa-notes-medical"></i> Quality / Fat Note (Optional)</label>
+            <input type="text" id="inwardNotes" class="styled-input" placeholder="e.g. 7.5% Fat, Fresh Cold Morning Tanker">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-modal-cancel" id="cancelMilkInwardBtn">Cancel</button>
+          <button type="submit" class="btn-save-prices" style="background:#059669;">
+            <i class="fa-solid fa-check"></i> Save Inward Record (محفوظ کریں)
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 12. RECORD MILK CONVERSION / DAHI PREP MODAL -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="milkUsageModal">
+    <div class="modal-card" style="max-width: 540px;">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="badge-pill" style="background:#8b5cf6; color:#fff;"><i class="fa-solid fa-bowl-food"></i> Conversion / Prep</span>
+          <h3>Dahi & Prep Usage (دہی و کھیر وغیرہ میں استعمال)</h3>
+          <span class="modal-item-urdu">دکان کے اندر دہی جمانے یا شیکس میں دودھ استعمال کا اندراج</span>
+        </div>
+        <button type="button" class="btn-modal-close" id="closeMilkUsageModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form id="milkUsageForm">
+        <div class="modal-body">
+          <div class="custom-field-group">
+            <label class="field-title"><i class="fa-solid fa-list-check"></i> Purpose of Usage (استعمال کا مقصد)</label>
+            <select id="usagePurpose" class="styled-input">
+              <option value="DAHI" selected>🥣 Set Fresh Dahi (دہی جمانے کے لیے)</option>
+              <option value="KHEER">🍨 Shahi Kheer & Sweets (کھیر و مٹھائی تیاری)</option>
+              <option value="SHAKES">🥤 Milkshakes & Protein Base (شیکس بیس تیاری)</option>
+              <option value="WASTAGE">⚠️ Spillage / Spoilage (ضیاع یا پھٹ جانا)</option>
+            </select>
+          </div>
+
+          <div class="custom-field-group">
+            <label class="field-title"><i class="fa-solid fa-cow"></i> Deduct from Milk Variety (کس دودھ سے کٹوتی ہو)</label>
+            <div class="radio-pill-group" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.5rem;">
+              <label class="radio-pill active">
+                <input type="radio" name="usageMilkType" value="buffalo" checked>
+                <span>🐃 Buffalo (بھینس)</span>
+              </label>
+              <label class="radio-pill">
+                <input type="radio" name="usageMilkType" value="cow">
+                <span>🐄 Cow (گائے)</span>
+              </label>
+              <label class="radio-pill">
+                <input type="radio" name="usageMilkType" value="mixed">
+                <span>🥛 Mixed (مکس)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="custom-field-group">
+            <label class="field-title"><i class="fa-solid fa-bottle-droplet"></i> Liters to Deduct (کتنے لیٹر لگے)</label>
+            <div style="display:flex; gap:0.5rem; margin-bottom:0.5rem;">
+              <button type="button" class="btn-quick-qty" dir="ltr" onclick="setUsageQty(20)">20 L</button>
+              <button type="button" class="btn-quick-qty" dir="ltr" onclick="setUsageQty(40)">40 L</button>
+              <button type="button" class="btn-quick-qty" dir="ltr" onclick="setUsageQty(60)">60 L</button>
+              <button type="button" class="btn-quick-qty" dir="ltr" onclick="setUsageQty(80)">80 L</button>
+            </div>
+            <input type="number" id="usageLiters" class="styled-input" placeholder="e.g. 50" min="1" max="2000" step="0.5" required>
+          </div>
+
+          <div class="custom-field-group">
+            <label class="field-title"><i class="fa-solid fa-scale-balanced"></i> Output Yield / Production Note</label>
+            <input type="text" id="usageNotes" class="styled-input" placeholder="e.g. Set 2 Large Matkas Dahi (~50 KG Dahi Expected)" value="Morning Matka Dahi setting">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-modal-cancel" id="cancelMilkUsageBtn">Cancel</button>
+          <button type="submit" class="btn-save-prices" style="background:#8b5cf6;">
+            <i class="fa-solid fa-check"></i> Record & Deduct Stock (اندراج کریں)
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 13. QUICK COUNTER WALK-IN CASH SALE MODAL -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="counterSaleModal">
+    <div class="modal-card" style="max-width: 540px;">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="badge-pill" style="background:#f59e0b; color:#fff;"><i class="fa-solid fa-cash-register"></i> Walk-in Sale</span>
+          <h3>Quick Counter Cash Sale (نقد سیل اندراج)</h3>
+          <span class="modal-item-urdu">دکان پر براہ راست آنے والے گاہک کی نقد بکری</span>
+        </div>
+        <button type="button" class="btn-modal-close" id="closeCounterSaleModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form id="counterSaleForm">
+        <div class="modal-body">
+          <div class="custom-field-group">
+            <label class="field-title"><i class="fa-solid fa-layer-group"></i> Product Category (کیٹیگری)</label>
+            <select id="saleCategory" class="styled-input" onchange="updateCounterSaleProducts()">
+              <option value="milk" selected>🥛 Fresh Milk (تازہ دودھ)</option>
+              <option value="dairy">🥣 Dahi & Dairy Items (دہی، کھیر، وغیرہ)</option>
+              <option value="shakes">🥤 Milkshakes & Protein (ملک شیکس)</option>
+              <option value="mojitos">🍹 Mojitos & Special Drinks (موہیٹوز)</option>
+            </select>
+          </div>
+
+          <div class="custom-field-group">
+            <label class="field-title"><i class="fa-solid fa-tag"></i> Select Item (پراڈکٹ منتخب کریں)</label>
+            <select id="saleItemSelect" class="styled-input" onchange="calcCounterSaleTotal()">
+              <!-- Populated by JS -->
+            </select>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.75rem;">
+            <div class="custom-field-group">
+              <label class="field-title"><i class="fa-solid fa-calculator"></i> Quantity (تعداد / لیٹر / گلاس)</label>
+              <input type="number" id="saleQty" class="styled-input" value="1" min="0.5" step="0.5" required oninput="calcCounterSaleTotal()">
+            </div>
+            <div class="custom-field-group">
+              <label class="field-title"><i class="fa-solid fa-money-bill"></i> Total Amount (کل رقم - روپے)</label>
+              <input type="number" id="saleTotalAmount" class="styled-input" style="font-weight:800; color:var(--brand-gold);" value="280" required>
+            </div>
+          </div>
+
+          <div class="custom-field-group">
+            <label class="field-title"><i class="fa-solid fa-user"></i> Customer Name / Note (اختیاری)</label>
+            <input type="text" id="saleCustomerName" class="styled-input" placeholder="Walk-in Cash Customer">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-modal-cancel" id="cancelCounterSaleBtn">Cancel</button>
+          <button type="submit" class="btn-save-prices" style="background:#f59e0b;">
+            <i class="fa-solid fa-check"></i> Record Cash Sale (سیل محفوظ کریں)
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 14. DAILY COMPLETE STOCK & FINANCIAL SHEET MODAL -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="dailyReportModal">
+    <div class="modal-card" style="max-width: 650px;">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="badge-pill icon-gold"><i class="fa-solid fa-file-invoice"></i> Al Sadiq Full Report</span>
+          <h3>Daily Operations & Financial Ledger</h3>
+          <span class="modal-item-urdu">الصادق روزانہ مکمل سٹاک و سیلز کھاتہ شیٹ</span>
+        </div>
+        <button type="button" class="btn-modal-close" id="closeDailyReportModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body" id="dailyReportContent" style="font-family: monospace; font-size: 0.88rem; background: #fff; color: #111; padding: 1.25rem; border-radius: var(--radius-md); border: 1px dashed #bbb;">
+        <!-- Populated by JS -->
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-modal-cancel" id="closeDailyReportBtn">Close</button>
+        <button type="button" class="btn-whatsapp-direct" id="btnSendDailyReportWhatsApp" style="font-size:0.85rem; padding:0.7rem 1rem;">
+          <i class="fa-brands fa-whatsapp"></i> Send Report to Shop WhatsApp
+        </button>
+        <button type="button" class="btn-print-slip" onclick="window.print()">
+          <i class="fa-solid fa-print"></i> Print Full Sheet
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Audio Chime Generator Element -->
+  <div id="audioChimeWrapper" style="display:none;"></div>
+
+  <!-- App Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
