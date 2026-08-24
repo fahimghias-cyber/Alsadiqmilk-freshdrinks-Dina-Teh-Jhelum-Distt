@@ -1070,25 +1070,60 @@ function setLanguage(lang) {
   renderSalesLedger();
 }
 
-// Render Daily Highlight Rates Bar
+// Render Daily Highlight Rates Bar & Hero Price Tags
 function renderDailyRates() {
+  // Find key dairy products
+  const cow = store.menu.find(i => i.id === "cow_milk");
+  const buffalo = store.menu.find(i => i.id === "buffalo_milk");
+  const mixed = store.menu.find(i => i.id === "mixed_milk");
+  const dahi = store.menu.find(i => i.id === "fresh_dahi");
+
+  // 1. Update Hero Price Badges dynamically
+  const heroCowRate = document.getElementById("heroCowRateDisplay");
+  const heroBuffaloRate = document.getElementById("heroBuffaloRateDisplay");
+  const heroMixedRate = document.getElementById("heroMixedRateDisplay");
+  const heroDahiRate = document.getElementById("heroDahiRateDisplay");
+
+  if (heroCowRate && cow) {
+    heroCowRate.textContent = `${store.currentLang === 'ur' ? 'گائے کا دودھ' : 'Cow Milk'}: Rs. ${cow.price} / ${cow.unit}`;
+  }
+  if (heroBuffaloRate && buffalo) {
+    heroBuffaloRate.textContent = `${store.currentLang === 'ur' ? 'بھینس کا دودھ' : 'Buffalo Milk'}: Rs. ${buffalo.price} / ${buffalo.unit}`;
+  }
+  if (heroMixedRate && mixed) {
+    heroMixedRate.textContent = `${store.currentLang === 'ur' ? 'مکس دودھ' : 'Mixed Milk'}: Rs. ${mixed.price} / ${mixed.unit}`;
+  }
+  if (heroDahiRate && dahi) {
+    heroDahiRate.textContent = `${store.currentLang === 'ur' ? 'تازہ دہی' : 'Fresh Dahi'}: Rs. ${dahi.price} / ${dahi.unit}`;
+  }
+
+  // 2. Update Tank Header Rates in Staff Dashboard Module 2
+  const tagCow = document.getElementById("tankRateTagCow");
+  const tagBuffalo = document.getElementById("tankRateTagBuffalo");
+  const tagMixed = document.getElementById("tankRateTagMixed");
+
+  if (tagCow && cow) tagCow.textContent = `Rs. ${cow.price} / ${cow.unit}`;
+  if (tagBuffalo && buffalo) tagBuffalo.textContent = `Rs. ${buffalo.price} / ${buffalo.unit}`;
+  if (tagMixed && mixed) tagMixed.textContent = `Rs. ${mixed.price} / ${mixed.unit}`;
+
+  // 3. Update Daily Rates Grid Bar
   const container = document.getElementById("dailyRatesGrid");
-  if (!container) return;
+  if (container) {
+    const highlightIds = ["cow_milk", "buffalo_milk", "mixed_milk", "fresh_dahi", "desi_ghee"];
+    const items = store.menu.filter(item => highlightIds.includes(item.id));
 
-  const highlightIds = ["cow_milk", "buffalo_milk", "mixed_milk", "fresh_dahi"];
-  const items = store.menu.filter(item => highlightIds.includes(item.id));
-
-  container.innerHTML = items.map(item => `
-    <div class="rate-item-card" onclick="openCustomizeModal('${item.id}')" style="cursor:pointer;" title="Click to Order">
-      <div class="rate-item-info">
-        <strong>${store.currentLang === 'ur' ? item.nameUr : item.nameEn}</strong>
-        <small>${item.badge || 'Fresh Farm'}</small>
+    container.innerHTML = items.map(item => `
+      <div class="rate-item-card" onclick="openCustomizeModal('${item.id}')" style="cursor:pointer;" title="Click to Order">
+        <div class="rate-item-info">
+          <strong>${store.currentLang === 'ur' ? item.nameUr : item.nameEn}</strong>
+          <small>${item.badge || 'Fresh Farm'}</small>
+        </div>
+        <div class="rate-item-price">
+          Rs. ${item.price} <span class="rate-unit">/${item.unit}</span>
+        </div>
       </div>
-      <div class="rate-item-price">
-        Rs. ${item.price} <span class="rate-unit">/${item.unit}</span>
-      </div>
-    </div>
-  `).join("");
+    `).join("");
+  }
 }
 
 // Render Catalog Products
@@ -2197,33 +2232,78 @@ function openKitchenSlip(orderId) {
   document.getElementById("kitchenSlipModal").classList.add("active");
 }
 
-// Live Menu & Price Manager Modal
+// =============================================================================
+// 9. LIVE MENU & PRICE MANAGER ENGINE
+// =============================================================================
 function openPriceManager() {
   const tableBody = document.getElementById("priceManagerTableBody");
   if (!tableBody) return;
 
-  tableBody.innerHTML = store.menu.map(item => `
-    <tr>
-      <td>
-        <strong>${item.nameEn}</strong><br>
-        <span style="font-family:var(--font-urdu); color:var(--text-muted);">${item.nameUr}</span>
-      </td>
-      <td><span class="badge-pill" style="font-size:0.72rem;">${item.category.toUpperCase()}</span></td>
-      <td>
-        <div style="display:flex; align-items:center; gap:0.35rem;">
-          <span>Rs.</span>
-          <input type="number" class="styled-input price-edit-input" style="width:90px; padding:0.3rem 0.5rem;" data-item-id="${item.id}" value="${item.price}" min="10" step="10">
-          <small>/ ${item.unit}</small>
-        </div>
-      </td>
-      <td>
-        <select class="styled-input" style="padding:0.3rem 0.5rem; font-size:0.8rem;" data-stock-id="${item.id}">
-          <option value="true" ${item.inStock ? 'selected' : ''}>In Stock</option>
-          <option value="false" ${!item.inStock ? 'selected' : ''}>Sold Out</option>
-        </select>
-      </td>
-    </tr>
-  `).join("");
+  const searchQuery = (document.getElementById("menuManagerSearchInput")?.value || "").trim().toLowerCase();
+  const catFilter = document.getElementById("menuManagerCatFilter")?.value || "all";
+
+  let filtered = store.menu.filter(item => {
+    if (catFilter !== "all" && item.category !== catFilter) return false;
+    if (searchQuery) {
+      const matchEn = (item.nameEn || "").toLowerCase().includes(searchQuery);
+      const matchUr = (item.nameUr || "").toLowerCase().includes(searchQuery);
+      const matchBadge = (item.badge || "").toLowerCase().includes(searchQuery);
+      return matchEn || matchUr || matchBadge;
+    }
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="5" style="text-align:center; padding:2rem; color:var(--text-muted);">
+          <i class="fa-solid fa-magnifying-glass" style="font-size:1.5rem; margin-bottom:0.5rem; display:block;"></i>
+          No menu items match your search.
+        </td>
+      </tr>
+    `;
+  } else {
+    tableBody.innerHTML = filtered.map(item => `
+      <tr>
+        <td>
+          <div class="menu-item-thumb-row">
+            <img src="${item.image || 'assets/alsadiq_fresh_drink.jpg'}" alt="${item.nameEn}" class="menu-item-thumb">
+            <div class="menu-item-names">
+              <strong>${item.nameEn}</strong>
+              <small>${item.nameUr}</small>
+              ${item.badge ? `<span style="font-size:0.68rem; background:var(--brand-emerald-subtle); color:var(--brand-emerald-dark); padding:0.1rem 0.35rem; border-radius:3px; font-weight:700; display:inline-block; margin-top:2px;">${item.badge}</span>` : ""}
+            </div>
+          </div>
+        </td>
+        <td>
+          <span class="badge-pill" style="font-size:0.72rem; text-transform:uppercase;">${item.category}</span>
+        </td>
+        <td>
+          <div style="display:flex; align-items:center; gap:0.25rem;">
+            <span style="font-size:0.75rem; color:var(--text-muted);">Rs.</span>
+            <input type="number" class="styled-input price-edit-input" style="width:75px; padding:0.3rem 0.4rem; font-weight:800; font-size:0.85rem;" data-item-id="${item.id}" value="${item.price}" min="1" step="5">
+            <span style="font-size:0.72rem; color:var(--text-muted);">/${item.unit}</span>
+          </div>
+        </td>
+        <td>
+          <select class="styled-input" style="padding:0.3rem 0.5rem; font-size:0.8rem;" data-stock-id="${item.id}">
+            <option value="true" ${item.inStock ? 'selected' : ''}>In Stock</option>
+            <option value="false" ${!item.inStock ? 'selected' : ''}>Sold Out</option>
+          </select>
+        </td>
+        <td>
+          <div style="display:flex; align-items:center; justify-content:center; gap:0.35rem;">
+            <button type="button" class="btn-item-action-edit" onclick="openEditItemModal('${item.id}')" title="Edit Item Details (ترمیم کریں)">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button type="button" class="btn-item-action-delete" onclick="deleteMenuItem('${item.id}')" title="Delete Item (حذف کریں)">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `).join("");
+  }
 
   document.getElementById("priceManagerModal").classList.add("active");
 }
@@ -2248,11 +2328,155 @@ function savePriceChanges() {
   });
 
   store.saveMenu();
-  showToast("Menu prices and stock status updated successfully!", "success");
+  showToast(store.currentLang === 'ur' ? "مینو اور قیمتیں کامیابی سے محفوظ ہو گئیں!" : "Menu prices and availability updated successfully!", "success");
   document.getElementById("priceManagerModal").classList.remove("active");
   renderDailyRates();
   renderProducts();
   renderStaffOrders();
+}
+
+window.openAddItemModal = function() {
+  document.getElementById("editItemId").value = "";
+  document.getElementById("itemEditorModalTitle").textContent = "Add New Menu Item";
+  document.getElementById("itemEditorModalUrdu").textContent = "مینو میں نیا آئٹم شامل کریں";
+  document.getElementById("btnSaveItemLabel").textContent = "Add Item (شامل کریں)";
+  
+  document.getElementById("editItemNameEn").value = "";
+  document.getElementById("editItemNameUr").value = "";
+  document.getElementById("editItemCategory").value = "milkshakes";
+  document.getElementById("editItemPrice").value = "";
+  document.getElementById("editItemUnit").value = "Glass";
+  document.getElementById("editItemBadge").value = "Fresh Special";
+  document.getElementById("editItemInStock").value = "true";
+  document.getElementById("editItemImage").value = "assets/alsadiq_fresh_drink.jpg";
+  document.getElementById("editItemDescEn").value = "";
+  document.getElementById("editItemDescUr").value = "";
+
+  document.querySelectorAll(".preset-thumb-option").forEach(opt => {
+    opt.classList.toggle("selected", opt.dataset.img === "assets/alsadiq_fresh_drink.jpg");
+  });
+
+  document.getElementById("menuItemEditorModal").classList.add("active");
+};
+
+window.openEditItemModal = function(itemId) {
+  const item = store.menu.find(i => i.id === itemId);
+  if (!item) return;
+
+  document.getElementById("editItemId").value = item.id;
+  document.getElementById("itemEditorModalTitle").textContent = `Edit Item: ${item.nameEn}`;
+  document.getElementById("itemEditorModalUrdu").textContent = `ترمیم: ${item.nameUr}`;
+  document.getElementById("btnSaveItemLabel").textContent = "Save Changes (تبدیلی محفوظ کریں)";
+
+  document.getElementById("editItemNameEn").value = item.nameEn || "";
+  document.getElementById("editItemNameUr").value = item.nameUr || "";
+  document.getElementById("editItemCategory").value = item.category || "dairy";
+  document.getElementById("editItemPrice").value = item.price || "";
+  document.getElementById("editItemUnit").value = item.unit || "Liter";
+  document.getElementById("editItemBadge").value = item.badge || "";
+  document.getElementById("editItemInStock").value = item.inStock ? "true" : "false";
+  document.getElementById("editItemImage").value = item.image || "assets/alsadiq_fresh_drink.jpg";
+  document.getElementById("editItemDescEn").value = item.descEn || "";
+  document.getElementById("editItemDescUr").value = item.descUr || "";
+
+  document.querySelectorAll(".preset-thumb-option").forEach(opt => {
+    opt.classList.toggle("selected", opt.dataset.img === item.image);
+  });
+
+  document.getElementById("menuItemEditorModal").classList.add("active");
+};
+
+window.deleteMenuItem = function(itemId) {
+  const item = store.menu.find(i => i.id === itemId);
+  if (!item) return;
+
+  const isUrdu = store.currentLang === 'ur';
+  const msg = isUrdu 
+    ? `کیا آپ واقعی "${item.nameUr || item.nameEn}" کو مینو سے مستقل ڈیلیٹ (حذف) کرنا چاہتے ہیں؟`
+    : `Are you sure you want to permanently delete "${item.nameEn}" from the menu?`;
+
+  if (confirm(msg)) {
+    store.menu = store.menu.filter(i => i.id !== itemId);
+    store.saveMenu();
+    showToast(isUrdu ? `"${item.nameUr || item.nameEn}" مینو سے حذف کر دیا گیا` : `"${item.nameEn}" removed from menu`, "alert");
+    renderDailyRates();
+    renderProducts();
+    openPriceManager();
+  }
+};
+
+function saveMenuItemForm(e) {
+  e.preventDefault();
+  const id = document.getElementById("editItemId").value.trim();
+  const nameEn = document.getElementById("editItemNameEn").value.trim();
+  const nameUr = document.getElementById("editItemNameUr").value.trim();
+  const category = document.getElementById("editItemCategory").value;
+  const price = parseFloat(document.getElementById("editItemPrice").value);
+  const unit = document.getElementById("editItemUnit").value;
+  const badge = document.getElementById("editItemBadge").value.trim();
+  const inStock = document.getElementById("editItemInStock").value === "true";
+  const image = document.getElementById("editItemImage").value.trim() || "assets/alsadiq_fresh_drink.jpg";
+  const descEn = document.getElementById("editItemDescEn").value.trim();
+  const descUr = document.getElementById("editItemDescUr").value.trim();
+
+  if (!nameEn || !nameUr || isNaN(price) || price <= 0) {
+    showToast("Please fill in valid name and price fields", "alert");
+    return;
+  }
+
+  const isDairy = category === "dairy";
+  const fitness = category === "protein";
+  const chilled = category === "mojitos";
+
+  if (id) {
+    // Update existing item
+    const existing = store.menu.find(i => i.id === id);
+    if (existing) {
+      existing.nameEn = nameEn;
+      existing.nameUr = nameUr;
+      existing.category = category;
+      existing.price = price;
+      existing.unit = unit;
+      existing.badge = badge;
+      existing.inStock = inStock;
+      existing.image = image;
+      existing.descEn = descEn;
+      existing.descUr = descUr;
+      existing.isDairy = isDairy;
+      existing.fitness = fitness;
+      existing.chilled = chilled;
+    }
+  } else {
+    // Create new item
+    const slug = nameEn.toLowerCase().replace(/[^a-z0-9]+/g, "_").slice(0, 20);
+    const newId = `${category}_${slug}_${Date.now().toString().slice(-4)}`;
+    
+    const newItem = {
+      id: newId,
+      category,
+      nameEn,
+      nameUr,
+      price,
+      unit,
+      image,
+      descEn: descEn || `${nameEn} - Freshly prepared at Al Sadiq GT Road Dina.`,
+      descUr: descUr || `${nameUr} - الصادق ملک اینڈ فریش ڈرنکس۔`,
+      inStock,
+      badge: badge || "New",
+      popular: true,
+      isDairy,
+      fitness,
+      chilled
+    };
+    store.menu.push(newItem);
+  }
+
+  store.saveMenu();
+  showToast(store.currentLang === 'ur' ? "مینو آئٹم کامیابی سے محفوظ ہو گیا!" : "Menu item saved successfully!", "success");
+  document.getElementById("menuItemEditorModal").classList.remove("active");
+  renderDailyRates();
+  renderProducts();
+  openPriceManager();
 }
 
 // Track Order Modal
@@ -2632,19 +2856,54 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("kitchenSlipModal").classList.remove("active");
   });
 
-  // Price Manager Modal
+  // Price / Menu Manager Modal
   document.getElementById("openPriceManagerBtn").addEventListener("click", openPriceManager);
   document.getElementById("closePriceManagerBtn").addEventListener("click", () => {
     document.getElementById("priceManagerModal").classList.remove("active");
   });
   document.getElementById("savePriceChangesBtn").addEventListener("click", savePriceChanges);
+  
+  // Menu Manager Search & Category Filter
+  const menuSearchInput = document.getElementById("menuManagerSearchInput");
+  if (menuSearchInput) {
+    menuSearchInput.addEventListener("input", openPriceManager);
+  }
+  const menuCatFilter = document.getElementById("menuManagerCatFilter");
+  if (menuCatFilter) {
+    menuCatFilter.addEventListener("change", openPriceManager);
+  }
+
+  // Item Editor Modal Handlers
+  const itemEditorModal = document.getElementById("menuItemEditorModal");
+  const closeItemEditor = () => {
+    if (itemEditorModal) itemEditorModal.classList.remove("active");
+  };
+  document.getElementById("closeItemEditorModalBtn")?.addEventListener("click", closeItemEditor);
+  document.getElementById("cancelItemEditorBtn")?.addEventListener("click", closeItemEditor);
+  document.getElementById("menuItemEditorForm")?.addEventListener("submit", saveMenuItemForm);
+
+  // Preset Image Picker Click Handlers
+  document.querySelectorAll(".preset-thumb-option").forEach(thumb => {
+    thumb.addEventListener("click", () => {
+      document.querySelectorAll(".preset-thumb-option").forEach(t => t.classList.remove("selected"));
+      thumb.classList.add("selected");
+      const imgPath = thumb.dataset.img;
+      const imgInput = document.getElementById("editItemImage");
+      if (imgInput) imgInput.value = imgPath;
+    });
+  });
+
   document.getElementById("resetDefaultPricesBtn").addEventListener("click", () => {
-    if (confirm("Reset all menu items and prices to original defaults?")) {
+    const isUrdu = store.currentLang === 'ur';
+    const confirmMsg = isUrdu 
+      ? "کیا آپ واقعی تمام مینو آئٹمز اور قیمتوں کو اصل فیکٹری حالت پر واپس لانا چاہتے ہیں؟"
+      : "Reset all menu items and prices to original defaults?";
+    if (confirm(confirmMsg)) {
       store.resetMenu();
       openPriceManager();
       renderDailyRates();
       renderProducts();
-      showToast("Menu prices reset to defaults", "alert");
+      showToast(isUrdu ? "مینو ڈیفالٹس پر بحال کر دیا گیا" : "Menu prices reset to defaults", "alert");
     }
   });
 
