@@ -652,7 +652,8 @@ const STORAGE_KEYS = {
   WHATSAPP: "alsadiq_whatsapp_settings_v4",
   MILK_LEDGER: "alsadiq_milk_ledger_v4",
   SALES_LEDGER: "alsadiq_sales_ledger_v4",
-  CLOUD_SYNC: "alsadiq_cloud_sync_config_v4"
+  CLOUD_SYNC: "alsadiq_cloud_sync_config_v4",
+  STAFF_PIN: "alsadiq_staff_pin_v4"
 };
 
 class AlSadiqStore {
@@ -664,6 +665,8 @@ class AlSadiqStore {
     this.salesLedger = this.load(STORAGE_KEYS.SALES_LEDGER, SAMPLE_SALES_TRANSACTIONS);
     this.currentLang = localStorage.getItem(STORAGE_KEYS.LANG) || "en";
     this.soundEnabled = localStorage.getItem(STORAGE_KEYS.SOUND) !== "false";
+    this.staffPin = localStorage.getItem(STORAGE_KEYS.STAFF_PIN) || "1234";
+    this.isStaffAuthenticated = false;
     this.whatsappSettings = this.load(STORAGE_KEYS.WHATSAPP, {
       num1: "0370-9589018",
       num2: "0342-1008375",
@@ -674,6 +677,11 @@ class AlSadiqStore {
     this.searchQuery = "";
     this.orderMode = "pickup"; // 'pickup' | 'delivery'
     this.currentOrderTrackingId = null;
+  }
+
+  saveStaffPin(pin) {
+    this.staffPin = pin;
+    localStorage.setItem(STORAGE_KEYS.STAFF_PIN, pin);
   }
 
   load(key, fallback) {
@@ -1023,8 +1031,8 @@ class CloudSyncManager {
   constructor(storeRef) {
     this.store = storeRef;
     this.config = this.store.load(STORAGE_KEYS.CLOUD_SYNC, {
-      url: "https://alsadiq-dairy-default-rtdb.firebaseio.com",
-      syncIntervalMs: 3500,
+      url: "https://alsadiqmilkfreshdrinks-default-rtdb.europe-west1.firebasedatabase.app",
+      syncIntervalMs: 2500,
       enabled: true
     });
     this.isSyncing = false;
@@ -1064,7 +1072,7 @@ class CloudSyncManager {
   }
 
   getApiBaseUrl() {
-    let url = (this.config.url || "https://alsadiq-dairy-default-rtdb.firebaseio.com").trim();
+    let url = (this.config.url || "https://alsadiqmilkfreshdrinks-default-rtdb.europe-west1.firebasedatabase.app").trim();
     if (url.endsWith("/")) url = url.slice(0, -1);
     return url;
   }
@@ -1535,38 +1543,79 @@ function createProductCardHtml(item) {
   const isUrdu = store.currentLang === "ur";
   const title = isUrdu ? item.nameUr : item.nameEn;
   const subTitle = isUrdu ? item.nameEn : item.nameUr;
-  const desc = isUrdu ? item.descUr : item.descEn;
-
-  let badgeClass = "badge-general";
-  if (item.fitness) badgeClass = "badge-gym";
-  if (item.isDairy) badgeClass = "badge-dairy";
+  const initialQty = item.unit === "KG" ? 1 : 1;
 
   return `
-    <div class="product-card" data-item-id="${item.id}">
-      <div class="product-thumb-wrap">
-        <img src="${item.image}" alt="${item.nameEn}" class="product-img" loading="lazy">
-        ${item.badge ? `<span class="product-badge-float ${badgeClass}">${item.badge}</span>` : ""}
-      </div>
-      <div class="product-body">
-        <div class="product-title-row">
-          <h3 class="product-title">${title}</h3>
-          <span class="product-urdu-title">${subTitle}</span>
+    <div class="product-card-compact" data-item-id="${item.id}">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="${item.image}" alt="${item.nameEn}" loading="lazy">
         </div>
-        <p class="product-desc">${desc}</p>
-        <div class="product-footer-row">
-          <div class="product-price-wrap">
-            <span class="price-unit-lbl">Rate / ${item.unit}</span>
-            <span class="product-price-value">Rs. ${item.price}</span>
-          </div>
-          <button type="button" class="btn-add-item" onclick="openCustomizeModal('${item.id}')">
-            <i class="fa-solid fa-plus"></i>
-            <span>${isUrdu ? 'آرڈر کریں' : 'Book / Add'}</span>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">${title}</h3>
+          <span class="card-compact-urdu">${subTitle}</span>
+          <div class="card-price-badge">Rs. ${item.price} / ${item.unit}</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('${item.id}', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_${item.id}">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('${item.id}', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('${item.id}')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('${item.id}')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>${isUrdu ? 'فوری بک کریں' : 'Book Now'}</span>
           </button>
         </div>
       </div>
     </div>
   `;
 }
+
+// Track card quantities in memory
+const itemCardQuantities = {};
+
+window.stepCardQty = function(itemId, delta) {
+  const item = store.menu.find(i => i.id === itemId);
+  if (!item) return;
+
+  const current = itemCardQuantities[itemId] || 1;
+  const step = (item.unit === "KG") ? 0.5 : 1;
+  let next = current + (delta * step);
+  if (next < step) next = step;
+  if (next > 50) next = 50;
+
+  itemCardQuantities[itemId] = next;
+  const valElem = document.getElementById(`cardQtyVal_${itemId}`);
+  if (valElem) valElem.textContent = next;
+};
+
+window.addCardItemToCart = function(itemId) {
+  const item = store.menu.find(i => i.id === itemId);
+  if (!item) return;
+
+  const qty = itemCardQuantities[itemId] || 1;
+  store.addToCart(item, qty, "", "");
+  renderCart();
+  showToast(`Added ${qty} ${item.unit} of ${store.currentLang === 'ur' ? item.nameUr : item.nameEn}`, "success");
+};
+
+// Instant Direct Quick-Booking (1-Click flow to checkout!)
+window.quickBookDirect = function(itemId) {
+  const item = store.menu.find(i => i.id === itemId);
+  if (!item) return;
+
+  const qty = itemCardQuantities[itemId] || 1;
+  store.addToCart(item, qty, "", "");
+  renderCart();
+  closeCartDrawer();
+  openCheckoutModal();
+};
 
 // Global direct jump for hero buttons
 window.filterCategoryDirect = function(catKey) {
@@ -1619,13 +1668,9 @@ function openCustomizeModal(itemId) {
       quickPills.innerHTML = [1, 2, 3, 5, 10].map(n => `
         <button type="button" class="quick-qty-btn ${n === 1 ? 'active' : ''}" onclick="setModalQty(${n})">${n} Liters</button>
       `).join("");
-    } else if (item.unit === "KG") {
+    } else {
       quickPills.innerHTML = [0.5, 1, 2, 5].map(n => `
         <button type="button" class="quick-qty-btn ${n === 1 ? 'active' : ''}" onclick="setModalQty(${n})">${n} KG</button>
-      `).join("");
-    } else {
-      quickPills.innerHTML = [1, 2, 3, 4].map(n => `
-        <button type="button" class="quick-qty-btn ${n === 1 ? 'active' : ''}" onclick="setModalQty(${n})">${n} ${item.unit}s</button>
       `).join("");
     }
   } else {
@@ -1634,88 +1679,41 @@ function openCustomizeModal(itemId) {
     `).join("");
   }
 
-  // Populate Custom Preparation Options
+  // Options: Sugar / Ice / Topping
   let optionsHtml = "";
-
-  if (item.category === "dairy") {
-    optionsHtml = `
+  if (!item.isDairy) {
+    optionsHtml += `
       <div class="custom-field-group">
-        <label class="field-title"><i class="fa-solid fa-temperature-three-quarters"></i> Preparation / Condition</label>
-        <div class="radio-pill-group" style="display:flex; gap:0.5rem;">
-          <label class="active" onclick="selectOpt('temp', 'Chilled Fresh (ٹھنڈا تازہ)')">
-            <input type="radio" name="optTemp" checked>
-            <span>Chilled Fresh (ٹھنڈا)</span>
-          </label>
-          <label onclick="selectOpt('temp', 'Warm / Boiled (ابلا ہوا)')">
-            <input type="radio" name="optTemp">
-            <span>Boiled (ابلا ہوا)</span>
-          </label>
-          <label onclick="selectOpt('temp', 'Raw Fresh Farm (کچا خالص)')">
-            <input type="radio" name="optTemp">
-            <span>Raw Farm (کچا)</span>
-          </label>
-        </div>
-      </div>
-    `;
-  } else if (item.category === "mojitos") {
-    optionsHtml = `
-      <div class="custom-field-group">
-        <label class="field-title"><i class="fa-solid fa-bottle-water"></i> Soda / Fizz Base</label>
-        <div class="radio-pill-group" style="display:flex; gap:0.5rem;">
-          <label class="active" onclick="selectOpt('base', 'Sprite / 7Up Base')">
-            <input type="radio" name="optBase" checked>
-            <span>Sprite / 7Up</span>
-          </label>
-          <label onclick="selectOpt('base', 'Club Soda (Less Sweet)')">
-            <input type="radio" name="optBase">
-            <span>Club Soda</span>
-          </label>
-        </div>
-      </div>
-      <div class="custom-field-group">
-        <label class="field-title"><i class="fa-solid fa-snowflake"></i> Crushed Ice Level</label>
-        <div class="radio-pill-group" style="display:flex; gap:0.5rem;">
-          <label class="active" onclick="selectOpt('ice', 'Normal Crushed Ice')">
+        <label class="field-title"><i class="fa-solid fa-snowflake"></i> Chilled Ice Level (برف کی مقدار)</label>
+        <div class="radio-pill-group">
+          <label class="active" onclick="selectOpt('ice', 'Normal Ice (نارمل ٹھنڈا)')">
             <input type="radio" name="optIce" checked>
-            <span>Normal Ice</span>
+            <span>Normal Chilled</span>
           </label>
-          <label onclick="selectOpt('ice', 'Extra Chilled')">
+          <label onclick="selectOpt('ice', 'Extra Chilled (زیادہ ٹھنڈا)')">
             <input type="radio" name="optIce">
-            <span>Extra Chilled 🧊</span>
+            <span>Extra Ice</span>
+          </label>
+          <label onclick="selectOpt('ice', 'No Ice / Room Temp (بغیر برف)')">
+            <input type="radio" name="optIce">
+            <span>No Ice</span>
           </label>
         </div>
       </div>
-    `;
-  } else {
-    // Milkshakes & Protein Shakes
-    optionsHtml = `
       <div class="custom-field-group">
-        <label class="field-title"><i class="fa-solid fa-cubes-stacked"></i> Sugar / Sweetness Level</label>
-        <div class="radio-pill-group" style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-          <label class="active" onclick="selectOpt('sugar', 'Normal Sweet')">
+        <label class="field-title"><i class="fa-solid fa-cubes-stacked"></i> Sweetness & Sugar (چینی کی مقدار)</label>
+        <div class="radio-pill-group">
+          <label class="active" onclick="selectOpt('sugar', 'Standard Sugar (معمول کے مطابق)')">
             <input type="radio" name="optSugar" checked>
-            <span>Normal Sugar</span>
+            <span>Standard</span>
           </label>
-          <label onclick="selectOpt('sugar', 'Less Sugar (کم میٹھا)')">
+          <label onclick="selectOpt('sugar', 'Less Sugar (کم چینی)')">
             <input type="radio" name="optSugar">
             <span>Less Sugar</span>
           </label>
           <label onclick="selectOpt('sugar', 'No Sugar / Diet (بغیر چینی)')">
             <input type="radio" name="optSugar">
             <span>Sugar Free / Diet</span>
-          </label>
-        </div>
-      </div>
-      <div class="custom-field-group">
-        <label class="field-title"><i class="fa-solid fa-sparkles"></i> Optional Add-ons & Topping</label>
-        <div class="radio-pill-group" style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-          <label onclick="selectOpt('topping', 'Extra Badam Pista Crunch')">
-            <input type="checkbox" name="optTopping">
-            <span>+ Badam Pista Crunch</span>
-          </label>
-          <label onclick="selectOpt('topping', 'Extra Khoya Blend')">
-            <input type="checkbox" name="optTopping">
-            <span>+ Khoya Blend</span>
           </label>
         </div>
       </div>
@@ -1767,6 +1765,12 @@ function renderCart() {
   const deliveryRow = document.getElementById("deliveryFeeRow");
   const modeHint = document.getElementById("modeHintText");
 
+  // Sticky Bottom Bar Elements
+  const stickyBar = document.getElementById("stickyBottomCartBar");
+  const stickyBadge = document.getElementById("stickyCartBadge");
+  const stickyTotal = document.getElementById("stickyCartTotalPrice");
+  const stickyItemsText = document.getElementById("stickyCartItemsText");
+
   const count = store.getCartCount();
   const subtotal = store.getCartTotal();
 
@@ -1774,6 +1778,20 @@ function renderCart() {
   if (navCountBadge) navCountBadge.textContent = count;
   if (subtotalText) subtotalText.textContent = subtotal.toLocaleString();
   if (totalText) totalText.textContent = subtotal.toLocaleString();
+
+  // Update Sticky Bottom Quick-Checkout Bar
+  if (stickyBar) {
+    if (count > 0) {
+      stickyBar.style.display = "block";
+      if (stickyBadge) stickyBadge.textContent = count;
+      if (stickyTotal) stickyTotal.textContent = `Rs. ${subtotal.toLocaleString()}`;
+      if (stickyItemsText) {
+        stickyItemsText.textContent = `${count} item${count > 1 ? 's' : ''} • Tap to view order`;
+      }
+    } else {
+      stickyBar.style.display = "none";
+    }
+  }
 
   if (deliveryRow) {
     deliveryRow.style.display = store.orderMode === "delivery" ? "flex" : "none";
@@ -1834,6 +1852,12 @@ window.removeCartItem = function(cartItemId) {
   store.cart = store.cart.filter(i => i.cartItemId !== cartItemId);
   store.saveCart();
   renderCart();
+};
+
+// Direct Checkout Jump from Sticky Bar
+window.proceedToCheckoutDirect = function() {
+  closeCartDrawer();
+  openCheckoutModal();
 };
 
 // Checkout Modal
@@ -2971,20 +2995,31 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize default language
   setLanguage(store.currentLang);
 
-  // Nav Switcher (Customer vs Staff)
+  // Nav Switcher (Customer vs Staff PIN Protected)
   const btnCustomer = document.getElementById("btnViewCustomer");
   const btnStaff = document.getElementById("btnViewStaff");
   const customerView = document.getElementById("customerView");
   const staffView = document.getElementById("staffView");
+  const staffPinModal = document.getElementById("staffLoginPinModal");
+  const staffPinInput = document.getElementById("staffPinInput");
+  const staffPinErrorMsg = document.getElementById("staffPinErrorMsg");
 
-  btnCustomer.addEventListener("click", () => {
-    btnCustomer.classList.add("active");
-    btnStaff.classList.remove("active");
-    customerView.classList.add("active");
-    staffView.classList.remove("active");
-  });
+  window.pressPinKey = function(key) {
+    if (staffPinErrorMsg) staffPinErrorMsg.style.display = "none";
+    if (!staffPinInput) return;
 
-  btnStaff.addEventListener("click", () => {
+    if (key === "C") {
+      staffPinInput.value = "";
+    } else if (key === "DEL") {
+      staffPinInput.value = staffPinInput.value.slice(0, -1);
+    } else {
+      if (staffPinInput.value.length < 8) {
+        staffPinInput.value += key;
+      }
+    }
+  };
+
+  function switchToStaffView() {
     btnStaff.classList.add("active");
     btnCustomer.classList.remove("active");
     staffView.classList.add("active");
@@ -2994,7 +3029,79 @@ document.addEventListener("DOMContentLoaded", () => {
     renderSalesLedger();
     soundSynth.init();
     cloudSync.pullFromCloud(false);
+  }
+
+  function attemptStaffUnlock() {
+    const enteredPin = (staffPinInput ? staffPinInput.value : "").trim();
+    const validPin = (store.staffPin || "1234").trim();
+
+    if (enteredPin === validPin) {
+      store.isStaffAuthenticated = true;
+      if (staffPinModal) staffPinModal.classList.remove("active");
+      if (staffPinInput) staffPinInput.value = "";
+      if (staffPinErrorMsg) staffPinErrorMsg.style.display = "none";
+      switchToStaffView();
+      showToast("🔓 Staff Dashboard Unlocked (ڈیش بورڈ کھل گیا)", "success");
+    } else {
+      if (staffPinErrorMsg) staffPinErrorMsg.style.display = "block";
+      if (staffPinInput) {
+        staffPinInput.value = "";
+        staffPinInput.focus();
+      }
+      showToast("❌ Incorrect PIN. Try again.", "alert");
+    }
+  }
+
+  btnCustomer.addEventListener("click", () => {
+    btnCustomer.classList.add("active");
+    btnStaff.classList.remove("active");
+    customerView.classList.add("active");
+    staffView.classList.remove("active");
   });
+
+  btnStaff.addEventListener("click", () => {
+    if (store.isStaffAuthenticated) {
+      switchToStaffView();
+    } else {
+      if (staffPinInput) staffPinInput.value = "";
+      if (staffPinErrorMsg) staffPinErrorMsg.style.display = "none";
+      if (staffPinModal) staffPinModal.classList.add("active");
+      setTimeout(() => { if (staffPinInput) staffPinInput.focus(); }, 150);
+    }
+  });
+
+  const submitPinBtn = document.getElementById("submitStaffPinBtn");
+  if (submitPinBtn) {
+    submitPinBtn.addEventListener("click", attemptStaffUnlock);
+  }
+
+  if (staffPinInput) {
+    staffPinInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        attemptStaffUnlock();
+      }
+    });
+  }
+
+  const cancelPinBtn = document.getElementById("cancelStaffPinBtn");
+  if (cancelPinBtn) {
+    cancelPinBtn.addEventListener("click", () => {
+      if (staffPinModal) staffPinModal.classList.remove("active");
+    });
+  }
+
+  // Lock Staff Dashboard Button
+  const btnLockStaff = document.getElementById("btnLockStaffDashboard");
+  if (btnLockStaff) {
+    btnLockStaff.addEventListener("click", () => {
+      store.isStaffAuthenticated = false;
+      btnCustomer.classList.add("active");
+      btnStaff.classList.remove("active");
+      customerView.classList.add("active");
+      staffView.classList.remove("active");
+      showToast("🔒 Staff Dashboard Locked (ڈیش بورڈ لاک ہو گیا)", "alert");
+    });
+  }
 
   // Language Toggle Button
   document.getElementById("langToggleBtn").addEventListener("click", () => {
@@ -3439,8 +3546,12 @@ document.addEventListener("DOMContentLoaded", () => {
     inputWa1.value = store.whatsappSettings.num1 || "0370-9589018";
     inputWa2.value = store.whatsappSettings.num2 || "0342-1008375";
     checkAutoOpen.checked = store.whatsappSettings.autoOpen !== false;
+    const pinInput = document.getElementById("settingStaffPin");
+    if (pinInput) {
+      pinInput.value = store.staffPin || "1234";
+    }
     if (inputCloudSyncUrl) {
-      inputCloudSyncUrl.value = cloudSync.config.url || "https://alsadiq-dairy-default-rtdb.firebaseio.com";
+      inputCloudSyncUrl.value = cloudSync.config.url || "https://alsadiqmilkfreshdrinks-default-rtdb.europe-west1.firebasedatabase.app";
     }
     if (cloudTestStatus) {
       cloudTestStatus.textContent = "Status: Ready";
@@ -3491,13 +3602,42 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     store.saveWhatsAppSettings();
 
+    const pinInput = document.getElementById("settingStaffPin");
+    if (pinInput && pinInput.value.trim()) {
+      store.saveStaffPin(pinInput.value.trim());
+    }
+
     if (inputCloudSyncUrl && inputCloudSyncUrl.value.trim()) {
       cloudSync.saveConfig({ url: inputCloudSyncUrl.value.trim() });
     }
 
-    showToast("WhatsApp & Cloud settings saved successfully!", "success");
+    showToast("Settings & Staff PIN saved successfully!", "success");
     whatsappSettingsModal.classList.remove("active");
   });
+
+  // Sticky Bottom Cart Bar Click Handlers
+  const stickyProceedBtn = document.getElementById("stickyProceedCheckoutBtn");
+  if (stickyProceedBtn) {
+    stickyProceedBtn.addEventListener("click", () => {
+      openCheckoutModal();
+    });
+  }
+
+  const stickySummaryBtn = document.getElementById("stickyCartSummaryBtn");
+  if (stickySummaryBtn) {
+    stickySummaryBtn.addEventListener("click", () => {
+      openCartDrawer();
+    });
+  }
+
+  // Cloud Status Pill click to open settings
+  const cloudPill = document.getElementById("cloudSyncStatusPill");
+  if (cloudPill) {
+    cloudPill.style.cursor = "pointer";
+    cloudPill.addEventListener("click", () => {
+      document.getElementById("openWhatsAppSettingsBtn").click();
+    });
+  }
 
   // Radio button pill visual active toggle helper
   document.addEventListener("change", (e) => {
