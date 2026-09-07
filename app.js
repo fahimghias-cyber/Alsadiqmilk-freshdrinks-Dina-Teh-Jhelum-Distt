@@ -677,6 +677,20 @@ class AlSadiqStore {
     this.searchQuery = "";
     this.orderMode = "pickup"; // 'pickup' | 'delivery'
     this.currentOrderTrackingId = null;
+    this.myBookingTokens = this.load("alsadiq_my_bookings", []);
+  }
+
+  saveCustomerBooking(token) {
+    if (!token) return;
+    if (!this.myBookingTokens.includes(token)) {
+      this.myBookingTokens.push(token);
+      this.save("alsadiq_my_bookings", this.myBookingTokens);
+    }
+  }
+
+  isMyBooking(token) {
+    if (!token) return false;
+    return this.myBookingTokens.includes(token) || this.currentOrderTrackingId === token;
   }
 
   saveStaffPin(pin) {
@@ -771,6 +785,7 @@ class AlSadiqStore {
 
   createOrder(customerData) {
     const tokenNum = "ASD-" + Math.floor(100 + Math.random() * 900);
+    this.saveCustomerBooking(tokenNum);
     const newOrder = {
       id: tokenNum,
       timestamp: new Date().toISOString(),
@@ -1239,6 +1254,35 @@ class CloudSyncManager {
     } catch (e) {}
   }
 
+  handleCustomerOrderUpdate(order, oldStatus, newStatus) {
+    if (!order || !newStatus) return;
+
+    // 1. Update confirmation stepper if visible or tracking
+    if (this.store.isMyBooking(order.id)) {
+      updateTrackerStepper(newStatus);
+    }
+
+    // 2. Play sound and vibrate customer device
+    soundSynth.playOrderBell();
+    this.triggerVibrate(600);
+
+    // 3. Status-specific customer alerts & notifications
+    if (newStatus === "ready") {
+      if (window.confetti) {
+        try {
+          window.confetti({ particleCount: 70, spread: 80, origin: { y: 0.5 } });
+        } catch (e) {}
+      }
+      showToast(`🥛 آرڈر تیار ہے! Order #${order.id} is READY FOR PICKUP at Al Sadiq Counter!`, "success");
+      showCustomerReadyBanner(order);
+    } else if (newStatus === "completed") {
+      showToast(`✅ آرڈر مکمل ہو گیا! Order #${order.id} marked completed. Thank you!`, "success");
+      hideCustomerReadyBanner();
+    } else if (newStatus === "preparing") {
+      showToast(`👨‍🍳 Order #${order.id} is now being prepared fresh!`, "info");
+    }
+  }
+
   async pullFromCloud(playChimeOnNew = true) {
     if (this.isSyncing || !this.config.enabled) return;
     this.isSyncing = true;
@@ -1259,6 +1303,8 @@ class CloudSyncManager {
 
         incomingOrders.forEach(co => {
           if (!co || !co.id) return;
+          const isMyOrder = this.store.isMyBooking(co.id);
+
           if (!this.knownOrderIds.has(co.id)) {
             this.knownOrderIds.add(co.id);
             if (co.status === "pending") {
@@ -1268,10 +1314,18 @@ class CloudSyncManager {
             if (!this.store.orders.some(lo => lo.id === co.id)) {
               this.store.orders.unshift(co);
             }
+            // If this order was already updated to ready or completed on cloud
+            if (isMyOrder && co.status && co.status !== "pending") {
+              this.handleCustomerOrderUpdate(co, "pending", co.status);
+            }
           } else {
             const local = this.store.orders.find(lo => lo.id === co.id);
             if (local && co.status && local.status !== co.status) {
+              const oldStatus = local.status;
               local.status = co.status;
+              if (isMyOrder) {
+                this.handleCustomerOrderUpdate(co, oldStatus, co.status);
+              }
             }
           }
         });
@@ -1401,11 +1455,44 @@ function showToast(message, type = "success") {
 
 // Clean international WhatsApp phone number formatter
 function formatWaPhone(raw) {
-  const digits = (raw || "").replace(/[^0-9]/g, '');
-  if (digits.startsWith("0")) return "92" + digits.substring(1);
-  if (digits.startsWith("92")) return digits;
-  return "92" + digits;
+  let digits = (raw || "").replace(/[^0-9]/g, '');
+  if (digits.startsWith("0092")) {
+    digits = digits.substring(2);
+  } else if (digits.startsWith("0")) {
+    digits = "92" + digits.substring(1);
+  } else if (!digits.startsWith("92")) {
+    digits = "92" + digits;
+  }
+  return digits;
 }
+
+// Global Customer Live Ready Banner Helpers
+window.showCustomerReadyBanner = function(order) {
+  if (!order) return;
+  let banner = document.getElementById("customerLiveReadyBanner");
+  if (!banner) {
+    banner = document.createElement("div");
+    banner.id = "customerLiveReadyBanner";
+    banner.className = "customer-live-ready-banner";
+    document.body.appendChild(banner);
+  }
+
+  banner.innerHTML = `
+    <div class="ready-banner-icon"><i class="fa-solid fa-bell-concierge"></i></div>
+    <div class="ready-banner-text">
+      <strong>Order #${order.id} is READY!</strong>
+      <span>آپ کا آرڈر تیار ہے۔ کاؤنٹر سے وصول کریں۔</span>
+    </div>
+    <button type="button" class="btn-ready-banner-view" onclick="openConfirmationModalFromTrack('${order.id}')">View Slip</button>
+    <button type="button" class="btn-ready-banner-close" onclick="hideCustomerReadyBanner()"><i class="fa-solid fa-xmark"></i></button>
+  `;
+  banner.style.display = "flex";
+};
+
+window.hideCustomerReadyBanner = function() {
+  const banner = document.getElementById("customerLiveReadyBanner");
+  if (banner) banner.style.display = "none";
+};
 
 // Build itemized Customer Confirmation Receipt for WhatsApp
 function buildCustomerReceiptMessage(order) {
@@ -2124,14 +2211,17 @@ function updateTrackerStepper(status) {
   const steps = ["pending", "preparing", "ready", "completed"];
   const currentIndex = steps.indexOf(status);
   const statusLabels = {
-    pending: "Order Booked & Received",
-    preparing: "In Preparation at Counter",
-    ready: "Ready for Pickup / Out for Delivery",
-    completed: "Order Completed & Collected"
+    pending: "Order Booked & Received / موصول ہو گیا",
+    preparing: "In Preparation / آرڈر تیار ہو رہا ہے",
+    ready: "Ready for Pickup / تیار ہے",
+    completed: "Order Completed / مکمل ہو گیا"
   };
 
   const badge = document.getElementById("confirmStatusBadge");
-  if (badge) badge.textContent = statusLabels[status] || "Active";
+  if (badge) {
+    badge.textContent = statusLabels[status] || (status ? status.toUpperCase() : "Active");
+    badge.className = `status-pill-badge status-${status}`;
+  }
 
   document.querySelectorAll("#orderStatusStepper .step-node").forEach((node, idx) => {
     node.classList.remove("active", "completed");
@@ -2360,20 +2450,22 @@ function renderStaffOrders() {
             <button type="button" class="btn-staff-action btn-action-ready" onclick="setOrderStatus('${order.id}', 'completed')">
               <i class="fa-solid fa-circle-check"></i> Complete & Paid
             </button>
+            <button type="button" class="btn-staff-action" style="background:#25D366; color:#ffffff; font-weight:700;" onclick="sendCustomerWhatsAppStatus('${order.id}')" title="Send WhatsApp Ready Message to Customer">
+              <i class="fa-brands fa-whatsapp"></i> Send WA Ready
+            </button>
           ` : ''}
 
           ${order.status === 'completed' ? `
             <button type="button" class="btn-staff-action" disabled style="opacity:0.6; background:#e2e8f0; color:#475569;">
               <i class="fa-solid fa-check-double"></i> Finished
             </button>
+            <button type="button" class="btn-staff-action" style="background:#059669; color:#ffffff; font-weight:700;" onclick="sendCustomerWhatsAppStatus('${order.id}')" title="Send WhatsApp Final Receipt">
+              <i class="fa-brands fa-whatsapp"></i> WA Receipt
+            </button>
           ` : ''}
 
           <button type="button" class="btn-staff-action btn-action-print" onclick="openKitchenSlip('${order.id}')" title="Print KOT Slip">
             <i class="fa-solid fa-print"></i> KOT
-          </button>
-
-          <button type="button" class="btn-staff-action btn-action-delete" onclick="deleteBookingOrder('${order.id}')" title="Delete Booking / حذف کریں">
-            <i class="fa-solid fa-trash-can"></i>
           </button>
         </div>
       </div>
@@ -2438,11 +2530,11 @@ window.clearCompletedBookings = function() {
   }
 };
 
-function setOrderStatus(orderId, newStatus) {
+function setOrderStatus(orderId, newStatus, autoSendWhatsApp = true) {
   const order = store.updateOrderStatus(orderId, newStatus);
   if (!order) return;
 
-  // Sync status to cloud immediately
+  // Sync status to cloud immediately so customer gets real-time app update
   cloudSync.updateRemoteOrderStatus(orderId, newStatus);
 
   showToast(`Order ${orderId} marked as ${newStatus.toUpperCase()}`, "success");
@@ -2452,6 +2544,11 @@ function setOrderStatus(orderId, newStatus) {
 
   if (store.currentOrderTrackingId === orderId) {
     updateTrackerStepper(newStatus);
+  }
+
+  // Automatically prompt/launch WhatsApp message with ready or completed receipt for the customer
+  if (autoSendWhatsApp && (newStatus === "ready" || newStatus === "completed")) {
+    sendCustomerWhatsAppStatus(orderId);
   }
 }
 
@@ -3044,8 +3141,11 @@ function executeTrackOrder() {
 window.openConfirmationModalFromTrack = function(orderId) {
   const order = store.orders.find(o => o.id === orderId);
   if (order) {
+    store.saveCustomerBooking(order.id);
     store.currentOrderTrackingId = order.id;
-    document.getElementById("trackOrderModal").classList.remove("active");
+    const trackModal = document.getElementById("trackOrderModal");
+    if (trackModal) trackModal.classList.remove("active");
+    if (typeof hideCustomerReadyBanner === "function") hideCustomerReadyBanner();
     openConfirmationModal(order);
   }
 };

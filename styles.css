@@ -4240,30 +4240,41 @@ img {
     z-index: 999;
     align-items: center;
     justify-content: space-around;
-    padding: 0 0.5rem;
+    padding: 0 4px;
+    gap: 2px;
   }
 
   .staff-mob-btn {
     flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 3px;
+    gap: 2px;
     background: transparent;
     border: none;
     color: var(--text-muted);
-    font-size: 0.72rem;
+    font-size: 0.65rem;
     font-weight: 700;
-    padding: 6px 4px;
+    padding: 5px 2px;
     cursor: pointer;
     transition: all 0.2s ease;
     border-radius: var(--radius-sm);
   }
 
+  .staff-mob-btn span {
+    font-size: 0.62rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    text-align: center;
+  }
+
   .staff-mob-btn .mob-icon-wrap {
     position: relative;
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -4275,11 +4286,11 @@ img {
     right: -10px;
     background: #ef4444;
     color: #ffffff;
-    font-size: 0.65rem;
+    font-size: 0.62rem;
     font-weight: 800;
-    padding: 1px 5px;
+    padding: 1px 4px;
     border-radius: 10px;
-    min-width: 16px;
+    min-width: 15px;
     text-align: center;
   }
 
@@ -4293,12 +4304,18 @@ img {
   }
 
   .staff-mob-btn.highlight-btn {
+    flex: 1.08;
     color: #ffffff;
     background: linear-gradient(135deg, #059669 0%, #047857 100%);
     border-radius: var(--radius-md);
     box-shadow: 0 3px 8px rgba(5, 150, 105, 0.35);
-    padding: 6px 8px;
-    margin: 0 4px;
+    padding: 5px 3px;
+    margin: 0 2px;
+  }
+
+  .staff-mob-btn.highlight-btn span {
+    color: #ffffff;
+    font-weight: 800;
   }
 
   .staff-mob-btn.highlight-btn:active {
@@ -4310,5 +4327,125 @@ img {
     padding-bottom: 80px !important;
   }
 }
+
+/* Floating Customer Live Order Ready Alert Banner */
+.customer-live-ready-banner {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 99999;
+  width: calc(100% - 24px);
+  max-width: 480px;
+  background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #059669 100%);
+  color: #ffffff;
+  padding: 10px 14px;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(5, 150, 105, 0.45), 0 0 0 2px rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  animation: slideDownPulse 0.4s ease-out forwards;
+}
+
+@keyframes slideDownPulse {
+  0% { opacity: 0; transform: translate(-50%, -20px) scale(0.95); }
+  100% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+
+.ready-banner-icon {
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  color: #fef08a;
+  flex-shrink: 0;
+  animation: bellRing 1.8s infinite ease-in-out;
+}
+
+@keyframes bellRing {
+  0%, 100% { transform: rotate(0); }
+  15% { transform: rotate(14deg); }
+  30% { transform: rotate(-14deg); }
+  45% { transform: rotate(10deg); }
+  60% { transform: rotate(-10deg); }
+  75% { transform: rotate(0); }
+}
+
+.ready-banner-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.ready-banner-text strong {
+  font-size: 0.88rem;
+  color: #fef08a;
+  letter-spacing: 0.3px;
+}
+
+.ready-banner-text span {
+  font-size: 0.73rem;
+  color: #ecfdf5;
+  opacity: 0.95;
+}
+
+.btn-ready-banner-view {
+  background: #f59e0b;
+  color: #0f172a;
+  border: none;
+  font-weight: 800;
+  font-size: 0.75rem;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.15s;
+}
+
+.btn-ready-banner-view:hover {
+  background: #fbbf24;
+  transform: scale(1.05);
+}
+
+.btn-ready-banner-close {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 4px;
+}
+
+/* Status Pill Badge variations in Confirmation Modal */
+.status-pill-badge.status-ready {
+  background: #10b981 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+  animation: pulseReady 1.5s infinite;
+}
+
+.status-pill-badge.status-completed {
+  background: #047857 !important;
+  color: #ffffff !important;
+}
+
+.status-pill-badge.status-preparing {
+  background: #f59e0b !important;
+  color: #ffffff !important;
+}
+
+@keyframes pulseReady {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
 
 
