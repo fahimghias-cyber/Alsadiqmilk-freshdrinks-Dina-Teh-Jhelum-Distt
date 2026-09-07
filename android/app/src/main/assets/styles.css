@@ -4217,4 +4217,98 @@ img {
   background: #f8fafc;
 }
 
+/* ========================================================================= */
+/* STAFF MOBILE BOTTOM NAVIGATION BAR */
+/* ========================================================================= */
+.staff-mobile-nav {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .staff-mobile-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border-color);
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+    z-index: 999;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 0.5rem;
+  }
+
+  .staff-mob-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 6px 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: var(--radius-sm);
+  }
+
+  .staff-mob-btn .mob-icon-wrap {
+    position: relative;
+    font-size: 1.15rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .staff-mob-btn .mob-badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background: #ef4444;
+    color: #ffffff;
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 1px 5px;
+    border-radius: 10px;
+    min-width: 16px;
+    text-align: center;
+  }
+
+  .staff-mob-btn.active {
+    color: var(--brand-emerald-dark);
+  }
+
+  .staff-mob-btn.active .mob-icon-wrap {
+    color: var(--brand-emerald-dark);
+    transform: scale(1.1);
+  }
+
+  .staff-mob-btn.highlight-btn {
+    color: #ffffff;
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    border-radius: var(--radius-md);
+    box-shadow: 0 3px 8px rgba(5, 150, 105, 0.35);
+    padding: 6px 8px;
+    margin: 0 4px;
+  }
+
+  .staff-mob-btn.highlight-btn:active {
+    transform: scale(0.95);
+  }
+
+  /* Add bottom padding to staff dashboard content on mobile so bottom bar doesn't obscure content */
+  .staff-dashboard-section {
+    padding-bottom: 80px !important;
+  }
+}
+
 

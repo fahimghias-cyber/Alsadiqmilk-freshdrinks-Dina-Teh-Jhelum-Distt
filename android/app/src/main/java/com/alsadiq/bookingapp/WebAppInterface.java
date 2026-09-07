@@ -188,6 +188,24 @@ public class WebAppInterface {
     }
 
     @JavascriptInterface
+    public void vibrate(long milliseconds) {
+        mainHandler.post(() -> {
+            try {
+                android.os.Vibrator v = (android.os.Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
+                if (v != null) {
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        v.vibrate(android.os.VibrationEffect.createOneShot(milliseconds, android.os.VibrationEffect.DEFAULT_AMPLITUDE));
+                    } else {
+                        v.vibrate(milliseconds);
+                    }
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Vibrate error: " + e.getMessage());
+            }
+        });
+    }
+
+    @JavascriptInterface
     public String getAppVersion() {
         return "1.0.0";
     }

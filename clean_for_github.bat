@@ -10,6 +10,8 @@ rmdir /s /q "android\app\build" 2>nul
 rmdir /s /q "android\build" 2>nul
 rmdir /s /q ".idea" 2>nul
 del /f /q "android\local.properties" 2>nul
+del /f /q "android\hs_err_pid*.log" 2>nul
+del /f /q "*.log" 2>nul
 
 echo.
 echo ========================================================

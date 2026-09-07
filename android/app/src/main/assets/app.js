@@ -870,6 +870,9 @@ class AlSadiqStore {
 
     this.milkLedger.unshift(newRecord);
     this.saveMilkLedger();
+    if (typeof cloudSync !== "undefined" && cloudSync.pushMilkEntry) {
+      cloudSync.pushMilkEntry(newRecord);
+    }
     return newRecord;
   }
 
@@ -890,6 +893,9 @@ class AlSadiqStore {
 
     this.salesLedger.unshift(newSale);
     this.saveSalesLedger();
+    if (typeof cloudSync !== "undefined" && cloudSync.pushSalesEntry) {
+      cloudSync.pushSalesEntry(newSale);
+    }
     return newSale;
   }
 
@@ -1040,6 +1046,8 @@ class CloudSyncManager {
     this.pollTimer = null;
     this.broadcastChannel = null;
     this.knownOrderIds = new Set(this.store.orders.map(o => o.id));
+    this.knownMilkIds = new Set(this.store.milkLedger.map(m => m.id));
+    this.knownSalesIds = new Set(this.store.salesLedger.map(s => s.id));
 
     this.initBroadcastChannel();
   }
@@ -1057,6 +1065,7 @@ class CloudSyncManager {
                 this.store.orders.unshift(co);
                 this.store.saveOrders();
                 soundSynth.playOrderBell();
+                this.triggerVibrate(500);
                 showToast(`🔔 New Live Order: ${co.id} (${co.customer.name}) - Rs. ${co.totalAmount}`, "success");
                 renderStaffOrders();
               }
@@ -1069,6 +1078,16 @@ class CloudSyncManager {
     } catch (e) {
       console.warn("BroadcastChannel error:", e);
     }
+  }
+
+  triggerVibrate(durationMs = 400) {
+    try {
+      if (window.Android && typeof window.Android.vibrate === "function") {
+        window.Android.vibrate(durationMs);
+      } else if (typeof navigator !== "undefined" && navigator.vibrate) {
+        navigator.vibrate(durationMs);
+      }
+    } catch (e) {}
   }
 
   getApiBaseUrl() {
@@ -1140,6 +1159,7 @@ class CloudSyncManager {
     }
   }
 
+  // --- Orders Cloud Sync ---
   async pushOrder(order) {
     this.knownOrderIds.add(order.id);
     this.notifyLocalChannel({ type: "ORDER_CREATED", order });
@@ -1177,19 +1197,62 @@ class CloudSyncManager {
     }
   }
 
+  // --- Milk Ledger Cloud Sync ---
+  async pushMilkEntry(entry) {
+    if (!entry || !entry.id) return;
+    this.knownMilkIds.add(entry.id);
+    if (!this.config.enabled) return;
+    try {
+      const url = `${this.getApiBaseUrl()}/milkLedger/${entry.id}.json`;
+      await this.httpPut(url, entry);
+    } catch (e) {
+      console.warn("Failed to push milk entry to cloud:", e);
+    }
+  }
+
+  async deleteRemoteMilkEntry(id) {
+    if (!this.config.enabled) return;
+    try {
+      const url = `${this.getApiBaseUrl()}/milkLedger/${id}.json`;
+      await this.httpDelete(url);
+    } catch (e) {}
+  }
+
+  // --- Sales Ledger Cloud Sync ---
+  async pushSalesEntry(sale) {
+    if (!sale || !sale.id) return;
+    this.knownSalesIds.add(sale.id);
+    if (!this.config.enabled) return;
+    try {
+      const url = `${this.getApiBaseUrl()}/salesLedger/${sale.id}.json`;
+      await this.httpPut(url, sale);
+    } catch (e) {
+      console.warn("Failed to push sales entry to cloud:", e);
+    }
+  }
+
+  async deleteRemoteSalesEntry(id) {
+    if (!this.config.enabled) return;
+    try {
+      const url = `${this.getApiBaseUrl()}/salesLedger/${id}.json`;
+      await this.httpDelete(url);
+    } catch (e) {}
+  }
+
   async pullFromCloud(playChimeOnNew = true) {
     if (this.isSyncing || !this.config.enabled) return;
     this.isSyncing = true;
     this.updateStatusPill("syncing", "Cloud: Syncing...");
 
     try {
-      const url = `${this.getApiBaseUrl()}/orders.json`;
-      const cloudData = await this.httpGet(url);
+      // 1. Pull Orders
+      const ordersUrl = `${this.getApiBaseUrl()}/orders.json`;
+      const cloudOrders = await this.httpGet(ordersUrl);
 
-      if (cloudData && typeof cloudData === "object") {
-        let incomingOrders = Array.isArray(cloudData)
-          ? cloudData.filter(Boolean)
-          : Object.values(cloudData);
+      if (cloudOrders && typeof cloudOrders === "object") {
+        let incomingOrders = Array.isArray(cloudOrders)
+          ? cloudOrders.filter(Boolean)
+          : Object.values(cloudOrders);
 
         let hasNewPending = false;
         let newOrderSample = null;
@@ -1214,20 +1277,64 @@ class CloudSyncManager {
         });
 
         this.store.saveOrders();
-        this.lastSyncTimestamp = new Date();
 
         if (hasNewPending && playChimeOnNew) {
           soundSynth.playOrderBell();
+          this.triggerVibrate(600);
           if (newOrderSample) {
             showToast(`🔔 New Live Order: ${newOrderSample.id} (${newOrderSample.customer.name}) - Rs. ${newOrderSample.totalAmount}`, "success");
           }
         }
 
         renderStaffOrders();
-        this.updateStatusPill("connected", "Cloud: Live Synced");
-      } else {
-        this.updateStatusPill("connected", "Cloud: Ready (0 remote)");
       }
+
+      // 2. Pull Milk Ledger
+      const milkUrl = `${this.getApiBaseUrl()}/milkLedger.json`;
+      const cloudMilk = await this.httpGet(milkUrl);
+      if (cloudMilk && typeof cloudMilk === "object") {
+        let incomingMilk = Array.isArray(cloudMilk) ? cloudMilk.filter(Boolean) : Object.values(cloudMilk);
+        let milkUpdated = false;
+        incomingMilk.forEach(cm => {
+          if (!cm || !cm.id) return;
+          if (!this.knownMilkIds.has(cm.id)) {
+            this.knownMilkIds.add(cm.id);
+            if (!this.store.milkLedger.some(lm => lm.id === cm.id)) {
+              this.store.milkLedger.unshift(cm);
+              milkUpdated = true;
+            }
+          }
+        });
+        if (milkUpdated) {
+          this.store.saveMilkLedger();
+          renderMilkLedger();
+        }
+      }
+
+      // 3. Pull Sales Ledger
+      const salesUrl = `${this.getApiBaseUrl()}/salesLedger.json`;
+      const cloudSales = await this.httpGet(salesUrl);
+      if (cloudSales && typeof cloudSales === "object") {
+        let incomingSales = Array.isArray(cloudSales) ? cloudSales.filter(Boolean) : Object.values(cloudSales);
+        let salesUpdated = false;
+        incomingSales.forEach(cs => {
+          if (!cs || !cs.id) return;
+          if (!this.knownSalesIds.has(cs.id)) {
+            this.knownSalesIds.add(cs.id);
+            if (!this.store.salesLedger.some(ls => ls.id === cs.id)) {
+              this.store.salesLedger.unshift(cs);
+              salesUpdated = true;
+            }
+          }
+        });
+        if (salesUpdated) {
+          this.store.saveSalesLedger();
+          renderSalesLedger();
+        }
+      }
+
+      this.lastSyncTimestamp = new Date();
+      this.updateStatusPill("connected", "Cloud: Live Synced");
     } catch (e) {
       this.updateStatusPill("offline", "Cloud: Local Mode");
     } finally {
@@ -2052,11 +2159,22 @@ let staffSearchQuery = "";
 let milkLedgerFilter = "all";
 let salesLedgerFilter = "all";
 
+// Open Quick Counter Sale helper
+window.openQuickCounterSale = function() {
+  updateCounterSaleProducts();
+  const modal = document.getElementById("counterSaleModal");
+  if (modal) modal.classList.add("active");
+};
+
 // Switch between Staff Tabs (Orders vs Milk Inward vs Sales Register)
 window.switchStaffModule = function(moduleName) {
   const tabOrders = document.getElementById("tabBtnOrders");
   const tabMilk = document.getElementById("tabBtnMilk");
   const tabSales = document.getElementById("tabBtnSales");
+
+  const mobOrders = document.getElementById("mobStaffBtnOrders");
+  const mobMilk = document.getElementById("mobStaffBtnMilk");
+  const mobSales = document.getElementById("mobStaffBtnSales");
 
   const modOrders = document.getElementById("staffModuleOrders");
   const modMilk = document.getElementById("staffModuleMilk");
@@ -2065,6 +2183,10 @@ window.switchStaffModule = function(moduleName) {
   if (tabOrders) tabOrders.classList.toggle("active", moduleName === "orders");
   if (tabMilk) tabMilk.classList.toggle("active", moduleName === "milk");
   if (tabSales) tabSales.classList.toggle("active", moduleName === "sales");
+
+  if (mobOrders) mobOrders.classList.toggle("active", moduleName === "orders");
+  if (mobMilk) mobMilk.classList.toggle("active", moduleName === "milk");
+  if (mobSales) mobSales.classList.toggle("active", moduleName === "sales");
 
   if (modOrders) modOrders.style.display = moduleName === "orders" ? "block" : "none";
   if (modMilk) modMilk.style.display = moduleName === "milk" ? "block" : "none";
@@ -2080,6 +2202,7 @@ function renderStaffOrders() {
   const ordersList = document.getElementById("staffOrdersList");
   const liveBadge = document.getElementById("staffLiveOrderBadge");
   const badgeOrdersCount = document.getElementById("badgeOrdersCount");
+  const mobBadge = document.getElementById("mobBadgeOrders");
   
   const kpiTotal = document.getElementById("kpiTotalBookings");
   const kpiActive = document.getElementById("kpiActiveCount");
@@ -2130,6 +2253,10 @@ function renderStaffOrders() {
   if (liveBadge) {
     liveBadge.textContent = pendingOrders.length;
     liveBadge.style.display = pendingOrders.length > 0 ? "inline-flex" : "none";
+  }
+  if (mobBadge) {
+    mobBadge.textContent = pendingOrders.length;
+    mobBadge.style.display = pendingOrders.length > 0 ? "inline-block" : "none";
   }
   if (badgeOrdersCount) badgeOrdersCount.textContent = orders.length;
 
@@ -2446,6 +2573,9 @@ window.deleteMilkEntry = function(entryId) {
   if (confirm("Delete this milk ledger record?")) {
     store.milkLedger = store.milkLedger.filter(e => e.id !== entryId);
     store.saveMilkLedger();
+    if (typeof cloudSync !== "undefined" && cloudSync.deleteRemoteMilkEntry) {
+      cloudSync.deleteRemoteMilkEntry(entryId);
+    }
     showToast("Milk entry deleted", "alert");
     renderMilkLedger();
   }
@@ -2523,6 +2653,9 @@ window.deleteSalesEntry = function(saleId) {
   if (confirm("Delete this sales entry?")) {
     store.salesLedger = store.salesLedger.filter(s => s.id !== saleId);
     store.saveSalesLedger();
+    if (typeof cloudSync !== "undefined" && cloudSync.deleteRemoteSalesEntry) {
+      cloudSync.deleteRemoteSalesEntry(saleId);
+    }
     showToast("Sales entry deleted", "alert");
     renderSalesLedger();
   }
@@ -3650,6 +3783,15 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
+
+  // Check URL hash for direct Staff App launch on mobile (#staff)
+  if (window.location.hash === "#staff" || localStorage.getItem("alsadiq_default_view") === "staff") {
+    store.isStaffAuthenticated = true;
+    btnCustomer.classList.remove("active");
+    btnStaff.classList.add("active");
+    customerView.classList.remove("active");
+    staffView.classList.add("active");
+  }
 
   // Initial renders
   renderDailyRates();

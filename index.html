@@ -664,6 +664,35 @@
 
       </div>
 
+      <!-- Mobile Sticky Bottom Navigation for Staff Mode -->
+      <nav class="staff-mobile-nav" id="staffMobileNav">
+        <button type="button" class="staff-mob-btn active" id="mobStaffBtnOrders" onclick="switchStaffModule('orders')">
+          <div class="mob-icon-wrap">
+            <i class="fa-solid fa-clipboard-list"></i>
+            <span class="mob-badge" id="mobBadgeOrders">0</span>
+          </div>
+          <span>Orders (آرڈرز)</span>
+        </button>
+        <button type="button" class="staff-mob-btn highlight-btn" id="mobStaffBtnPOS" onclick="openQuickCounterSale()">
+          <div class="mob-icon-wrap">
+            <i class="fa-solid fa-bolt"></i>
+          </div>
+          <span>Quick Sale (سیل)</span>
+        </button>
+        <button type="button" class="staff-mob-btn" id="mobStaffBtnMilk" onclick="switchStaffModule('milk')">
+          <div class="mob-icon-wrap">
+            <i class="fa-solid fa-bottle-droplet"></i>
+          </div>
+          <span>Milk Tank (سٹاک)</span>
+        </button>
+        <button type="button" class="staff-mob-btn" id="mobStaffBtnSales" onclick="switchStaffModule('sales')">
+          <div class="mob-icon-wrap">
+            <i class="fa-solid fa-coins"></i>
+          </div>
+          <span>Sales (کھاتہ)</span>
+        </button>
+      </nav>
+
     </div>
   </section>
 
