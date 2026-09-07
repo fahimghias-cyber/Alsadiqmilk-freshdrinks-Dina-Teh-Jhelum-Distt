@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     // OPTIONAL: If you host your app online on GitHub Pages or custom domain, enter it here (e.g. "https://yourusername.github.io/alsadiq-booking/")
     // If left empty (""), the app runs from fast local bundled assets with real-time cloud synchronization!
     public static final String LIVE_ONLINE_URL = "";
-    private static final String LOCAL_ASSET_URL = "file:///android_asset/index.html";
+    private static final String LOCAL_ASSET_URL = "file:///android_asset/staff.html";
 
     private WebView webView;
     private SwipeRefreshLayout swipeRefreshLayout;

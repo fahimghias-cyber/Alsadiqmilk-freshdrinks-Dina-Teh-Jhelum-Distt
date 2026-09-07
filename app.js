@@ -2816,13 +2816,26 @@ function openKitchenSlip(orderId) {
   const order = store.orders.find(o => o.id === orderId);
   if (!order) return;
 
-  document.getElementById("kotTokenNumber").textContent = `TOKEN # ${order.id}`;
-  document.getElementById("kotOrderType").textContent = order.customer.mode.toUpperCase();
-  document.getElementById("kotDate").textContent = new Date(order.timestamp).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-  document.getElementById("kotTime").textContent = order.customer.timeSlot;
-  document.getElementById("kotCustomer").textContent = order.customer.name;
-  document.getElementById("kotPhone").textContent = order.customer.phone;
-  document.getElementById("kotGrandTotal").textContent = `Rs. ${order.totalAmount}`;
+  const modal = document.getElementById("kitchenSlipModal");
+  if (!modal) {
+    window.print();
+    return;
+  }
+
+  const tokenElem = document.getElementById("kotTokenNumber");
+  if (tokenElem) tokenElem.textContent = `TOKEN # ${order.id}`;
+  const typeElem = document.getElementById("kotOrderType");
+  if (typeElem) typeElem.textContent = order.customer.mode.toUpperCase();
+  const dateElem = document.getElementById("kotDate");
+  if (dateElem) dateElem.textContent = new Date(order.timestamp).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  const timeElem = document.getElementById("kotTime");
+  if (timeElem) timeElem.textContent = order.customer.timeSlot;
+  const custElem = document.getElementById("kotCustomer");
+  if (custElem) custElem.textContent = order.customer.name;
+  const phoneElem = document.getElementById("kotPhone");
+  if (phoneElem) phoneElem.textContent = order.customer.phone;
+  const totalElem = document.getElementById("kotGrandTotal");
+  if (totalElem) totalElem.textContent = `Rs. ${order.totalAmount}`;
 
   const notesBox = document.getElementById("kotNotesBox");
   const notesText = document.getElementById("kotNotesText");
@@ -3225,585 +3238,513 @@ Pure Milk, Refreshing Life! - خالص دودھ، تازہ دم زندگی!
 // 10. EVENT LISTENERS INITIALIZATION
 // =============================================================================
 document.addEventListener("DOMContentLoaded", () => {
-  // Initialize default language
-  setLanguage(store.currentLang);
-
-  // Nav Switcher (Customer vs Staff PIN Protected)
-  const btnCustomer = document.getElementById("btnViewCustomer");
-  const btnStaff = document.getElementById("btnViewStaff");
-  const customerView = document.getElementById("customerView");
-  const staffView = document.getElementById("staffView");
-  const staffPinModal = document.getElementById("staffLoginPinModal");
-  const staffPinInput = document.getElementById("staffPinInput");
-  const staffPinErrorMsg = document.getElementById("staffPinErrorMsg");
-
-  window.pressPinKey = function(key) {
-    if (staffPinErrorMsg) staffPinErrorMsg.style.display = "none";
-    if (!staffPinInput) return;
-
-    if (key === "C") {
-      staffPinInput.value = "";
-    } else if (key === "DEL") {
-      staffPinInput.value = staffPinInput.value.slice(0, -1);
-    } else {
-      if (staffPinInput.value.length < 8) {
-        staffPinInput.value += key;
-      }
+  // Helper for safe element listener attachment
+  const on = (idOrEl, event, handler) => {
+    const el = typeof idOrEl === 'string' ? document.getElementById(idOrEl) : idOrEl;
+    if (el) {
+      el.addEventListener(event, handler);
+      return el;
     }
+    return null;
   };
 
-  function switchToStaffView() {
-    btnStaff.classList.add("active");
-    btnCustomer.classList.remove("active");
-    staffView.classList.add("active");
-    customerView.classList.remove("active");
-    renderStaffOrders();
-    renderMilkLedger();
-    renderSalesLedger();
-    soundSynth.init();
-    cloudSync.pullFromCloud(false);
-  }
+  const isCustomerPage = !!document.getElementById("customerView");
+  const isStaffPage = !!document.getElementById("staffView");
 
-  function attemptStaffUnlock() {
-    const enteredPin = (staffPinInput ? staffPinInput.value : "").trim();
-    const validPin = (store.staffPin || "1234").trim();
-
-    if (enteredPin === validPin) {
-      store.isStaffAuthenticated = true;
-      if (staffPinModal) staffPinModal.classList.remove("active");
-      if (staffPinInput) staffPinInput.value = "";
-      if (staffPinErrorMsg) staffPinErrorMsg.style.display = "none";
-      switchToStaffView();
-      showToast("🔓 Staff Dashboard Unlocked (ڈیش بورڈ کھل گیا)", "success");
-    } else {
-      if (staffPinErrorMsg) staffPinErrorMsg.style.display = "block";
-      if (staffPinInput) {
-        staffPinInput.value = "";
-        staffPinInput.focus();
-      }
-      showToast("❌ Incorrect PIN. Try again.", "alert");
-    }
-  }
-
-  btnCustomer.addEventListener("click", () => {
-    btnCustomer.classList.add("active");
-    btnStaff.classList.remove("active");
-    customerView.classList.add("active");
-    staffView.classList.remove("active");
-  });
-
-  btnStaff.addEventListener("click", () => {
-    if (store.isStaffAuthenticated) {
-      switchToStaffView();
-    } else {
-      if (staffPinInput) staffPinInput.value = "";
-      if (staffPinErrorMsg) staffPinErrorMsg.style.display = "none";
-      if (staffPinModal) staffPinModal.classList.add("active");
-      setTimeout(() => { if (staffPinInput) staffPinInput.focus(); }, 150);
-    }
-  });
-
-  const submitPinBtn = document.getElementById("submitStaffPinBtn");
-  if (submitPinBtn) {
-    submitPinBtn.addEventListener("click", attemptStaffUnlock);
-  }
-
-  if (staffPinInput) {
-    staffPinInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        attemptStaffUnlock();
-      }
-    });
-  }
-
-  const cancelPinBtn = document.getElementById("cancelStaffPinBtn");
-  if (cancelPinBtn) {
-    cancelPinBtn.addEventListener("click", () => {
-      if (staffPinModal) staffPinModal.classList.remove("active");
-    });
-  }
-
-  // Lock Staff Dashboard Button
-  const btnLockStaff = document.getElementById("btnLockStaffDashboard");
-  if (btnLockStaff) {
-    btnLockStaff.addEventListener("click", () => {
-      store.isStaffAuthenticated = false;
-      btnCustomer.classList.add("active");
-      btnStaff.classList.remove("active");
-      customerView.classList.add("active");
-      staffView.classList.remove("active");
-      showToast("🔒 Staff Dashboard Locked (ڈیش بورڈ لاک ہو گیا)", "alert");
-    });
-  }
+  // Common: Initialize default language
+  setLanguage(store.currentLang);
 
   // Language Toggle Button
-  document.getElementById("langToggleBtn").addEventListener("click", () => {
+  on("langToggleBtn", "click", () => {
     const nextLang = store.currentLang === "en" ? "ur" : "en";
     setLanguage(nextLang);
   });
 
-  // Category Tabs Filter
-  document.querySelectorAll(".cat-tab").forEach(tab => {
-    tab.addEventListener("click", () => {
-      document.querySelectorAll(".cat-tab").forEach(t => t.classList.remove("active"));
-      tab.classList.add("active");
-      store.activeCategory = tab.dataset.category;
-      renderProducts();
-    });
-  });
-
-  // Quick Filter Pills
-  document.querySelectorAll(".pill-filter").forEach(pill => {
-    pill.addEventListener("click", () => {
-      document.querySelectorAll(".pill-filter").forEach(p => p.classList.remove("active"));
-      pill.classList.add("active");
-      store.activeFilter = pill.dataset.filter;
-      renderProducts();
-    });
-  });
-
-  // Search Input
-  const searchInput = document.getElementById("menuSearchInput");
-  const searchClear = document.getElementById("searchClearBtn");
-
-  searchInput.addEventListener("input", (e) => {
-    store.searchQuery = e.target.value;
-    searchClear.style.display = store.searchQuery ? "block" : "none";
-    renderProducts();
-  });
-
-  searchClear.addEventListener("click", () => {
-    searchInput.value = "";
-    store.searchQuery = "";
-    searchClear.style.display = "none";
-    renderProducts();
-  });
-
-  // Cart Drawer Triggers
-  document.getElementById("openCartBtn").addEventListener("click", openCartDrawer);
-  document.getElementById("closeCartBtn").addEventListener("click", closeCartDrawer);
-  document.getElementById("cartOverlay").addEventListener("click", (e) => {
-    if (e.target.id === "cartOverlay") closeCartDrawer();
-  });
-
-  // Order Mode Switcher in Cart
-  const modePickupBtn = document.getElementById("modePickupBtn");
-  const modeDeliveryBtn = document.getElementById("modeDeliveryBtn");
-
-  modePickupBtn.addEventListener("click", () => {
-    modePickupBtn.classList.add("active");
-    modeDeliveryBtn.classList.remove("active");
-    store.orderMode = "pickup";
-    renderCart();
-  });
-
-  modeDeliveryBtn.addEventListener("click", () => {
-    modeDeliveryBtn.classList.add("active");
-    modePickupBtn.classList.remove("active");
-    store.orderMode = "delivery";
-    renderCart();
-  });
-
-  // Customization Modal Controls
-  document.getElementById("modalQtyMinus").addEventListener("click", () => {
-    const step = activeModalItem && activeModalItem.unit === "KG" ? 0.5 : 1;
-    if (currentModalQty > step) {
-      currentModalQty = Math.max(step, currentModalQty - step);
-      document.getElementById("modalQtyInput").value = currentModalQty;
-      updateModalTotal();
+  // Radio button pill visual active toggle helper
+  document.addEventListener("change", (e) => {
+    if (e.target && e.target.type === "radio") {
+      const group = e.target.closest(".radio-pill-group");
+      if (group) {
+        group.querySelectorAll("label").forEach(l => l.classList.remove("active"));
+        const parentLabel = e.target.closest("label");
+        if (parentLabel) parentLabel.classList.add("active");
+      }
     }
   });
 
-  document.getElementById("modalQtyPlus").addEventListener("click", () => {
-    const step = activeModalItem && activeModalItem.unit === "KG" ? 0.5 : 1;
-    currentModalQty = currentModalQty + step;
-    document.getElementById("modalQtyInput").value = currentModalQty;
-    updateModalTotal();
-  });
+  // =========================================================================
+  // CUSTOMER STOREFRONT PORTAL LOGIC & LISTENERS
+  // =========================================================================
+  if (isCustomerPage) {
+    // Category Tabs Filter
+    document.querySelectorAll(".cat-tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".cat-tab").forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        store.activeCategory = tab.dataset.category;
+        renderProducts();
+      });
+    });
 
-  document.getElementById("modalQtyInput").addEventListener("input", (e) => {
-    const val = parseFloat(e.target.value);
-    if (!isNaN(val) && val > 0) {
-      currentModalQty = val;
-      updateModalTotal();
+    // Quick Filter Pills
+    document.querySelectorAll(".pill-filter").forEach(pill => {
+      pill.addEventListener("click", () => {
+        document.querySelectorAll(".pill-filter").forEach(p => p.classList.remove("active"));
+        pill.classList.add("active");
+        store.activeFilter = pill.dataset.filter;
+        renderProducts();
+      });
+    });
+
+    // Search Input
+    const searchInput = document.getElementById("menuSearchInput");
+    const searchClear = document.getElementById("searchClearBtn");
+    if (searchInput) {
+      searchInput.addEventListener("input", (e) => {
+        store.searchQuery = e.target.value;
+        if (searchClear) searchClear.style.display = store.searchQuery ? "block" : "none";
+        renderProducts();
+      });
     }
-  });
-
-  document.getElementById("closeCustomizeModalBtn").addEventListener("click", () => {
-    document.getElementById("customizationModal").classList.remove("active");
-  });
-
-  document.getElementById("confirmAddToCartBtn").addEventListener("click", () => {
-    if (!activeModalItem) return;
-
-    const optSummary = Object.values(currentModalOptions).filter(Boolean).join(", ");
-    const note = document.getElementById("modalItemNotes").value.trim();
-
-    store.addToCart(activeModalItem, currentModalQty, optSummary, note);
-    document.getElementById("customizationModal").classList.remove("active");
-
-    showToast(`${activeModalItem.nameEn} (${currentModalQty} ${activeModalItem.unit}) added to order!`, "success");
-    renderCart();
-  });
-
-  // Proceed to Checkout
-  document.getElementById("proceedCheckoutBtn").addEventListener("click", openCheckoutModal);
-  document.getElementById("closeCheckoutModalBtn").addEventListener("click", () => {
-    document.getElementById("checkoutModal").classList.remove("active");
-  });
-  document.getElementById("cancelCheckoutBtn").addEventListener("click", () => {
-    document.getElementById("checkoutModal").classList.remove("active");
-    openCartDrawer();
-  });
-
-  // Checkout Form Submission
-  document.getElementById("checkoutForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    const customerData = {
-      name: document.getElementById("custName").value.trim(),
-      phone: document.getElementById("custPhone").value.trim(),
-      date: document.getElementById("custDate").value,
-      timeSlot: document.getElementById("custTimeSlot").value,
-      address: document.getElementById("custAddress").value.trim(),
-      notes: document.getElementById("custSpecialNote").value.trim()
-    };
-
-    const newOrder = store.createOrder(customerData);
-    store.currentOrderTrackingId = newOrder.id;
-
-    // Push new booking to cloud database immediately for real-time staff sync
-    cloudSync.pushOrder(newOrder);
-
-    soundSynth.playOrderBell();
-
-    document.getElementById("checkoutModal").classList.remove("active");
-    renderCart();
-    renderStaffOrders();
-    openConfirmationModal(newOrder);
-  });
-
-  // Confirmation Modal Controls
-  document.getElementById("closeConfirmationModalBtn").addEventListener("click", () => {
-    document.getElementById("confirmationModal").classList.remove("active");
-  });
-
-  document.getElementById("printCustomerSlipBtn").addEventListener("click", () => {
-    if (store.currentOrderTrackingId) {
-      openKitchenSlip(store.currentOrderTrackingId);
-    }
-  });
-
-  // Track Order Modal Controls
-  document.getElementById("openTrackModalBtn").addEventListener("click", () => {
-    document.getElementById("trackOrderModal").classList.add("active");
-  });
-  document.getElementById("closeTrackModalBtn").addEventListener("click", () => {
-    document.getElementById("trackOrderModal").classList.remove("active");
-  });
-  document.getElementById("btnExecuteTrack").addEventListener("click", executeTrackOrder);
-  document.getElementById("trackLookupInput").addEventListener("keypress", (e) => {
-    if (e.key === "Enter") executeTrackOrder();
-  });
-
-  // Staff Dashboard Sound Toggle
-  const soundToggle = document.getElementById("soundToggleBtn");
-  const soundIcon = document.getElementById("soundIcon");
-  const soundLabel = document.getElementById("soundLabel");
-
-  soundToggle.addEventListener("click", () => {
-    store.soundEnabled = !store.soundEnabled;
-    localStorage.setItem(STORAGE_KEYS.SOUND, store.soundEnabled);
-    soundIcon.className = store.soundEnabled ? "fa-solid fa-volume-high" : "fa-solid fa-volume-xmark";
-    soundLabel.textContent = store.soundEnabled ? "Sound: ON" : "Sound: OFF";
-    showToast(`Staff sound chime turned ${store.soundEnabled ? 'ON' : 'OFF'}`, "alert");
-  });
-
-  // Status Filter Tabs
-  document.querySelectorAll("#staffStatusFilters .filter-tab").forEach(tab => {
-    tab.addEventListener("click", () => {
-      document.querySelectorAll("#staffStatusFilters .filter-tab").forEach(t => t.classList.remove("active"));
-      tab.classList.add("active");
-      staffFilterStatus = tab.dataset.status;
-      renderStaffOrders();
-    });
-  });
-
-  document.getElementById("staffOrderSearchInput").addEventListener("input", (e) => {
-    staffSearchQuery = e.target.value;
-    renderStaffOrders();
-  });
-
-  // Milk Ledger Filters
-  document.querySelectorAll("#milkLedgerFilters .filter-tab").forEach(tab => {
-    tab.addEventListener("click", () => {
-      document.querySelectorAll("#milkLedgerFilters .filter-tab").forEach(t => t.classList.remove("active"));
-      tab.classList.add("active");
-      milkLedgerFilter = tab.dataset.filter;
-      renderMilkLedger();
-    });
-  });
-
-  // Sales Ledger Filters
-  document.querySelectorAll("#salesLedgerFilters .filter-tab").forEach(tab => {
-    tab.addEventListener("click", () => {
-      document.querySelectorAll("#salesLedgerFilters .filter-tab").forEach(t => t.classList.remove("active"));
-      tab.classList.add("active");
-      salesLedgerFilter = tab.dataset.saleType;
-      renderSalesLedger();
-    });
-  });
-
-  // Kitchen Slip Close
-  document.getElementById("closeKitchenSlipBtn").addEventListener("click", () => {
-    document.getElementById("kitchenSlipModal").classList.remove("active");
-  });
-  document.getElementById("cancelKitchenSlipBtn").addEventListener("click", () => {
-    document.getElementById("kitchenSlipModal").classList.remove("active");
-  });
-
-  // Price / Menu Manager Modal
-  document.getElementById("openPriceManagerBtn").addEventListener("click", openPriceManager);
-  document.getElementById("closePriceManagerBtn").addEventListener("click", () => {
-    document.getElementById("priceManagerModal").classList.remove("active");
-  });
-  document.getElementById("savePriceChangesBtn").addEventListener("click", savePriceChanges);
-  
-  // Menu Manager Search & Category Filter
-  const menuSearchInput = document.getElementById("menuManagerSearchInput");
-  if (menuSearchInput) {
-    menuSearchInput.addEventListener("input", openPriceManager);
-  }
-  const menuCatFilter = document.getElementById("menuManagerCatFilter");
-  if (menuCatFilter) {
-    menuCatFilter.addEventListener("change", openPriceManager);
-  }
-
-  // Item Editor Modal Handlers
-  const itemEditorModal = document.getElementById("menuItemEditorModal");
-  const closeItemEditor = () => {
-    if (itemEditorModal) itemEditorModal.classList.remove("active");
-  };
-  document.getElementById("closeItemEditorModalBtn")?.addEventListener("click", closeItemEditor);
-  document.getElementById("cancelItemEditorBtn")?.addEventListener("click", closeItemEditor);
-  document.getElementById("menuItemEditorForm")?.addEventListener("submit", saveMenuItemForm);
-
-  // Preset Image Picker Click Handlers
-  document.querySelectorAll(".preset-thumb-option").forEach(thumb => {
-    thumb.addEventListener("click", () => {
-      document.querySelectorAll(".preset-thumb-option").forEach(t => t.classList.remove("selected"));
-      thumb.classList.add("selected");
-      const imgPath = thumb.dataset.img;
-      const imgInput = document.getElementById("editItemImage");
-      if (imgInput) imgInput.value = imgPath;
-    });
-  });
-
-  document.getElementById("resetDefaultPricesBtn").addEventListener("click", () => {
-    const isUrdu = store.currentLang === 'ur';
-    const confirmMsg = isUrdu 
-      ? "کیا آپ واقعی تمام مینو آئٹمز اور قیمتوں کو اصل فیکٹری حالت پر واپس لانا چاہتے ہیں؟"
-      : "Reset all menu items and prices to original defaults?";
-    if (confirm(confirmMsg)) {
-      store.resetMenu();
-      openPriceManager();
-      renderDailyRates();
-      renderProducts();
-      showToast(isUrdu ? "مینو ڈیفالٹس پر بحال کر دیا گیا" : "Menu prices reset to defaults", "alert");
-    }
-  });
-
-  // Milk Inward Modal
-  const milkInwardModal = document.getElementById("milkInwardModal");
-  const openMilkInwardModal = () => {
-    document.getElementById("inwardLiters").value = "";
-    milkInwardModal.classList.add("active");
-  };
-
-  document.getElementById("openMilkInwardModalBtn").addEventListener("click", openMilkInwardModal);
-  const btnQuickMilkIn = document.getElementById("btnQuickMilkIn");
-  if (btnQuickMilkIn) btnQuickMilkIn.addEventListener("click", openMilkInwardModal);
-
-  document.getElementById("closeMilkInwardModalBtn").addEventListener("click", () => milkInwardModal.classList.remove("active"));
-  document.getElementById("cancelMilkInwardBtn").addEventListener("click", () => milkInwardModal.classList.remove("active"));
-
-  document.getElementById("milkInwardForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const type = document.querySelector('input[name="inwardMilkType"]:checked').value;
-    const liters = parseFloat(document.getElementById("inwardLiters").value);
-    const batch = document.getElementById("inwardBatch").value;
-    const source = document.getElementById("inwardSource").value.trim();
-    const notes = document.getElementById("inwardNotes").value.trim();
-
-    store.addMilkEntry({
-      type: "IN",
-      milkType: type,
-      liters: liters,
-      batch: batch,
-      source: source,
-      notes: notes
-    });
-
-    showToast(`Recorded ${liters} L ${type.toUpperCase()} milk inward!`, "success");
-    milkInwardModal.classList.remove("active");
-    renderMilkLedger();
-  });
-
-  // Milk Usage / Dahi Modal
-  const milkUsageModal = document.getElementById("milkUsageModal");
-  const openMilkUsageModal = () => {
-    document.getElementById("usageLiters").value = "";
-    milkUsageModal.classList.add("active");
-  };
-
-  document.getElementById("openMilkUsageModalBtn").addEventListener("click", openMilkUsageModal);
-  const btnQuickDahiPrep = document.getElementById("btnQuickDahiPrep");
-  if (btnQuickDahiPrep) btnQuickDahiPrep.addEventListener("click", openMilkUsageModal);
-
-  document.getElementById("closeMilkUsageModalBtn").addEventListener("click", () => milkUsageModal.classList.remove("active"));
-  document.getElementById("cancelMilkUsageBtn").addEventListener("click", () => milkUsageModal.classList.remove("active"));
-
-  document.getElementById("milkUsageForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const purpose = document.getElementById("usagePurpose").value;
-    const type = document.querySelector('input[name="usageMilkType"]:checked').value;
-    const liters = parseFloat(document.getElementById("usageLiters").value);
-    const notes = document.getElementById("usageNotes").value.trim();
-
-    store.addMilkEntry({
-      type: purpose,
-      milkType: type,
-      liters: liters,
-      batch: "Dahi / Prep",
-      source: `Usage: ${purpose}`,
-      notes: notes
-    });
-
-    showToast(`Deducted ${liters} L ${type.toUpperCase()} milk for ${purpose}!`, "success");
-    milkUsageModal.classList.remove("active");
-    renderMilkLedger();
-  });
-
-  // Quick Counter Sale Modal
-  const counterSaleModal = document.getElementById("counterSaleModal");
-  const openCounterSaleModal = () => {
-    updateCounterSaleProducts();
-    counterSaleModal.classList.add("active");
-  };
-
-  document.getElementById("openCounterSaleModalBtn").addEventListener("click", openCounterSaleModal);
-  const btnOpenWalkin = document.getElementById("btnOpenWalkinSaleModal");
-  if (btnOpenWalkin) btnOpenWalkin.addEventListener("click", openCounterSaleModal);
-
-  document.getElementById("closeCounterSaleModalBtn").addEventListener("click", () => counterSaleModal.classList.remove("active"));
-  document.getElementById("cancelCounterSaleBtn").addEventListener("click", () => counterSaleModal.classList.remove("active"));
-
-  document.getElementById("counterSaleForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const cat = document.getElementById("saleCategory").value;
-    const itemSelect = document.getElementById("saleItemSelect");
-    const itemOpt = itemSelect.options[itemSelect.selectedIndex];
-    const itemName = itemOpt ? itemOpt.text.split('-')[0].trim() : "Direct Item";
-    const qty = parseFloat(document.getElementById("saleQty").value) || 1;
-    const total = parseFloat(document.getElementById("saleTotalAmount").value) || 0;
-    const customer = document.getElementById("saleCustomerName").value.trim() || "Walk-in Cash Customer";
-
-    store.addSalesEntry({
-      type: "walkin",
-      category: cat,
-      customer: customer,
-      itemsSummary: `${itemName} (${qty} qty)`,
-      amount: total,
-      paymentMode: "Cash (نقد)"
-    });
-
-    // If milk was sold, deduct from milk tank
-    if (cat === "milk") {
-      const selectedId = itemSelect.value;
-      const milkType = selectedId.includes("cow") ? "cow" : (selectedId.includes("buffalo") ? "buffalo" : "mixed");
-      store.addMilkEntry({
-        type: "OUT",
-        milkType: milkType,
-        liters: qty,
-        batch: "Counter Cash Sale",
-        source: `Counter Sale (${customer})`,
-        notes: `Sold ${qty} Liters at counter`
+    if (searchClear) {
+      searchClear.addEventListener("click", () => {
+        if (searchInput) searchInput.value = "";
+        store.searchQuery = "";
+        searchClear.style.display = "none";
+        renderProducts();
       });
     }
 
-    showToast(`Recorded Rs. ${total} counter cash sale!`, "success");
-    counterSaleModal.classList.remove("active");
-    renderSalesLedger();
-    renderMilkLedger();
-  });
+    // Cart Drawer Triggers
+    on("openCartBtn", "click", openCartDrawer);
+    on("closeCartBtn", "click", closeCartDrawer);
+    on("cartOverlay", "click", (e) => {
+      if (e.target.id === "cartOverlay") closeCartDrawer();
+    });
 
-  // Daily Operations / Z-Report Full Sheet Modal
-  document.getElementById("exportDailySummaryBtn").addEventListener("click", openDailyReportModal);
-  const btnPrintSales = document.getElementById("btnPrintSalesLedger");
-  if (btnPrintSales) btnPrintSales.addEventListener("click", openDailyReportModal);
+    // Order Mode Switcher in Cart
+    const modePickupBtn = document.getElementById("modePickupBtn");
+    const modeDeliveryBtn = document.getElementById("modeDeliveryBtn");
+    if (modePickupBtn) {
+      modePickupBtn.addEventListener("click", () => {
+        modePickupBtn.classList.add("active");
+        if (modeDeliveryBtn) modeDeliveryBtn.classList.remove("active");
+        store.orderMode = "pickup";
+        renderCart();
+      });
+    }
+    if (modeDeliveryBtn) {
+      modeDeliveryBtn.addEventListener("click", () => {
+        modeDeliveryBtn.classList.add("active");
+        if (modePickupBtn) modePickupBtn.classList.remove("active");
+        store.orderMode = "delivery";
+        renderCart();
+      });
+    }
 
-  const btnPrintMilk = document.getElementById("btnPrintMilkReport");
-  if (btnPrintMilk) btnPrintMilk.addEventListener("click", openDailyReportModal);
+    // Customization Modal Controls
+    on("modalQtyMinus", "click", () => {
+      const step = activeModalItem && activeModalItem.unit === "KG" ? 0.5 : 1;
+      if (currentModalQty > step) {
+        currentModalQty = Math.max(step, currentModalQty - step);
+        const qInput = document.getElementById("modalQtyInput");
+        if (qInput) qInput.value = currentModalQty;
+        updateModalTotal();
+      }
+    });
 
-  const btnShareSalesWa = document.getElementById("btnShareSalesWhatsApp");
-  if (btnShareSalesWa) btnShareSalesWa.addEventListener("click", openDailyReportModal);
+    on("modalQtyPlus", "click", () => {
+      const step = activeModalItem && activeModalItem.unit === "KG" ? 0.5 : 1;
+      currentModalQty = currentModalQty + step;
+      const qInput = document.getElementById("modalQtyInput");
+      if (qInput) qInput.value = currentModalQty;
+      updateModalTotal();
+    });
 
-  document.getElementById("closeDailyReportModalBtn").addEventListener("click", () => {
-    document.getElementById("dailyReportModal").classList.remove("active");
-  });
-  document.getElementById("closeDailyReportBtn").addEventListener("click", () => {
-    document.getElementById("dailyReportModal").classList.remove("active");
-  });
+    on("modalQtyInput", "input", (e) => {
+      const val = parseFloat(e.target.value);
+      if (!isNaN(val) && val > 0) {
+        currentModalQty = val;
+        updateModalTotal();
+      }
+    });
 
-  // WhatsApp & Cloud Real-Time Sync Settings Modal
-  const whatsappSettingsModal = document.getElementById("whatsappSettingsModal");
-  const inputWa1 = document.getElementById("settingWhatsApp1");
-  const inputWa2 = document.getElementById("settingWhatsApp2");
-  const checkAutoOpen = document.getElementById("settingAutoOpenWhatsApp");
-  const inputCloudSyncUrl = document.getElementById("settingCloudSyncUrl");
-  const btnTestCloud = document.getElementById("btnTestCloudSync");
-  const cloudTestStatus = document.getElementById("cloudTestStatus");
-  const btnManualSync = document.getElementById("btnManualSync");
+    on("closeCustomizeModalBtn", "click", () => {
+      const m = document.getElementById("customizationModal");
+      if (m) m.classList.remove("active");
+    });
 
-  // Manual Sync Button in Staff Header
-  if (btnManualSync) {
-    btnManualSync.addEventListener("click", async () => {
+    on("confirmAddToCartBtn", "click", () => {
+      if (!activeModalItem) return;
+      const optSummary = Object.values(currentModalOptions).filter(Boolean).join(", ");
+      const noteElem = document.getElementById("modalItemNotes");
+      const note = noteElem ? noteElem.value.trim() : "";
+
+      store.addToCart(activeModalItem, currentModalQty, optSummary, note);
+      const m = document.getElementById("customizationModal");
+      if (m) m.classList.remove("active");
+
+      showToast(${activeModalItem.nameEn} ( ) added to order!, "success");
+      renderCart();
+    });
+
+    // Proceed to Checkout
+    on("proceedCheckoutBtn", "click", openCheckoutModal);
+    on("closeCheckoutModalBtn", "click", () => {
+      const m = document.getElementById("checkoutModal");
+      if (m) m.classList.remove("active");
+    });
+    on("cancelCheckoutBtn", "click", () => {
+      const m = document.getElementById("checkoutModal");
+      if (m) m.classList.remove("active");
+      openCartDrawer();
+    });
+
+    // Checkout Form Submission
+    on("checkoutForm", "submit", (e) => {
+      e.preventDefault();
+
+      const customerData = {
+        name: (document.getElementById("custName")?.value || "").trim(),
+        phone: (document.getElementById("custPhone")?.value || "").trim(),
+        date: document.getElementById("custDate")?.value || "Today",
+        timeSlot: document.getElementById("custTimeSlot")?.value || "ASAP",
+        address: (document.getElementById("custAddress")?.value || "").trim(),
+        notes: (document.getElementById("custSpecialNote")?.value || "").trim()
+      };
+
+      const newOrder = store.createOrder(customerData);
+      store.currentOrderTrackingId = newOrder.id;
+
+      // Push new booking to cloud database immediately for real-time staff sync
+      cloudSync.pushOrder(newOrder);
+
+      soundSynth.playOrderBell();
+
+      const m = document.getElementById("checkoutModal");
+      if (m) m.classList.remove("active");
+      renderCart();
+      openConfirmationModal(newOrder);
+    });
+
+    // Confirmation Modal Controls
+    on("closeConfirmationModalBtn", "click", () => {
+      const m = document.getElementById("confirmationModal");
+      if (m) m.classList.remove("active");
+    });
+
+    on("printCustomerSlipBtn", "click", () => {
+      if (store.currentOrderTrackingId) {
+        openKitchenSlip(store.currentOrderTrackingId);
+      }
+    });
+
+    // Track Order Modal Controls
+    on("openTrackModalBtn", "click", () => {
+      const m = document.getElementById("trackOrderModal");
+      if (m) m.classList.add("active");
+    });
+    on("closeTrackModalBtn", "click", () => {
+      const m = document.getElementById("trackOrderModal");
+      if (m) m.classList.remove("active");
+    });
+    on("btnExecuteTrack", "click", executeTrackOrder);
+    on("trackLookupInput", "keypress", (e) => {
+      if (e.key === "Enter") executeTrackOrder();
+    });
+
+    // Sticky Bottom Cart Bar Click Handlers
+    on("stickyProceedCheckoutBtn", "click", openCheckoutModal);
+    on("stickyCartSummaryBtn", "click", openCartDrawer);
+
+    // Initial customer storefront renders
+    renderDailyRates();
+    renderProducts();
+    renderCart();
+  }
+
+  // =========================================================================
+  // STAFF & COUNTER POS PORTAL LOGIC & LISTENERS
+  // =========================================================================
+  if (isStaffPage) {
+    store.isStaffAuthenticated = true;
+
+    // Staff Dashboard Sound Toggle
+    const soundToggle = document.getElementById("soundToggleBtn");
+    const soundIcon = document.getElementById("soundIcon");
+    const soundLabel = document.getElementById("soundLabel");
+
+    if (soundToggle) {
+      soundToggle.addEventListener("click", () => {
+        store.soundEnabled = !store.soundEnabled;
+        localStorage.setItem(STORAGE_KEYS.SOUND, store.soundEnabled);
+        if (soundIcon) soundIcon.className = store.soundEnabled ? "fa-solid fa-volume-high" : "fa-solid fa-volume-xmark";
+        if (soundLabel) soundLabel.textContent = store.soundEnabled ? "Sound: ON" : "Sound: OFF";
+        showToast(Staff sound chime turned , "alert");
+      });
+    }
+
+    // Status Filter Tabs
+    document.querySelectorAll("#staffStatusFilters .filter-tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll("#staffStatusFilters .filter-tab").forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        staffFilterStatus = tab.dataset.status;
+        renderStaffOrders();
+      });
+    });
+
+    on("staffOrderSearchInput", "input", (e) => {
+      staffSearchQuery = e.target.value;
+      renderStaffOrders();
+    });
+
+    // Milk Ledger Filters
+    document.querySelectorAll("#milkLedgerFilters .filter-tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll("#milkLedgerFilters .filter-tab").forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        milkLedgerFilter = tab.dataset.filter;
+        renderMilkLedger();
+      });
+    });
+
+    // Sales Ledger Filters
+    document.querySelectorAll("#salesLedgerFilters .filter-tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll("#salesLedgerFilters .filter-tab").forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        salesLedgerFilter = tab.dataset.saleType;
+        renderSalesLedger();
+      });
+    });
+
+    // Kitchen Slip Close
+    on("closeKitchenSlipBtn", "click", () => {
+      document.getElementById("kitchenSlipModal")?.classList.remove("active");
+    });
+    on("cancelKitchenSlipBtn", "click", () => {
+      document.getElementById("kitchenSlipModal")?.classList.remove("active");
+    });
+
+    // Price / Menu Manager Modal
+    on("openPriceManagerBtn", "click", openPriceManager);
+    on("closePriceManagerBtn", "click", () => {
+      document.getElementById("priceManagerModal")?.classList.remove("active");
+    });
+    on("savePriceChangesBtn", "click", savePriceChanges);
+
+    // Menu Manager Search & Category Filter
+    on("menuManagerSearchInput", "input", openPriceManager);
+    on("menuManagerCatFilter", "change", openPriceManager);
+
+    // Item Editor Modal Handlers
+    const itemEditorModal = document.getElementById("menuItemEditorModal");
+    const closeItemEditor = () => {
+      if (itemEditorModal) itemEditorModal.classList.remove("active");
+    };
+    on("closeItemEditorModalBtn", "click", closeItemEditor);
+    on("cancelItemEditorBtn", "click", closeItemEditor);
+    on("menuItemEditorForm", "submit", saveMenuItemForm);
+
+    // Preset Image Picker Click Handlers
+    document.querySelectorAll(".preset-thumb-option").forEach(thumb => {
+      thumb.addEventListener("click", () => {
+        document.querySelectorAll(".preset-thumb-option").forEach(t => t.classList.remove("selected"));
+        thumb.classList.add("selected");
+        const imgPath = thumb.dataset.img;
+        const imgInput = document.getElementById("editItemImage");
+        if (imgInput) imgInput.value = imgPath;
+      });
+    });
+
+    on("resetDefaultPricesBtn", "click", () => {
+      const isUrdu = store.currentLang === 'ur';
+      const confirmMsg = isUrdu 
+        ? "کیا آپ واقعی تمام مینو آئٹمز اور قیمتوں کو اصل فیکٹری حالت پر واپس لانا چاہتے ہیں؟"
+        : "Reset all menu items and prices to original defaults?";
+      if (confirm(confirmMsg)) {
+        store.resetMenu();
+        openPriceManager();
+        renderDailyRates();
+        renderProducts();
+        showToast(isUrdu ? "مینو ڈیفالٹس پر بحال کر دیا گیا" : "Menu prices reset to defaults", "alert");
+      }
+    });
+
+    // Milk Inward Modal
+    const milkInwardModal = document.getElementById("milkInwardModal");
+    const openMilkInwardModal = () => {
+      const input = document.getElementById("inwardLiters");
+      if (input) input.value = "";
+      if (milkInwardModal) milkInwardModal.classList.add("active");
+    };
+
+    on("openMilkInwardModalBtn", "click", openMilkInwardModal);
+    on("btnQuickMilkIn", "click", openMilkInwardModal);
+    on("closeMilkInwardModalBtn", "click", () => milkInwardModal?.classList.remove("active"));
+    on("cancelMilkInwardBtn", "click", () => milkInwardModal?.classList.remove("active"));
+
+    on("milkInwardForm", "submit", (e) => {
+      e.preventDefault();
+      const type = document.querySelector('input[name="inwardMilkType"]:checked')?.value || "mixed";
+      const liters = parseFloat(document.getElementById("inwardLiters")?.value) || 0;
+      const batch = document.getElementById("inwardBatch")?.value || "";
+      const source = (document.getElementById("inwardSource")?.value || "").trim();
+      const notes = (document.getElementById("inwardNotes")?.value || "").trim();
+
+      store.addMilkEntry({
+        type: "IN",
+        milkType: type,
+        liters: liters,
+        batch: batch,
+        source: source,
+        notes: notes
+      });
+
+      showToast(Recorded  L  milk inward!, "success");
+      milkInwardModal?.classList.remove("active");
+      renderMilkLedger();
+    });
+
+    // Milk Usage / Dahi Modal
+    const milkUsageModal = document.getElementById("milkUsageModal");
+    const openMilkUsageModal = () => {
+      const input = document.getElementById("usageLiters");
+      if (input) input.value = "";
+      if (milkUsageModal) milkUsageModal.classList.add("active");
+    };
+
+    on("openMilkUsageModalBtn", "click", openMilkUsageModal);
+    on("btnQuickDahiPrep", "click", openMilkUsageModal);
+    on("closeMilkUsageModalBtn", "click", () => milkUsageModal?.classList.remove("active"));
+    on("cancelMilkUsageBtn", "click", () => milkUsageModal?.classList.remove("active"));
+
+    on("milkUsageForm", "submit", (e) => {
+      e.preventDefault();
+      const purpose = document.getElementById("usagePurpose")?.value || "Dahi Making";
+      const type = document.querySelector('input[name="usageMilkType"]:checked')?.value || "buffalo";
+      const liters = parseFloat(document.getElementById("usageLiters")?.value) || 0;
+      const notes = (document.getElementById("usageNotes")?.value || "").trim();
+
+      store.addMilkEntry({
+        type: purpose,
+        milkType: type,
+        liters: liters,
+        batch: "Dahi / Prep",
+        source: Usage: ,
+        notes: notes
+      });
+
+      showToast(Deducted  L  milk for !, "success");
+      milkUsageModal?.classList.remove("active");
+      renderMilkLedger();
+    });
+
+    // Quick Counter Sale Modal
+    const counterSaleModal = document.getElementById("counterSaleModal");
+    const openCounterSaleModal = () => {
+      updateCounterSaleProducts();
+      if (counterSaleModal) counterSaleModal.classList.add("active");
+    };
+
+    on("openCounterSaleModalBtn", "click", openCounterSaleModal);
+    on("btnOpenWalkinSaleModal", "click", openCounterSaleModal);
+    on("closeCounterSaleModalBtn", "click", () => counterSaleModal?.classList.remove("active"));
+    on("cancelCounterSaleBtn", "click", () => counterSaleModal?.classList.remove("active"));
+
+    on("counterSaleForm", "submit", (e) => {
+      e.preventDefault();
+      const cat = document.getElementById("saleCategory")?.value || "milk";
+      const itemSelect = document.getElementById("saleItemSelect");
+      const itemOpt = itemSelect ? itemSelect.options[itemSelect.selectedIndex] : null;
+      const itemName = itemOpt ? itemOpt.text.split('-')[0].trim() : "Direct Item";
+      const qty = parseFloat(document.getElementById("saleQty")?.value) || 1;
+      const total = parseFloat(document.getElementById("saleTotalAmount")?.value) || 0;
+      const customer = (document.getElementById("saleCustomerName")?.value || "").trim() || "Walk-in Cash Customer";
+
+      store.addSalesEntry({
+        type: "walkin",
+        category: cat,
+        customer: customer,
+        itemsSummary: ${itemName} ( qty),
+        amount: total,
+        paymentMode: "Cash (نقد)"
+      });
+
+      // If milk was sold, deduct from milk tank
+      if (cat === "milk" && itemSelect) {
+        const selectedId = itemSelect.value;
+        const milkType = selectedId.includes("cow") ? "cow" : (selectedId.includes("buffalo") ? "buffalo" : "mixed");
+        store.addMilkEntry({
+          type: "OUT",
+          milkType: milkType,
+          liters: qty,
+          batch: "Counter Cash Sale",
+          source: Counter Sale (),
+          notes: Sold  Liters at counter
+        });
+      }
+
+      showToast(Recorded Rs.  counter cash sale!, "success");
+      counterSaleModal?.classList.remove("active");
+      renderSalesLedger();
+      renderMilkLedger();
+    });
+
+    // Daily Operations / Z-Report Full Sheet Modal
+    on("exportDailySummaryBtn", "click", openDailyReportModal);
+    on("btnPrintSalesLedger", "click", openDailyReportModal);
+    on("btnPrintMilkReport", "click", openDailyReportModal);
+    on("btnShareSalesWhatsApp", "click", openDailyReportModal);
+    on("closeDailyReportModalBtn", "click", () => {
+      document.getElementById("dailyReportModal")?.classList.remove("active");
+    });
+    on("closeDailyReportBtn", "click", () => {
+      document.getElementById("dailyReportModal")?.classList.remove("active");
+    });
+
+    // WhatsApp & Cloud Real-Time Sync Settings Modal
+    const whatsappSettingsModal = document.getElementById("whatsappSettingsModal");
+    const inputWa1 = document.getElementById("settingWhatsApp1");
+    const inputWa2 = document.getElementById("settingWhatsApp2");
+    const checkAutoOpen = document.getElementById("settingAutoOpenWhatsApp");
+    const inputCloudSyncUrl = document.getElementById("settingCloudSyncUrl");
+    const cloudTestStatus = document.getElementById("cloudTestStatus");
+
+    // Manual Sync Button in Staff Header
+    on("btnManualSync", "click", async () => {
       showToast("Syncing orders with cloud...", "alert");
       await cloudSync.pullFromCloud(true);
       showToast("Live cloud sync completed!", "success");
     });
-  }
 
-  // Open Settings Modal
-  document.getElementById("openWhatsAppSettingsBtn").addEventListener("click", () => {
-    inputWa1.value = store.whatsappSettings.num1 || "0370-9589018";
-    inputWa2.value = store.whatsappSettings.num2 || "0342-1008375";
-    checkAutoOpen.checked = store.whatsappSettings.autoOpen !== false;
-    const pinInput = document.getElementById("settingStaffPin");
-    if (pinInput) {
-      pinInput.value = store.staffPin || "1234";
-    }
-    if (inputCloudSyncUrl) {
-      inputCloudSyncUrl.value = cloudSync.config.url || "https://alsadiqmilkfreshdrinks-default-rtdb.europe-west1.firebasedatabase.app";
-    }
-    if (cloudTestStatus) {
-      cloudTestStatus.textContent = "Status: Ready";
-      cloudTestStatus.style.color = "var(--text-muted)";
-    }
-    whatsappSettingsModal.classList.add("active");
-  });
+    // Open Settings Modal
+    on("openWhatsAppSettingsBtn", "click", () => {
+      if (inputWa1) inputWa1.value = store.whatsappSettings.num1 || "0370-9589018";
+      if (inputWa2) inputWa2.value = store.whatsappSettings.num2 || "0342-1008375";
+      if (checkAutoOpen) checkAutoOpen.checked = store.whatsappSettings.autoOpen !== false;
+      const pinInput = document.getElementById("settingStaffPin");
+      if (pinInput) pinInput.value = store.staffPin || "1234";
+      if (inputCloudSyncUrl) {
+        inputCloudSyncUrl.value = cloudSync.config.url || "https://alsadiqmilkfreshdrinks-default-rtdb.europe-west1.firebasedatabase.app";
+      }
+      if (cloudTestStatus) {
+        cloudTestStatus.textContent = "Status: Ready";
+        cloudTestStatus.style.color = "var(--text-muted)";
+      }
+      if (whatsappSettingsModal) whatsappSettingsModal.classList.add("active");
+    });
 
-  document.getElementById("closeWhatsAppSettingsBtn").addEventListener("click", () => {
-    whatsappSettingsModal.classList.remove("active");
-  });
+    on("closeWhatsAppSettingsBtn", "click", () => {
+      whatsappSettingsModal?.classList.remove("active");
+    });
+    on("cancelWhatsAppSettingsBtn", "click", () => {
+      whatsappSettingsModal?.classList.remove("active");
+    });
 
-  document.getElementById("cancelWhatsAppSettingsBtn").addEventListener("click", () => {
-    whatsappSettingsModal.classList.remove("active");
-  });
-
-  // Test Cloud Connection Button
-  if (btnTestCloud) {
-    btnTestCloud.addEventListener("click", async () => {
+    // Test Cloud Connection Button
+    on("btnTestCloudSync", "click", async () => {
       if (cloudTestStatus) {
         cloudTestStatus.textContent = "Testing...";
         cloudTestStatus.style.color = "#0284c7";
@@ -3820,87 +3761,50 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     });
-  }
 
-  // Save Settings
-  document.getElementById("saveWhatsAppSettingsBtn").addEventListener("click", () => {
-    const num1Val = inputWa1.value.trim() || "0370-9589018";
-    const num2Val = inputWa2.value.trim() || "0342-1008375";
-    const autoVal = checkAutoOpen.checked;
+    // Save Settings
+    on("saveWhatsAppSettingsBtn", "click", () => {
+      const num1Val = inputWa1 ? inputWa1.value.trim() || "0370-9589018" : "0370-9589018";
+      const num2Val = inputWa2 ? inputWa2.value.trim() || "0342-1008375" : "0342-1008375";
+      const autoVal = checkAutoOpen ? checkAutoOpen.checked : true;
 
-    store.whatsappSettings = {
-      num1: num1Val,
-      num2: num2Val,
-      autoOpen: autoVal
-    };
-    store.saveWhatsAppSettings();
+      store.whatsappSettings = {
+        num1: num1Val,
+        num2: num2Val,
+        autoOpen: autoVal
+      };
+      store.saveWhatsAppSettings();
 
-    const pinInput = document.getElementById("settingStaffPin");
-    if (pinInput && pinInput.value.trim()) {
-      store.saveStaffPin(pinInput.value.trim());
-    }
-
-    if (inputCloudSyncUrl && inputCloudSyncUrl.value.trim()) {
-      cloudSync.saveConfig({ url: inputCloudSyncUrl.value.trim() });
-    }
-
-    showToast("Settings & Staff PIN saved successfully!", "success");
-    whatsappSettingsModal.classList.remove("active");
-  });
-
-  // Sticky Bottom Cart Bar Click Handlers
-  const stickyProceedBtn = document.getElementById("stickyProceedCheckoutBtn");
-  if (stickyProceedBtn) {
-    stickyProceedBtn.addEventListener("click", () => {
-      openCheckoutModal();
-    });
-  }
-
-  const stickySummaryBtn = document.getElementById("stickyCartSummaryBtn");
-  if (stickySummaryBtn) {
-    stickySummaryBtn.addEventListener("click", () => {
-      openCartDrawer();
-    });
-  }
-
-  // Cloud Status Pill click to open settings
-  const cloudPill = document.getElementById("cloudSyncStatusPill");
-  if (cloudPill) {
-    cloudPill.style.cursor = "pointer";
-    cloudPill.addEventListener("click", () => {
-      document.getElementById("openWhatsAppSettingsBtn").click();
-    });
-  }
-
-  // Radio button pill visual active toggle helper
-  document.addEventListener("change", (e) => {
-    if (e.target.type === "radio") {
-      const group = e.target.closest(".radio-pill-group");
-      if (group) {
-        group.querySelectorAll("label").forEach(l => l.classList.remove("active"));
-        const parentLabel = e.target.closest("label");
-        if (parentLabel) parentLabel.classList.add("active");
+      const pinInput = document.getElementById("settingStaffPin");
+      if (pinInput && pinInput.value.trim()) {
+        store.saveStaffPin(pinInput.value.trim());
       }
-    }
-  });
 
-  // Check URL hash for direct Staff App launch on mobile (#staff)
-  if (window.location.hash === "#staff" || localStorage.getItem("alsadiq_default_view") === "staff") {
-    store.isStaffAuthenticated = true;
-    btnCustomer.classList.remove("active");
-    btnStaff.classList.add("active");
-    customerView.classList.remove("active");
-    staffView.classList.add("active");
+      if (inputCloudSyncUrl && inputCloudSyncUrl.value.trim()) {
+        cloudSync.saveConfig({ url: inputCloudSyncUrl.value.trim() });
+      }
+
+      showToast("Settings & Staff PIN saved successfully!", "success");
+      whatsappSettingsModal?.classList.remove("active");
+    });
+
+    // Cloud Status Pill click to open settings
+    const cloudPill = document.getElementById("cloudSyncStatusPill");
+    if (cloudPill) {
+      cloudPill.style.cursor = "pointer";
+      cloudPill.addEventListener("click", () => {
+        const btn = document.getElementById("openWhatsAppSettingsBtn");
+        if (btn) btn.click();
+      });
+    }
+
+    // Initial staff renders
+    renderDailyRates();
+    renderStaffOrders();
+    renderMilkLedger();
+    renderSalesLedger();
   }
 
-  // Initial renders
-  renderDailyRates();
-  renderProducts();
-  renderCart();
-  renderStaffOrders();
-  renderMilkLedger();
-  renderSalesLedger();
-
-  // Start background Real-Time Cloud Synchronization
+  // Start background Real-Time Cloud Synchronization (Runs on BOTH customer & staff pages!)
   cloudSync.startPolling();
 });
