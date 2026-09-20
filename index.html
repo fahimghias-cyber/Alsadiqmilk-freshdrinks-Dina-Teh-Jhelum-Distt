@@ -1,827 +1,671 @@
 <!DOCTYPE html>
-<html lang="ur" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>اسپِ شفا | گھوڑوں کا دیسی علاج اور نیزہ بازی ویٹرنری گائیڈ</title>
-  <meta name="description" content="نیزہ بازی کے گھوڑوں کی عام بیماریوں، پٹھوں کے کھچاؤ، چوٹ، سوجن اور فٹنس کے لیے کچن کی قدرتی اشیاء سے مستند اور فوری دیسی ٹوٹکے مع لائیو اے آئی ویٹرنری ڈاکٹر۔">
-  <meta name="keywords" content="اسپ شفا, گھوڑوں کا دیسی علاج, نیزہ بازی گھوڑے, گھوڑوں کی بیماریاں, دیسی ٹوٹکے, ہلدی سرسوں لیپ, ویٹرنری ڈاکٹر, tent pegging horse care">
+  <title>Al Sadiq Milk & Fresh Drinks | الصادق ملک اینڈ فریش ڈرنکس - Pure Milk & Beverage Booking</title>
+  <meta name="description" content="Online booking and counter orders for Al Sadiq Dairy Farm & Fresh Drinks in Dina. 100% Pure Cow & Buffalo Milk, Dahi, Desi Ghee, Fresh Fruit Milkshakes, Protein Shakes, Mojitos, and Special Drinks.">
   
-  <!-- Open Graph -->
-  <meta property="og:title" content="اسپِ شفا: گھوڑوں کا دیسی علاج">
-  <meta property="og:description" content="نیزہ بازی کے گھوڑوں کی صحت، چوٹوں اور خوراک کے لیے مستند دیسی نسخہ جات اور لائیو اے آئی ڈاکٹر۔">
-  <meta property="og:image" content="assets/logo.jpg">
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/jpeg" href="assets/logo.jpg">
-
-  <!-- Styles -->
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Canvas Confetti & QR Code Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  
+  <!-- Custom Styles -->
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="theme-light" data-lang="en">
 
-  <!-- App Header -->
-  <header class="app-header">
-    <div class="header-inner">
-      <div class="brand-wrapper" data-nav-target="chat-tab">
-        <img src="assets/logo.jpg" alt="اسپِ شفا لوگو" class="brand-logo-img">
-        <div class="brand-titles">
-          <span class="brand-title">اسپِ شفا</span>
-          <span class="brand-tagline">نیزہ بازی و گھوڑوں کا دیسی شفا خانہ</span>
-          <span class="brand-farm-badge">🏛️ غیاث فارم ہاؤس | فہیم غیاث محمود</span>
-        </div>
+  <!-- Top Announcement Header -->
+  <header class="top-announcement">
+    <div class="container announcement-inner">
+      <div class="announcement-left">
+        <span class="live-dot-pulse"></span>
+        <span class="announcement-text" id="topStoreHours">
+          <i class="fa-solid fa-clock"></i> <strong>Open Today:</strong> 6:00 AM – 11:30 PM &nbsp;|&nbsp; 
+          <i class="fa-solid fa-location-dot"></i> GT Road, Dina (With Focus College)
+        </span>
       </div>
-
-      <!-- Desktop Nav Tabs -->
-      <nav class="nav-tabs" aria-label="مین نیویگیشن">
-        <button class="nav-tab-btn active" data-tab="chat-tab">
-          <span>💬 اے آئی ڈاکٹر</span>
-        </button>
-        <button class="nav-tab-btn" data-tab="remedies-tab">
-          <span>📚 دیسی نسخہ جات</span>
-        </button>
-        <button class="nav-tab-btn" data-tab="calculator-tab">
-          <span>🌾 خوراک، چارہ و ایکوائن فیول</span>
-        </button>
-        <button class="nav-tab-btn" data-tab="emergency-tab">
-          <span>🚑 ایمرجنسی گائیڈ</span>
-        </button>
-        <button class="nav-tab-btn" data-tab="herbs-tab">
-          <span>🌿 کچن اشیاء</span>
-        </button>
-      </nav>
-
-      <div class="header-actions">
-        <button class="btn-icon" id="settings-btn" title="سیٹنگز اور اے پی آئی کی" aria-label="سیٹنگز">
-          ⚙️
-        </button>
+      <div class="announcement-right">
+        <a href="tel:03709589018" class="contact-pill"><i class="fa-solid fa-phone"></i> 0370-9589018</a>
+        <a href="https://wa.me/923709589018" target="_blank" class="contact-pill whatsapp-pill"><i class="fa-brands fa-whatsapp"></i> 0370-9589018</a>
+        <a href="https://wa.me/923421008375" target="_blank" class="contact-pill whatsapp-pill"><i class="fa-brands fa-whatsapp"></i> 0342-1008375</a>
       </div>
     </div>
   </header>
 
-  <!-- Hero Section -->
-  <section class="hero-section">
-    <div class="hero-card">
-      <div class="hero-content">
-        <div class="hero-top-badges">
-          <div class="hero-badge">
-            <span>🐎 نیزہ بازی و اصطبل اسپیشل</span>
+  <!-- Main Navigation Bar -->
+  <nav class="main-navbar">
+    <div class="container nav-content">
+      <!-- Brand Logo -->
+      <div class="brand-wrapper" id="navBrand">
+        <img src="assets/alsadiq_logo.jpg" alt="Al Sadiq Milk & Fresh Drinks Logo" class="brand-logo-img">
+        <div class="brand-text">
+          <div class="brand-title">
+            <span class="brand-name">Al Sadiq</span>
+            <span class="brand-badge">EST. 2023</span>
           </div>
-          <div class="hero-farm-badge">
-            <span>👑 پیشکش و ڈیزائن: فہیم غیاث محمود (غیاث فارم ہاؤس)</span>
-          </div>
-        </div>
-        <h1 class="hero-title">
-          گھوڑوں کا <span>مستند دیسی علاج</span> و ویٹرنری رہنمائی
-        </h1>
-        <p class="hero-desc">
-          کچن میں موجود قدرتی اشیاء (ہلدی، سرسوں، اجوائن، گڑ، لہسن اور سونف) سے نیزہ بازی کے گھوڑوں کے پٹھوں کا کھچاؤ، چوٹ، موچ، ہاضمہ اور فٹنس کے فوری محفوظ نسخے۔
-        </p>
-        <div class="hero-stats">
-          <div class="stat-chip" data-nav-target="chat-tab" style="cursor: pointer;">
-            <span class="stat-icon">⚡</span>
-            <div class="stat-info">
-              <span class="stat-number">Groq لائیو AI ڈاکٹر</span>
-              <span class="stat-label">لائیو اے آئی ویٹ کنسلٹیشن</span>
-            </div>
-          </div>
-          <div class="stat-chip" data-nav-target="remedies-tab" style="cursor: pointer;">
-            <span class="stat-icon">📜</span>
-            <div class="stat-info">
-              <span class="stat-number">20+ نسخے</span>
-              <span class="stat-label">آزمودہ دیسی ٹوٹکے</span>
-            </div>
-          </div>
-          <div class="stat-chip" data-nav-target="calculator-tab" style="cursor: pointer;">
-            <span class="stat-icon">🌾</span>
-            <div class="stat-info">
-              <span class="stat-number">مکس راشن و فیول</span>
-              <span class="stat-label">خوراک، چارہ، اوقات و کیلشیم</span>
-            </div>
+          <div class="brand-subtitle">
+            <span class="en-sub">MILK & FRESH DRINKS</span>
+            <span class="ur-sub">الصادق ملک اینڈ فریش ڈرنکس</span>
           </div>
         </div>
+      </div>
+
+
+      <!-- Nav Actions -->
+      <div class="nav-actions">
+        <!-- Language Switcher -->
+        <button type="button" class="lang-toggle-btn" id="langToggleBtn" title="Switch Language">
+          <i class="fa-solid fa-globe"></i>
+          <span id="currentLangLabel">اردو</span>
+        </button>
+
+        <!-- Track My Order -->
+        <button type="button" class="action-btn track-btn" id="openTrackModalBtn">
+          <i class="fa-solid fa-magnifying-glass-location"></i>
+          <span class="btn-lbl-en">Track Order</span>
+          <span class="btn-lbl-ur">آرڈر ٹریک کریں</span>
+        </button>
+
+        <!-- Cart Button -->
+        <button type="button" class="cart-trigger-btn" id="openCartBtn" aria-label="View Cart">
+          <div class="cart-icon-wrap">
+            <i class="fa-solid fa-basket-shopping"></i>
+            <span class="cart-badge" id="cartCountBadge">0</span>
+          </div>
+          <div class="cart-btn-price">
+            <span class="cart-label">Rs.</span>
+            <span id="cartTotalPriceNav">0</span>
+          </div>
+        </button>
       </div>
     </div>
-  </section>
+  </nav>
 
-  <!-- Main Content Panels -->
-  <main class="main-container">
-
-    <!-- 1. AI VET DOCTOR CHAT PANEL -->
-    <div class="tab-panel active" id="chat-tab">
-      
-      <!-- Mobile Only Simple App Intro Banner (Simple Description & Easy To Use) -->
-      <div class="mobile-intro-banner">
-        <div class="mobile-intro-badge-row">
-          <span class="mobile-farm-pill">🏛️ غیاث فارم ہاؤس | فہیم غیاث محمود</span>
-          <span class="mobile-live-pill"><span class="live-dot"></span> لائیو AI ڈاکٹر</span>
+  <!-- ========================================================================= -->
+  <!-- 1. CUSTOMER VIEW SECTION -->
+  <!-- ========================================================================= -->
+  <main class="view-container active" id="customerView">
+    
+    <!-- Compact Top Rates & Quick Booking Header -->
+    <section class="compact-hero-bar">
+      <div class="container">
+        <div class="compact-hero-inner">
+          <div class="compact-hero-brand">
+            <div class="brand-badge-circle"><i class="fa-solid fa-cow"></i></div>
+            <div>
+              <h1 class="compact-hero-title">
+                <span class="en-heading">Al Sadiq Pure Dairy & Drinks</span>
+                <span class="ur-heading">الصادق ملک اینڈ فریش ڈرنکس • جی ٹی روڈ دینہ</span>
+              </h1>
+              <div class="compact-hero-meta">
+                <span><i class="fa-solid fa-circle-check text-green"></i> 100% Pure Farm Fresh</span>
+                <span><i class="fa-solid fa-location-dot"></i> GT Road, Dina</span>
+                <span><i class="fa-brands fa-whatsapp text-green"></i> 0370-9589018</span>
+              </div>
+            </div>
+          </div>
+          <div class="compact-quick-cta">
+            <a href="tel:03709589018" class="compact-call-btn"><i class="fa-solid fa-phone"></i> Call Order</a>
+            <a href="https://wa.me/923421008375" target="_blank" class="compact-wa-btn"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+          </div>
         </div>
-        <h2 class="mobile-intro-title">اسپِ شفا - ویٹرنری اے آئی ڈاکٹر</h2>
-        <p class="mobile-intro-desc">گھوڑے کی بیماری، موٹا کرنے کا نسخہ، راشن یا چوٹ کے بارے میں نیچے لکھیں یا مائیک دبائیں۔</p>
-      </div>
 
-      <div class="chat-layout">
+        <!-- Highlight Live Daily Rates Bar (Compact) -->
+        <div class="rates-strip-wrap">
+          <div class="rates-strip-label">
+            <i class="fa-solid fa-tag"></i> <strong>Live Rates (آج کے ریٹس):</strong>
+          </div>
+          <div class="rates-grid compact-rates-grid" id="dailyRatesGrid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Menu Section (Fast & Direct) -->
+    <section class="menu-section compact-menu-section" id="menuMainSection">
+      <div class="container">
         
-        <!-- Sidebar with Quick Prompts & Rules -->
-        <aside class="chat-sidebar">
-          <div class="sidebar-header-row">
-            <h3 class="sidebar-title">
-              <span>⚡ فوری سوالات و نسخے</span>
-            </h3>
-            <div class="prompts-lang-tabs" id="prompts-lang-tabs">
-              <button type="button" class="prompts-tab-btn active" data-tab-lang="pa">🐎 پنجابی</button>
-              <button type="button" class="prompts-tab-btn" data-tab-lang="ur">اردو</button>
-              <button type="button" class="prompts-tab-btn" data-tab-lang="en">English</button>
+        <!-- Category Navigation Tabs & Search -->
+        <div class="menu-controls-header">
+          <div class="category-tabs-scroll" id="categoryTabs">
+            <button type="button" class="cat-tab active" data-category="all">
+              <i class="fa-solid fa-border-all"></i>
+              <span class="en-text">All Items</span>
+              <span class="ur-text">تمام آئٹمز</span>
+            </button>
+            <button type="button" class="cat-tab" data-category="dairy">
+              <i class="fa-solid fa-cow"></i>
+              <span class="en-text">Pure Dairy & Milk</span>
+              <span class="ur-text">خالص دودھ و ڈیری</span>
+            </button>
+            <button type="button" class="cat-tab" data-category="milkshakes">
+              <i class="fa-solid fa-blender"></i>
+              <span class="en-text">Milk Shakes</span>
+              <span class="ur-text">ملک شیکس</span>
+            </button>
+            <button type="button" class="cat-tab" data-category="protein">
+              <i class="fa-solid fa-dumbbell"></i>
+              <span class="en-text">Protein & Energy Shakes</span>
+              <span class="ur-text">پروٹین شیکس</span>
+            </button>
+            <button type="button" class="cat-tab" data-category="mojitos">
+              <i class="fa-solid fa-champagne-glasses"></i>
+              <span class="en-text">Mojitos & Fresh Juices</span>
+              <span class="ur-text">موجیتوز و جوسز</span>
+            </button>
+            <button type="button" class="cat-tab" data-category="specials">
+              <i class="fa-solid fa-star"></i>
+              <span class="en-text">Special Drinks</span>
+              <span class="ur-text">اسپیشل مشروبات</span>
+            </button>
+          </div>
+
+          <!-- Search & Filter Row -->
+          <div class="search-filter-row">
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="menuSearchInput" placeholder="Search milk, shakes, mojitos... / تلاش کریں" autocomplete="off">
+              <button type="button" class="search-clear-btn" id="searchClearBtn" style="display:none;"><i class="fa-solid fa-xmark"></i></button>
             </div>
-          </div>
-
-          <!-- Punjabi Prompts Grid (Default Active for Easy Access) -->
-          <div class="quick-prompts-grid" id="prompts-grid-pa">
-            <button class="quick-prompt-btn" data-prompt="گھوڑے نوں موٹا تے تگڑا کرن دا شاہی نسخہ، ڈی ورمنگ دا طریقہ، دیسی ونڈا تے خوراک دسو۔">
-              <span>🐎 گھوڑے نوں موٹا تے تگڑا کرن دا نسخہ</span>
-            </button>
-            <button class="quick-prompt-btn" data-prompt="نیزہ بازی توں بعد گھوڑے دے پٹھے کھچے گئے نے، لتاں چ کھچ اے تے گھوڑا چُھ گیا اے، فوری دیسی لیپ دسو۔">
-              <span>🏇 نیزہ بازی توں بعد پٹھیاں دا کھچاؤ (چُھ جانا)</span>
-            </button>
-            <button class="quick-prompt-btn" data-prompt="گھوڑے دے پیٹ چ ول پے گئے نے، مروڑ تے افارہ اے، زمین تے لتاں ماردا اے، فوری دیسی کاڑھا دسو۔">
-              <span>🩺 پیٹ چ ول، مروڑ تے افارہ دا فوری کاڑھا</span>
-            </button>
-            <button class="quick-prompt-btn" data-prompt="گھوڑے دے کھر پات گئے نے، کٹ گئے نے یا سڑاند اے، پیر نئیں لاندا، دیسی تیل تے ہوف کیئر دسو۔">
-              <span>🩹 کھر پاتن، چٹخن تے لتاں دی موچ دا علاج</span>
-            </button>
-            <button class="quick-prompt-btn" data-prompt="گھوڑے نوں نال (ڈرینچنگ بوتل) لان تے دیسی کاڑھا یا دوائی پیاؤن دا محفوظ طریقہ دسو۔">
-              <span>🥣 نال (ڈرینچنگ) لان تے دوائی پیاؤن دا طریقہ</span>
-            </button>
-            <button class="quick-prompt-btn" data-prompt="نیزہ بازی لئی گھوڑے دا شاہی مقوی ونڈا، جَو دا دلیہ، چھولے، گھیو تے گُڑ دا روزانہ حساب دسو۔">
-              <span>🌾 نیزہ بازی لئی شاہی ونڈا تے خوراک</span>
-            </button>
-            <button class="quick-prompt-btn" data-prompt="گھوڑے نوں کھنگ لگی اے، دم چڑدا اے تے سینے چوں خرخراہٹ آندی اے، دیسی علاج دسو۔">
-              <span>🫁 کھنگ، دم چڑن تے سینے دی خرخراہٹ</span>
-            </button>
-            <button class="quick-prompt-btn" data-prompt="گھوڑے دی بیماری چ دیسی نسخیاں دے نال نال میڈیکل انگلش دوائیاں (جیسے کولک لئی بینامائن، السر لئی اومیپرازول) دا کی کردار اے؟">
-              <span>💊 میڈیکل ویٹرنری دوائیاں تے دیسی علاج دا ملاپ</span>
-            </button>
-            <button class="quick-prompt-btn" data-prompt="ایکوائن فیول بلیو فیول (Blue Fuel Calcium) تے الیکٹرو فیول دے کی فائدے نے تے کداں استعمال کرائی دا اے؟">
-              <span>💎 ایکوائن فیول یو ایس اے سپلیمنٹس گائیڈ</span>
-            </button>
-            <button class="quick-prompt-btn" data-prompt="گرمی چ گھوڑے دی تریہہ، پانی دا صحیح ٹائم تے دیسی نمکیات/الیکٹرولائٹ شربت کیویں بنائی دا اے؟">
-              <span>💧 پانی، تریہہ تے دیسی الیکٹرولائٹ شربت</span>
-            </button>
-          </div>
-
-          <!-- Urdu Prompts Grid -->
-          <div class="quick-prompts-grid hidden" id="prompts-grid-ur">
-            <button class="quick-prompt-btn" data-prompt="گھوڑے کو موٹا، فربہ اور تندرست کرنے کا مستند نسخہ، روزمرہ کا راشن اور ڈی ورمنگ کا طریقہ بتائیں۔">
-              <span>🐎 گھوڑے کو موٹا و فربہ کرنے کا نسخہ</span>
-            </button>
-            <button class="quick-prompt-btn" data-prompt="نیزہ بازی کے بعد گھوڑے کے پٹھوں میں شدید کچھاؤ اور تھکاوٹ ہے، کچن کی اشیاء سے فوری دیسی علاج بتائیں۔">
-              <span>🏇 نیزہ بازی کے بعد پٹھوں کا کھچاؤ</span>
-            </button>
-            <button class="quick-prompt-btn" data-prompt="گھوڑے کے پچھلے جوڑ اور کھر کے اوپر موچ اور سوجن آ گئی ہے، فوری لیپ بتائیں۔">
-              <span>🩹 ٹانگ یا جوڑ کی موچ و سوجن</span>
-            </button>
-            <button class="quick-prompt-btn" data-prompt="گھوڑا پیٹ کے بل بار بار دیکھ رہا ہے اور ہلکا درد معلوم ہو رہا ہے، کچن سے فوری ہاضم کاڑھا بتائیں۔">
-              <span>🩺 پیٹ کا درد، گیس اور اپھارہ</span>
-            </button>
-            <button class="quick-prompt-btn" data-prompt="نیزہ بازی مقابلے کے سیزن میں گھوڑے کے اسٹیمنا اور دم کو بڑھانے کے لیے شاہی ونڈے کا دیسی نسخہ بتائیں۔">
-              <span>🌾 نیزہ بازی مقوی ونڈا و اسٹیمنا</span>
-            </button>
-            <button class="quick-prompt-btn" data-prompt="گھوڑے کو زین کی رگڑ یا کھرچ کا زخم لگ گیا ہے، کچن کا اینٹی سیپٹک مرہم بتائیں۔">
-              <span>🌿 سطحی زخم اور کھرچ کا مرہم</span>
-            </button>
-            <button class="quick-prompt-btn" data-prompt="گھوڑے کا دوڑتے وقت سانس پھول جاتا ہے اور گلے میں خرخراہٹ ہے، السی اور گڑ کا نسخہ بتائیں۔">
-              <span>🫁 سانس کی نالی اور پھیپھڑوں کا دم</span>
-            </button>
-            <button class="quick-prompt-btn" data-prompt="کھروں میں خشکی اور چٹخنے کا دیسی تیل اور پالش بنانے کا طریقہ بتائیں۔">
-              <span>🐎 کھروں کی سختی اور چمک کا تیل</span>
-            </button>
-            <button class="quick-prompt-btn" data-prompt="گھوڑے کو امریکن ایکوائن فیول بلیو فیول (Blue Fuel Calcium) دینے کے کیا فوائد ہیں اور راشن میں کتنی مقدار شامل کریں؟">
-              <span>💎 ایکوائن فیول بلیو فیول و کیلشیم</span>
-            </button>
-            <button class="quick-prompt-btn" data-prompt="ہنگامی حالت (کولک، شدید بخار یا لیمینائٹس) میں دیسی علاج کے ساتھ ضروری میڈیکل ویٹرنری ادویات کی رہنمائی کریں۔">
-              <span>💊 ایمرجنسی میڈیکل ویٹرنری گائیڈ</span>
-            </button>
-          </div>
-
-          <!-- English Prompts Grid -->
-          <div class="quick-prompts-grid hidden" id="prompts-grid-en">
-            <button class="quick-prompt-btn" data-prompt="How to safely fatten up a thin horse? Provide a step-by-step weight gain diet with deworming, barley mash, and supplements.">
-              <span>🐎 Horse Weight Gain & Muscle Formula</span>
-            </button>
-            <button class="quick-prompt-btn" data-prompt="My horse has severe muscle stiffness (tie-up/azoturia) after tent pegging sprint. Suggest natural poultice and veterinary protocol.">
-              <span>🏇 Post-Event Muscle Cramps & Tie-Up</span>
-            </button>
-            <button class="quick-prompt-btn" data-prompt="Emergency colic relief protocol: natural herbal drench and modern veterinary emergency steps (Flunixin/Banamine).">
-              <span>🩺 Colic Spasm Relief & Vet Advice</span>
-            </button>
-            <button class="quick-prompt-btn" data-prompt="Cracked hooves and thrush management: natural antiseptic oil and Hoof Fuel biotin supplement.">
-              <span>🩹 Hoof Cracks, Thrush & Polish</span>
-            </button>
-            <button class="quick-prompt-btn" data-prompt="What are the proven benefits of Equine Fuel USA products (Blue Fuel, Electro Fuel, Calm Fuel)?">
-              <span>💎 Equine Fuel USA Supplements</span>
-            </button>
-            <button class="quick-prompt-btn" data-prompt="How to combine traditional herbal remedies with modern equine veterinary medicine safely?">
-              <span>💊 Integrative Herbal & Modern Vet Care</span>
-            </button>
-          </div>
-
-          <div class="doc-rules-box">
-            <strong>📋 ویٹرنری ڈاکٹر دے اصول:</strong>
-            <p>ہر نسخے چ قدرتی دیسی اجزاء، تیاری دا طریقہ، میڈیکل سائنسی افادیت تے نیزہ بازی لئی ضروری احتیاط شامل اے۔</p>
-          </div>
-        </aside>
-
-        <!-- Chat Window -->
-        <div class="chat-window">
-          <!-- Chat Header -->
-          <div class="chat-header">
-            <div class="chat-doctor-profile">
-              <div class="doc-avatar-wrap">
-                <img src="assets/logo.jpg" alt="ڈاکٹر اوتار" class="doc-avatar">
-                <span class="online-indicator" title="لائیو دستیاب"></span>
-              </div>
-              <div class="doc-meta">
-                <h4>اسپِ شفا اے آئی ڈاکٹر</h4>
-                <p>ماہر امراض، خوراک و دیسی علاج (پنجابی / اردو / English)</p>
-              </div>
+            <div class="quick-filter-pills">
+              <button type="button" class="pill-filter active" data-filter="all">All</button>
+              <button type="button" class="pill-filter" data-filter="popular">⭐ Popular</button>
+              <button type="button" class="pill-filter" data-filter="fitness">💪 Gym / Fitness</button>
+              <button type="button" class="pill-filter" data-filter="chilled">🧊 Chilled Mojitos</button>
             </div>
-
-            <div class="chat-tools">
-              <!-- Multilingual Language Selector -->
-              <div class="lang-selector-pills" id="chat-lang-selector" title="زبان منتخب کریں (Select Language)">
-                <span class="lang-pill-icon">🗣️</span>
-                <button type="button" class="lang-pill-btn active" data-lang="auto" title="خودکار زبان کی شناخت (Auto Detect)">خودکار</button>
-                <button type="button" class="lang-pill-btn" data-lang="pa" title="پنجابی وچ جواب">پنجابی</button>
-                <button type="button" class="lang-pill-btn" data-lang="ur" title="سلیس اردو میں جواب">اردو</button>
-                <button type="button" class="lang-pill-btn" data-lang="en" title="English Veterinary Response">EN</button>
-              </div>
-
-              <button class="chat-tool-btn" id="clear-chat-btn" title="گفتگو صاف کریں">
-                <span>🗑️ چیٹ صاف کریں</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Messages Container -->
-          <div class="chat-messages" id="chat-messages">
-            <div class="message-row bot">
-              <img src="assets/logo.jpg" alt="ڈاکٹر" class="msg-avatar">
-              <div class="msg-bubble">
-                <p><strong>السلام علیکم و رحمتہ اللہ!</strong></p>
-                <p>میں <strong>اسپِ شفا</strong> کا اے آئی ویٹرنری ڈاکٹر ہوں — <strong>فہیم غیاث محمود (غیاث فارم ہاؤس - Ghias Farm House)</strong> کی خصوصی پیشکش۔ نیزہ بازی اور گھوڑوں کی صحت، بیماریوں، پٹھوں کے کھچاؤ، چوٹ، سوجن، متوازن خوراک، چارہ جات، اوقاتِ راشن، پانی، یا امریکن ایکوائن فیول اور دیسی نسخوں کے متعلق اپنا سوال پوچھیں، میں فوری قدم بہ قدم رہنمائی فراہم کروں گا۔</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Input Form -->
-          <div class="chat-input-container">
-            <!-- Image Attachment Preview Bar -->
-            <div id="image-preview-bar" class="image-preview-bar hidden">
-              <div class="preview-thumb-wrap">
-                <img id="image-preview-img" src="" alt="پیشگی تصویر">
-                <span class="preview-badge">📷 تصویر منسلک</span>
-              </div>
-              <div class="preview-info">
-                <span id="preview-filename">horse_photo.jpg</span>
-                <small>ویٹرنری معائنہ و دیسی علاج کے لیے تیار</small>
-              </div>
-              <button type="button" id="remove-image-btn" class="btn-remove-preview" title="تصویر ہٹائیں">✕</button>
-            </div>
-
-            <!-- Voice Recording Notice -->
-            <div id="voice-recording-notice" class="voice-recording-notice hidden">
-              <div class="recording-indicator-left">
-                <span class="recording-dot"></span>
-                <span class="recording-text">🔴 لائیو وائس ریکارڈنگ جاری ہے... بولتے رہیں (مکمل ہونے پر روکیں دبائیں)</span>
-              </div>
-              <button type="button" id="stop-voice-btn" class="btn-stop-voice" title="ریکارڈنگ روکیں">
-                روکیں ⏹️
-              </button>
-            </div>
-
-            <!-- Hidden File and Camera Inputs -->
-            <input type="file" id="image-upload-input" accept="image/*,video/*" style="display: none;">
-
-            <form class="chat-input-form" id="chat-form">
-              <textarea 
-                class="chat-textarea" 
-                id="chat-input" 
-                rows="1" 
-                placeholder="اپنے گھوڑے کا مسئلہ لکھیں، یا 🎤 مائیک اور 📷 تصویر سے پوچھیں..." 
-                required></textarea>
-              
-              <div class="input-actions">
-                <button type="button" class="btn-camera" id="camera-btn" title="گھوڑے کی بیماری، چوٹ یا کھر کی تصویر/ویڈیو بھیجیں">
-                  📷
-                </button>
-                <button type="button" class="btn-voice" id="voice-btn" title="پنجابی یا اردو میں بولیں (وائس ڈکٹیشن)">
-                  🎤
-                </button>
-                <button type="submit" class="btn-send" id="send-btn" title="مشورہ لیں">
-                  <span>مشورہ لیں</span> 🚀
-                </button>
-              </div>
-            </form>
           </div>
         </div>
 
-      </div>
-    </div>
-
-    <!-- 2. REMEDIES LIBRARY PANEL -->
-    <div class="tab-panel" id="remedies-tab">
-      <div class="section-header-wrap">
-        <div>
-          <h2 class="section-title">📚 مستند دیسی نسخہ جات انسائیکلوپیڈیا</h2>
-          <p class="section-subtitle">روایتی اصطبل و جدید ویٹرنری حکمت پر مبنی آزمودہ دیسی ٹوٹکے</p>
-        </div>
-      </div>
-
-      <div class="library-controls">
-        <div class="search-bar-wrap">
-          <span class="search-icon">🔍</span>
-          <input 
-            type="text" 
-            id="remedies-search" 
-            class="search-input" 
-            placeholder="بیماری، علامت یا جزو کا نام لکھیں (مثلاً: ہلدی، موچ، گیس، السی، کھر، ونڈا)...">
+        <!-- Menu Product Cards Grid -->
+        <div class="menu-products-container" id="menuProductsGrid">
+          <!-- Dynamically populated products -->
         </div>
 
-        <div class="category-filter-chips">
-          <button class="cat-filter-btn active" data-category="all">تمام نسخے</button>
-          <button class="cat-filter-btn" data-category="injury">🩹 چوٹ و موچ</button>
-          <button class="cat-filter-btn" data-category="digestion">🫕 ہاضمہ و پیٹ درد</button>
-          <button class="cat-filter-btn" data-category="fitness">🏇 نیزہ بازی طاقت و دم</button>
-          <button class="cat-filter-btn" data-category="hoof">🐎 کھر و ہڈیاں</button>
-          <button class="cat-filter-btn" data-category="respiratory">🫁 سانس و کھانسی</button>
-          <button class="cat-filter-btn" data-category="wounds">🌿 زخم و جلدی امراض</button>
-        </div>
       </div>
+    </section>
 
-      <div class="remedies-grid" id="remedies-grid">
-        <!-- Injected via JavaScript -->
-      </div>
-    </div>
-
-    <!-- 3. FEED, FORAGE & EQUINE FUEL CENTER -->
-    <div class="tab-panel" id="calculator-tab">
-      <div class="section-header-wrap">
-        <div>
-          <h2 class="section-title">🌾 گھوڑوں کی خوراک، چارہ جات و ایکوائن فیول سینٹر</h2>
-          <p class="section-subtitle">روزمرہ مکس راشن، فیڈنگ ٹائم ٹیبل، پانی کی ضرورت، چارہ جات کی تحقیق اور امریکن ایکوائن فیول سپلیمنٹس</p>
-        </div>
-      </div>
-
-      <!-- Sub-Tabs Bar -->
-      <div class="nutrition-sub-tabs" role="tablist" aria-label="خوراک کے ذیلی شعبے">
-        <button class="sub-tab-btn active" data-subtab="calc-subpanel">
-          <span>🧮 راشن و پانی کیلکولیٹر</span>
-        </button>
-        <button class="sub-tab-btn" data-subtab="efuel-subpanel">
-          <span>⚡ ایکوائن فیول USA (کیلشیم)</span>
-        </button>
-        <button class="sub-tab-btn" data-subtab="mixes-subpanel">
-          <span>🍲 روزمرہ مکس راشن</span>
-        </button>
-        <button class="sub-tab-btn" data-subtab="fodder-subpanel">
-          <span>🌿 چارہ جات ڈائریکٹری</span>
-        </button>
-        <button class="sub-tab-btn" data-subtab="benefits-subpanel">
-          <span>🌾 اجزاء اور طبی فوائد</span>
-        </button>
-        <button class="sub-tab-btn" data-subtab="schedule-subpanel">
-          <span>⏰ اوقات و ٹائم ٹیبل</span>
-        </button>
-        <button class="sub-tab-btn" data-subtab="hydration-subpanel">
-          <span>💧 پانی اور ہائیڈریشن</span>
-        </button>
-      </div>
-
-      <!-- 3.1 CALCULATOR SUB-PANEL -->
-      <div class="nutrition-sub-panel active" id="calc-subpanel">
-        <div class="calc-layout">
-          <!-- Calculator Inputs -->
-          <div class="calc-card">
-            <h3 style="color: var(--gold-400); margin-bottom: 1.25rem;">⚙️ گھوڑے کی تفصیلات درج کریں</h3>
-            
-            <div class="form-group">
-              <label class="form-label" for="horse-weight">گھوڑے کا وزن / جسامت کا زمرہ:</label>
-              <select id="horse-weight" class="form-select">
-                <option value="light">ہلکا / نوجوان گھوڑا (350 تا 400 کلوگرام)</option>
-                <option value="medium" selected>درمیانہ نیزہ بازی گھوڑا (400 تا 480 کلوگرام)</option>
-                <option value="heavy">بھاری / لمبا قد گھوڑا (480 تا 550+ کلوگرام)</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="work-intensity">مشق و ٹریننگ کا مرحلہ:</label>
-              <select id="work-intensity" class="form-select">
-                <option value="rest">آرام / ہلکی واک (Rest & Light Routine)</option>
-                <option value="training" selected>روٹین ٹریننگ و مشق (Daily Tent-Pegging Practice)</option>
-                <option value="tournament">مقابلہ / ٹورنامنٹ کا ہفتہ (Match & Peak Performance)</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="current-season">موجودہ موسم:</label>
-              <select id="current-season" class="form-select">
-                <option value="winter" selected>موسمِ سرما (سردیاں - گرم تاثیر راشن مطلوب)</option>
-                <option value="summer">موسمِ گرما (گرمیاں - ٹھنڈی تاثیر راشن مطلوب)</option>
-              </select>
-            </div>
-
-            <!-- Dynamic Water Intake Badge -->
-            <div style="background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: var(--radius-md); padding: 1rem; margin-top: 1.25rem;">
-              <div style="display: flex; align-items: center; justify-content: space-between;">
-                <span style="color: #7dd3fc; font-weight: 600;">💧 متوقع یومیہ پانی کی ضرورت:</span>
-                <span id="calculated-water-liters" style="font-family: var(--font-latin); font-weight: 800; color: #38bdf8; font-size: 1.2rem;">35 تا 45 لیٹر</span>
+    <!-- Shop Information & Location Section -->
+    <section class="shop-info-section">
+      <div class="container">
+        <div class="shop-info-card">
+          <div class="shop-info-text">
+            <div class="badge-pill"><i class="fa-solid fa-location-dot"></i> GT Road, Dina</div>
+            <h2>
+              <span class="en-text">Visit Al Sadiq Milk & Fresh Drinks</span>
+              <span class="ur-text">الصادق ملک اینڈ فریش ڈرنکس تشریف لائیں</span>
+            </h2>
+            <p>
+              <span class="en-text">Conveniently located on GT Road, Dina (With Focus College). Experience pure, bacteria-free dairy fresh from farm and enjoy fresh, refreshing fruit shakes and signature mojitos prepared on the spot!</span>
+              <span class="ur-text">جی ٹی روڈ، دینہ (فوکس کالج کے ساتھ)۔ خالص، بیکٹیریا سے پاک دودھ اور تازہ پھلوں کے لذیذ شیکس اور خاص موجیتوز کے لیے تشریف لائیں۔</span>
+            </p>
+            <div class="contact-details-grid">
+              <div class="contact-item">
+                <i class="fa-solid fa-clock"></i>
+                <div>
+                  <strong>Daily Timings</strong>
+                  <span>6:00 AM – 11:30 PM (7 Days a week)</span>
+                </div>
               </div>
-              <small style="color: var(--text-muted); display: block; margin-top: 0.35rem;">پانی ہمیشہ تازہ اور صاف ہونا چاہیے؛ دوڑ کے بعد نیم گرم دیں۔</small>
-            </div>
-
-            <div style="background: rgba(212, 175, 55, 0.08); border-right: 3px solid var(--gold-500); padding: 0.85rem; border-radius: var(--radius-sm); font-size: 0.85rem; color: var(--text-secondary); margin-top: 1.25rem;">
-              💡 <strong>ویٹرنری اصول:</strong> راشن میں خشک چارے (Roughage) کا تناسب کم از کم 60% اور دانے (Grain) کا تناسب زیادہ سے زیادہ 40% ہونا چاہیے تاکہ قولنج سے بچاؤ رہے۔
+              <div class="contact-item">
+                <i class="fa-solid fa-phone"></i>
+                <div>
+                  <strong>Phone Booking</strong>
+                  <span>0370-9589018 | 0342-1008375</span>
+                </div>
+              </div>
+              <div class="contact-item">
+                <i class="fa-brands fa-whatsapp"></i>
+                <div>
+                  <strong>WhatsApp Orders</strong>
+                  <span>0370-9589018 | 0342-1008375</span>
+                </div>
+              </div>
+              <div class="contact-item">
+                <i class="fa-solid fa-truck"></i>
+                <div>
+                  <strong>Home Delivery</strong>
+                  <span>Fast delivery across Dina area</span>
+                </div>
+              </div>
             </div>
           </div>
-
-          <!-- Calculated Results -->
-          <div class="feed-results-card">
-            <div class="feed-plan-header">
-              <h3 class="feed-plan-title">📊 تجویز کردہ یومیہ دیسی ونڈا و چارہ</h3>
-              <span class="pres-badge">مستند راشن</span>
-            </div>
-
-            <div class="feed-items-list">
-              <div class="feed-item-row">
-                <span class="feed-item-name">🫘 دیسی چنے (رات بھر بھگو کر):</span>
-                <span class="feed-item-qty" id="feed-chana-qty">2.0 کلوگرام</span>
-              </div>
-              <div class="feed-item-row">
-                <span class="feed-item-name">🌾 جَو کا دلیہ (پکا ہوا):</span>
-                <span class="feed-item-qty" id="feed-barley-qty">1.0 کلوگرام</span>
-              </div>
-              <div class="feed-item-row">
-                <span class="feed-item-name">🍞 گندم کا چوکر (نم کر کے):</span>
-                <span class="feed-item-qty" id="feed-bran-qty">1.0 کلوگرام</span>
-              </div>
-              <div class="feed-item-row">
-                <span class="feed-item-name">🟫 پرانا دیسی گڑ:</span>
-                <span class="feed-item-qty" id="feed-gur-qty">300 گرام</span>
-              </div>
-              <div class="feed-item-row">
-                <span class="feed-item-name">🧈 خالص دیسی گھی / السی تیل:</span>
-                <span class="feed-item-qty" id="feed-ghee-qty">120 گرام</span>
-              </div>
-              <div class="feed-item-row">
-                <span class="feed-item-name">💎 ایکوائن فیول بلیو فیول (کیلشیم):</span>
-                <span class="feed-item-qty" id="feed-bluefuel-qty">40 گرام</span>
-              </div>
-              <div class="feed-item-row">
-                <span class="feed-item-name">🌿 خشک گھاس / روڈس گراس ہے:</span>
-                <span class="feed-item-qty" id="feed-hay-qty">8.0 کلوگرام</span>
-              </div>
-              <div class="feed-item-row">
-                <span class="feed-item-name">🌱 تازہ سبز چارہ (لوسرن / برسیم):</span>
-                <span class="feed-item-qty" id="feed-green-qty">15.0 کلوگرام</span>
+          <div class="shop-info-visual">
+            <div class="farm-tag-box" style="padding:1.5rem; text-align:center;">
+              <img src="assets/alsadiq_logo.jpg" alt="Al Sadiq Logo" style="width:100px; height:100px; border-radius:50%; margin:0 auto 0.75rem auto; border:3px solid var(--brand-gold); box-shadow:var(--shadow-md);">
+              <h3>AL SADIQ DAIRY FARM</h3>
+              <p>EST. 2023 • QUALITY ASSURED</p>
+              <div class="pure-quote">
+                "Pure Milk, Refreshing Life! - خالص دودھ، تازہ دم زندگی!"
               </div>
             </div>
-
-            <div class="match-day-drink-box">
-              <strong>🥤 مقابلے کے دن کا خصوصی دیسی انرجی ٹونک:</strong>
-              <p>نیزہ بازی کے رن سے 1.5 گھنٹہ قبل 100 گرام پرانا گڑ، 5 گرام کالا نمک اور 1 چمچ تخم ملنگا 4 لیٹر تازہ پانی میں گھول کر پلائیں۔ رن کے بعد جب سانس بحال ہو جائے تو ہلکا نیم گرم پانی پلائیں۔</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 3.2 EQUINE FUEL USA SUB-PANEL -->
-      <div class="nutrition-sub-panel" id="efuel-subpanel">
-        <div class="efuel-hero-banner">
-          <div class="efuel-banner-badge">🇺🇸 Made in USA | Premium Equine Growth & Wellness</div>
-          <h3 class="efuel-banner-title">ایکوائن فیول (Equine Fuel USA) - پریمیم ہارس سپلیمنٹس و کیلشیم</h3>
-          <p class="efuel-banner-desc">
-            امریکہ کے سائنسی فارمولے پر تیار کردہ مستند ایکوائن سپلیمنٹس جو گھوڑوں اور بچھڑوں کی تیز رفتار گروتھ، فولادی ہڈیوں، پٹھوں کی طاقت اور نیزہ بازی کی اعلیٰ پرفارمنس کے لیے دنیا بھر میں مانے جاتے ہیں۔ گھڑ سواروں کا آزمودہ اور بے مثال نتائج کا حامل فارمولا۔
-          </p>
-          <div class="efuel-banner-actions">
-            <a href="https://www.youtube.com/@Equine-fuel/videos" target="_blank" rel="noopener" class="btn-efuel-youtube">
-              <span>▶️ یوٹیوب ویڈیوز و ٹرانسفارمیشن دیکھیں</span>
-            </a>
-            <a href="https://www.equinefuelusa.com" target="_blank" rel="noopener" class="btn-efuel-web">
-              <span>🌐 وزٹ آفیشل ویب سائٹ (equinefuelusa.com)</span>
+          <div class="footer-staff-access" style="text-align:center; padding: 1.5rem 0 0.5rem 0; border-top: 1px solid var(--border-color); margin-top: 2rem;">
+            <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:0.4rem;">© 2023 - 2026 Al Sadiq Milk & Fresh Drinks • GT Road, Dina (With Focus College)</p>
+            <a href="staff.html" class="staff-portal-link" style="color:var(--text-muted); font-size:0.75rem; text-decoration:none; opacity:0.6; transition:opacity 0.2s;" title="Authorized Staff Access Only">
+              <i class="fa-solid fa-lock"></i> Staff Portal
             </a>
           </div>
         </div>
-
-        <div class="efuel-grid" id="efuel-products-container">
-          <!-- Injected via feed-data.js & app.js -->
-        </div>
       </div>
-
-      <!-- 3.3 DAILY FEED MIX RECIPES SUB-PANEL -->
-      <div class="nutrition-sub-panel" id="mixes-subpanel">
-        <div style="margin-bottom: 1.5rem;">
-          <h3 style="color: var(--gold-400); font-size: 1.4rem; margin-bottom: 0.35rem;">🍲 آزمودہ روزمرہ مکس راشن فارمولے</h3>
-          <p style="color: var(--text-muted); font-size: 0.95rem;">نیزہ بازی ٹورنامنٹ، روزانہ مشق، کمزور گھوڑے کا وزن بڑھانے، اور گرمی و سردی کے لیے الگ الگ متوازن دیسی ترکیبیں</p>
-        </div>
-        <div class="mix-grid" id="feed-mixes-container">
-          <!-- Injected via feed-data.js & app.js -->
-        </div>
-      </div>
-
-      <!-- 3.4 FODDER & ROUGHAGE ENCYCLOPEDIA SUB-PANEL -->
-      <div class="nutrition-sub-panel" id="fodder-subpanel">
-        <div class="fodder-controls">
-          <div>
-            <h3 style="color: var(--gold-400); font-size: 1.4rem; margin-bottom: 0.35rem;">🌿 چارہ جات انسائیکلوپیڈیا و ریسرچ گائیڈ</h3>
-            <p style="color: var(--text-muted); font-size: 0.95rem;">سبز چارے اور خشک گھاس کی غذائی اقدار، کلوگرام مقدار، کٹائی کا وقت اور احتیاطی تدابیر</p>
-          </div>
-          <div class="search-bar-wrap">
-            <span class="search-icon">🔍</span>
-            <input 
-              type="text" 
-              id="fodder-search-input" 
-              class="search-input" 
-              placeholder="چارے کا نام تلاش کریں (مثلاً: لوسرن، الفالفا، روڈس گراس، برسیم، جئی، توڑی)...">
-          </div>
-          <div class="category-filter-chips" id="fodder-filter-chips">
-            <button class="cat-filter-btn active" data-fodder-filter="all">تمام چارہ جات</button>
-            <button class="cat-filter-btn" data-fodder-filter="green">🌱 سبز چارے</button>
-            <button class="cat-filter-btn" data-fodder-filter="dry">🌾 خشک گھاس و ہے (Hay)</button>
-            <button class="cat-filter-btn" data-fodder-filter="warning">⚠️ احتیاطی انتباہ</button>
-          </div>
-        </div>
-
-        <div class="fodder-grid" id="fodder-grid-container">
-          <!-- Injected via feed-data.js & app.js -->
-        </div>
-      </div>
-
-      <!-- 3.5 FEED INGREDIENTS & BENEFITS SUB-PANEL -->
-      <div class="nutrition-sub-panel" id="benefits-subpanel">
-        <div class="fodder-controls">
-          <div>
-            <h3 style="color: var(--gold-400); font-size: 1.4rem; margin-bottom: 0.35rem;">🌾 کون سی خوراک کون سا فائدہ دے گی؟</h3>
-            <p style="color: var(--text-muted); font-size: 0.95rem;">ہر اناج، دال، تیل اور سپلیمنٹ کی افادیت، مسلز، سانس اور کھروں پر اس کے اثرات اور طریقہ استعمال</p>
-          </div>
-          <div class="search-bar-wrap">
-            <span class="search-icon">🔍</span>
-            <input 
-              type="text" 
-              id="ingredients-search-input" 
-              class="search-input" 
-              placeholder="خوراک کا نام تلاش کریں (مثلاً: چنے، جَو، گڑ، گھی، السی، کالا نمک، میتھی)...">
-          </div>
-        </div>
-
-        <div class="ingredients-benefits-grid" id="ingredients-grid-container">
-          <!-- Injected via feed-data.js & app.js -->
-        </div>
-      </div>
-
-      <!-- 3.6 DAILY FEEDING SCHEDULE & TIMELINE SUB-PANEL -->
-      <div class="nutrition-sub-panel" id="schedule-subpanel">
-        <div style="background: rgba(10, 45, 33, 0.7); border: 1px solid var(--border-glass); border-radius: var(--radius-xl); padding: 1.75rem; margin-bottom: 2rem;">
-          <h3 style="color: var(--gold-400); font-size: 1.4rem; margin-bottom: 0.75rem;">⏰ 24 گھنٹے کا گھڑ سوار فیڈنگ ٹائم ٹیبل</h3>
-          <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 2;" id="schedule-overview-text">
-            گھوڑے کا معدہ چھوٹا ہوتا ہے اس لیے دن میں تھوڑی تھوڑی خوراک 3 سے 4 بار دینا اور چارہ ہمہ وقت میسر رکھنا ہاضمے کا بنیادی اصول ہے۔
-          </p>
-        </div>
-
-        <div class="schedule-timeline" id="schedule-timeline-container">
-          <!-- Injected via feed-data.js & app.js -->
-        </div>
-
-        <div style="margin-top: 2rem; background: rgba(212, 175, 55, 0.08); border: 1px solid var(--gold-500); border-radius: var(--radius-xl); padding: 1.5rem;" id="golden-rules-container">
-          <!-- Injected via feed-data.js & app.js -->
-        </div>
-      </div>
-
-      <!-- 3.7 WATER & HYDRATION SUB-PANEL -->
-      <div class="nutrition-sub-panel" id="hydration-subpanel">
-        <div style="margin-bottom: 1.5rem;">
-          <h3 style="color: #38bdf8; font-size: 1.4rem; margin-bottom: 0.35rem;">💧 پانی اور ہائیڈریشن گائیڈ برائے گھوڑے</h3>
-          <p style="color: var(--text-muted); font-size: 0.95rem;">موسم، محنت اور وزن کے مطابق یومیہ پانی کی مقدار اور گرم گھوڑے کو پانی پلانے کا سائنسی پروٹوکول</p>
-        </div>
-
-        <div class="water-needs-grid" id="water-needs-container">
-          <!-- Injected via feed-data.js & app.js -->
-        </div>
-
-        <div class="ice-water-warning-card">
-          <strong>🚨 شدید ویٹرنری انتباہ: گرم گھوڑے کو ٹھنڈا برف والا پانی ہرگز نہ پلائیں!</strong>
-          <p>
-            نیزہ بازی کی دوڑ یا سخت مشق کے فوری بعد جب گھوڑے کا جسم گرم اور پسینے سے تر ہو، اسے یخ ٹھنڈا پانی پلانا جان لیوا ثابت ہو سکتا ہے۔ اس سے معدے کی نسیں سکڑ جاتی ہیں، شدید قولنج (Spasmodic Colic) ہو سکتا ہے یا دونوں اگلے کھروں میں خون جم کر دائمی لنگڑاہٹ (Founder / Laminitis) پیدا ہو جاتی ہے۔ ہمیشہ پہلے 30 سے 45 منٹ واک کروائیں، پسینہ سکھائیں اور نیم گرم تازہ پانی پلائیں۔
-          </p>
-        </div>
-
-        <div class="calc-layout" style="margin-bottom: 2rem;">
-          <div class="calc-card">
-            <h4 style="color: var(--gold-400); margin-bottom: 1rem;">🐎 مشق کے بعد کول ڈاؤن واک کا مرحلہ وار پروٹوکول:</h4>
-            <div class="step-item"><strong>مرحلہ 1:</strong> نیزہ بازی کے بعد فوری زین کھولیں اور گھوڑے کو 15 سے 20 منٹ کھلی فضا میں سیدھی واک کروائیں۔</div>
-            <div class="step-item"><strong>مرحلہ 2:</strong> سینے اور پچھلی ٹانگوں پر ہلکا تازہ پانی ڈال کر وائپر سے فوراً نچوڑیں تاکہ پانی جلد پر گرم نہ ہو۔</div>
-            <div class="step-item"><strong>مرحلہ 3:</strong> 40 منٹ بعد جب نتھنے نارمل ہو جائیں تو 2 سے 3 گھونٹ نیم گرم پانی دیں؛ 10 منٹ بعد حسبِ خواہش پینے دیں۔</div>
-          </div>
-
-          <div class="homemade-electrolyte-card" id="homemade-electrolyte-container">
-            <!-- Injected via feed-data.js & app.js -->
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- 4. EMERGENCY & TRIAGE PANEL -->
-    <div class="tab-panel" id="emergency-tab">
-      <div class="section-header-wrap">
-        <div>
-          <h2 class="section-title">🚑 ایمرجنسی فرسٹ ایڈ و خطرناک علامات</h2>
-          <p class="section-subtitle">کب دیسی علاج کافی ہے اور کب فوراً مستند ویٹرنری ڈاکٹر کو بلانا ضروری ہے</p>
-        </div>
-      </div>
-
-      <!-- Equine Vitals Guide -->
-      <h3 style="color: var(--gold-400); margin-bottom: 1rem;">🩺 گھوڑے کے نارمل وائٹل سائنز (Equine Vital Signs)</h3>
-      <div class="vitals-grid" id="vitals-grid-container">
-        <!-- Injected via JavaScript -->
-      </div>
-
-      <!-- Red Flags List -->
-      <h3 style="color: #fda4af; margin: 1.5rem 0 1rem;">🚨 خطرناک علامات جن پر فوری ڈاکٹر کو بلائیں (Red Flags)</h3>
-      <div class="emergency-redflags-list" id="redflags-container">
-        <!-- Injected via JavaScript -->
-      </div>
-    </div>
-
-    <!-- 5. KITCHEN HERBS MATERIA MEDICA PANEL -->
-    <div class="tab-panel" id="herbs-tab">
-      <div class="herbs-banner-card">
-        <div style="max-width: 600px; z-index: 2;">
-          <h2 class="section-title" style="font-size: 2.2rem;">🌿 کچن اشیاء کی طبی ڈائریکٹری</h2>
-          <p style="color: var(--text-secondary); font-size: 1.05rem; line-height: 2;">
-            کچن میں موجود قدرتی مصالحہ جات اور جڑی بوٹیوں کی سائنسی افادیت، فعال اجزاء اور گھوڑوں کے لیے محفوظ ترین مقداریں۔
-          </p>
-        </div>
-      </div>
-
-      <div class="herbs-grid" id="herbs-grid-container">
-        <!-- Injected via JavaScript -->
-      </div>
-    </div>
+    </section>
 
   </main>
 
-  <!-- App Footer with Ghias Farm House Credits -->
-  <footer class="app-footer">
-    <div class="footer-inner">
-      <div class="footer-brand-col">
-        <div class="footer-logo-row">
-          <img src="assets/logo.jpg" alt="اسپِ شفا لوگو" class="footer-logo-img">
+  <!-- ========================================================================= -->
+  <!-- 3. CART DRAWER (SLIDE OVER) -->
+  <!-- ========================================================================= -->
+  <div class="cart-drawer-overlay" id="cartOverlay">
+    <div class="cart-drawer">
+      
+      <div class="cart-drawer-header">
+        <div class="cart-hdr-title">
+          <i class="fa-solid fa-basket-shopping"></i>
           <div>
-            <h3 class="footer-title">اسپِ شفا (Isp-e-Shifaa)</h3>
-            <p class="footer-farm-name">غیاث فارم ہاؤس (Ghias Farm House)</p>
+            <h3>Your Fresh Order</h3>
+            <span class="ur-sub">آپ کا آرڈر اور بکنگ</span>
           </div>
         </div>
-        <p class="footer-about-text">
-          یہ مکمل نظام، ویٹرنری گائیڈ اور گھوڑوں کا غذائی انسائیکلوپیڈیا <strong>فہیم غیاث محمود (Fahim Ghias Mahmood)</strong> اور <strong>غیاث فارم ہاؤس</strong> کے روایتی اصطبل تجربے اور جدید سائنسی تحقیق کے تحت نیزہ بازوں اور گھڑ سواروں کی رہنمائی کے لیے خصوصی طور پر ڈیزائن کیا گیا ہے۔
-        </p>
+        <button type="button" class="btn-close-drawer" id="closeCartBtn" aria-label="Close Cart">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
 
-      <div class="footer-credits-card">
-        <div class="footer-credits-badge">🌟 ڈیزائن و تخلیق (Designed & Conceived By)</div>
-        <h4 class="creator-name">فہیم غیاث محمود</h4>
-        <span class="creator-title">Fahim Ghias Mahmood</span>
-        <div class="farm-affiliation">
-          <span>🏛️</span>
-          <strong>غیاث فارم ہاؤس (Ghias Farm House)</strong>
-        </div>
-        <p class="footer-copyright">
-          تمام جملہ حقوق بحق فہیم غیاث محمود و غیاث فارم ہاؤس محفوظ ہیں۔ نیزہ بازی اور اصطبل کی خدمت کے لیے وقف۔
-        </p>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Mobile Bottom Navigation -->
-  <nav class="mobile-nav-bar" aria-label="موبائل نیویگیشن">
-    <button class="mobile-nav-btn active" data-tab="chat-tab">
-      <span class="icon">💬</span>
-      <span>اے آئی ڈاکٹر</span>
-    </button>
-    <button class="mobile-nav-btn" data-tab="remedies-tab">
-      <span class="icon">📚</span>
-      <span>دیسی نسخے</span>
-    </button>
-    <button class="mobile-nav-btn" data-tab="calculator-tab">
-      <span class="icon">🌾</span>
-      <span>خوراک و چارہ</span>
-    </button>
-    <button class="mobile-nav-btn" data-tab="emergency-tab">
-      <span class="icon">🚑</span>
-      <span>ایمرجنسی</span>
-    </button>
-    <button class="mobile-nav-btn" data-tab="herbs-tab">
-      <span class="icon">🌿</span>
-      <span>کچن اشیاء</span>
-    </button>
-  </nav>
-
-  <!-- Modals -->
-
-  <!-- Remedy Detail Modal -->
-  <div class="modal-overlay" id="remedy-detail-modal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3 class="modal-title" id="remedy-modal-title">تفصیلِ نسخہ</h3>
-        <button class="btn-modal-close" aria-label="بند کریں">&times;</button>
-      </div>
-      <div class="modal-body" id="remedy-modal-body">
-        <!-- Injected via JS -->
-      </div>
-    </div>
-  </div>
-
-  <!-- Printable Prescription Modal -->
-  <div class="modal-overlay" id="printable-rx-modal">
-    <div class="modal-card" style="max-width: 760px;">
-      <div class="modal-header">
-        <h3 class="modal-title">🖨️ مستند ویٹرنری نسخہ کارڈ</h3>
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
-          <button class="btn-send" id="rx-print-action-btn" style="padding: 0.35rem 1rem;">
-            <span>پرنٹ کریں</span> 🖨️
+      <!-- Order Mode Toggle: Shop Pickup vs Home Delivery -->
+      <div class="order-mode-toggle-wrap">
+        <div class="mode-btn-group">
+          <button type="button" class="mode-btn active" id="modePickupBtn">
+            <i class="fa-solid fa-store"></i>
+            <span>Shop Pickup (دکان سے وصولی)</span>
           </button>
-          <button class="btn-modal-close" aria-label="بند کریں">&times;</button>
+          <button type="button" class="mode-btn" id="modeDeliveryBtn">
+            <i class="fa-solid fa-motorcycle"></i>
+            <span>Home Delivery (ہوم ڈیلیوری)</span>
+          </button>
+        </div>
+        <div class="mode-hint" id="modeHintText">
+          <i class="fa-solid fa-circle-info"></i> Ready for pickup at our GT Road Dina counter.
         </div>
       </div>
-      <div class="modal-body" id="rx-pad-content">
-        <!-- Injected via JS -->
+
+      <!-- Cart Items List -->
+      <div class="cart-items-scroll" id="cartItemsList">
+        <!-- Populated by JS -->
       </div>
+
+      <!-- Cart Summary & Checkout Trigger -->
+      <div class="cart-drawer-footer" id="cartFooter">
+        <div class="cart-calculations">
+          <div class="calc-row">
+            <span>Items Subtotal:</span>
+            <strong>Rs. <span id="cartSubtotalText">0</span></strong>
+          </div>
+          <div class="calc-row" id="deliveryFeeRow" style="display:none;">
+            <span>Delivery Fee (Dina City):</span>
+            <strong class="delivery-free-badge">FREE / مفت</strong>
+          </div>
+          <div class="calc-row total-row">
+            <span>Total Payable at Pickup:</span>
+            <strong class="total-amount">Rs. <span id="cartTotalText">0</span></strong>
+          </div>
+        </div>
+
+        <button type="button" class="btn-proceed-checkout" id="proceedCheckoutBtn">
+          <span>Proceed to Booking Details</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
     </div>
   </div>
 
-  <!-- Settings Modal -->
-  <div class="modal-overlay" id="settings-modal">
-    <div class="modal-card" style="max-width: 520px;">
+  <!-- ========================================================================= -->
+  <!-- 4. ITEM CUSTOMIZATION & WEIGHT MODAL -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="customizationModal">
+    <div class="modal-card customize-modal-card">
       <div class="modal-header">
-        <h3 class="modal-title">⚙️ سیٹنگز و Groq API</h3>
-        <button class="btn-modal-close" aria-label="بند کریں">&times;</button>
+        <div class="modal-title-group">
+          <span class="category-badge" id="modalCategoryBadge">Fresh Dairy</span>
+          <h3 id="modalItemTitle">Pure Cow Milk</h3>
+          <span class="modal-item-urdu" id="modalItemUrdu">گائے کا خالص دودھ</span>
+        </div>
+        <button type="button" class="btn-modal-close" id="closeCustomizeModalBtn"><i class="fa-solid fa-xmark"></i></button>
       </div>
+
       <div class="modal-body">
-        <div class="form-group">
-          <label class="form-label" for="api-key-input">Groq API Key:</label>
-          <input 
-            type="password" 
-            id="api-key-input" 
-            class="form-input" 
-            placeholder="gsk_..." 
-            style="direction: ltr; font-family: monospace;">
-          <small style="color: var(--text-muted); display: block; margin-top: 0.35rem;">
-            ڈیفالٹ کی پہلے سے فعال ہے۔ اگر آپ اپنی نجی کی لگانا چاہیں تو یہاں تبدیل کر سکتے ہیں۔
-          </small>
+        <div class="modal-product-summary">
+          <img src="" alt="" id="modalItemImage" class="modal-img-preview">
+          <div class="modal-product-details">
+            <p id="modalItemDesc">100% pure cow milk directly from local dairy farm. Freshly chilled and free from chemicals.</p>
+            <div class="modal-base-price">
+              <span class="rate-label">Unit Rate:</span>
+              <strong id="modalRateDisplay">Rs. 220 / Liter</strong>
+            </div>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label" for="model-select">AI ماڈل کا انتخاب:</label>
-          <select id="model-select" class="form-select" style="direction: ltr;">
-            <option value="qwen/qwen3.8-27b">qwen/qwen3.8-27b (تجویز کردہ - انتہائی تیز رفتار و رواں اردو ویٹ ماڈل)</option>
-            <option value="openai/gpt-oss-120b">openai/gpt-oss-120b (انتہائی طاقتور اور گہری بصیرت والا ماڈل)</option>
-            <option value="openai/gpt-oss-20b">openai/gpt-oss-20b (تیز رفتار اور ہلکا پھلکا)</option>
-            <option value="groq/compound-mini">groq/compound-mini (انتہائی تیز کمپاؤنڈ ماڈل)</option>
-          </select>
+        <!-- Dynamic Quantity / Weight Selector -->
+        <div class="custom-field-group">
+          <label class="field-title">
+            <i class="fa-solid fa-scale-balanced"></i>
+            <span id="qtySectionTitle">Select Quantity (Liters / KG)</span>
+          </label>
+          <div class="quick-qty-pills" id="quickQtyPills">
+            <!-- Populated dynamically (e.g. 1 L, 2 L, 3 L, 5 L or 1 Glass, 2 Glasses) -->
+          </div>
+          <div class="custom-qty-row">
+            <button type="button" class="qty-btn" id="modalQtyMinus"><i class="fa-solid fa-minus"></i></button>
+            <div class="qty-input-wrap">
+              <input type="number" id="modalQtyInput" value="1" min="1" max="50" step="1">
+              <span class="qty-unit-label" id="modalQtyUnit">Liter</span>
+            </div>
+            <button type="button" class="qty-btn" id="modalQtyPlus"><i class="fa-solid fa-plus"></i></button>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label" for="lang-select">پسندیدہ زبان (Language Preference):</label>
-          <select id="lang-select" class="form-select">
-            <option value="auto">خودکار شناخت (Auto Detect - اردو / پنجابی / English)</option>
-            <option value="pa">پنجابی (ਪੰਜਾਬੀ / Punjabi)</option>
-            <option value="ur">اردو (Urdu)</option>
-            <option value="en">English (انگریزی)</option>
-          </select>
+        <!-- Custom Preparation Options (Sugar, Ice, Extra Malai, Khoya, Protein scoop, Packaging) -->
+        <div class="custom-options-container" id="customOptionsContainer">
+          <!-- Populated by JS according to category -->
         </div>
 
-        <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem;">
-          <button type="button" class="btn-card-view" id="reset-settings-btn">
-            ڈیفالٹ پر لائیں
+        <!-- Special Instructions / Counter Note -->
+        <div class="custom-field-group">
+          <label class="field-title" for="modalItemNotes">
+            <i class="fa-regular fa-comment-dots"></i> Special Counter Request / اضافی ہدایات
+          </label>
+          <input type="text" id="modalItemNotes" class="styled-input" placeholder="e.g., Less sweet, extra ice, packing in glass bottle...">
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div class="modal-calc-preview">
+          <span>Item Total:</span>
+          <strong>Rs. <span id="modalItemCalcTotal">220</span></strong>
+        </div>
+        <button type="button" class="btn-add-to-cart-confirm" id="confirmAddToCartBtn">
+          <i class="fa-solid fa-plus"></i> Add to Order
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 5. CHECKOUT & PICKUP SCHEDULING MODAL -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="checkoutModal">
+    <div class="modal-card checkout-modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="badge-pill"><i class="fa-solid fa-calendar-check"></i> Final Step</span>
+          <h3>Complete Your Booking</h3>
+          <span class="modal-item-urdu">بکنگ کی معلومات درج کریں</span>
+        </div>
+        <button type="button" class="btn-modal-close" id="closeCheckoutModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form id="checkoutForm" class="checkout-form">
+        <div class="modal-body">
+          
+          <!-- Order Mode Reminder -->
+          <div class="checkout-mode-banner" id="checkoutModeBanner">
+            <i class="fa-solid fa-store"></i>
+            <div>
+              <strong id="checkoutModeTitle">Shop Counter Pickup</strong>
+              <p id="checkoutModeSub">Al Sadiq Milk & Fresh Drinks, GT Road, Dina</p>
+            </div>
+          </div>
+
+          <!-- Customer Contact Fields -->
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="custName"><i class="fa-solid fa-user"></i> Your Full Name / آپ کا نام *</label>
+              <input type="text" id="custName" class="styled-input" placeholder="e.g. Muhammad Ali" required>
+            </div>
+            <div class="form-group">
+              <label for="custPhone"><i class="fa-solid fa-phone"></i> Mobile / WhatsApp No. *</label>
+              <input type="tel" id="custPhone" class="styled-input" placeholder="0342-1234567" required>
+            </div>
+          </div>
+
+          <!-- Date & Time Slot Selection -->
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="custDate"><i class="fa-solid fa-calendar-day"></i> Preferred Date *</label>
+              <select id="custDate" class="styled-input" required>
+                <!-- Populated by JS: Today, Tomorrow, etc. -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="custTimeSlot"><i class="fa-solid fa-clock"></i> Preferred Time Slot *</label>
+              <select id="custTimeSlot" class="styled-input" required>
+                <option value="ASAP (Within 15-20 Mins)">⚡ ASAP (Within 15-20 Mins)</option>
+                <option value="Morning (6:30 AM - 9:00 AM)">🌅 Morning (6:30 AM - 9:00 AM)</option>
+                <option value="Noon (12:00 PM - 2:30 PM)">☀️ Noon (12:00 PM - 2:30 PM)</option>
+                <option value="Evening (5:00 PM - 8:00 PM)">🌆 Evening (5:00 PM - 8:00 PM)</option>
+                <option value="Night (8:30 PM - 11:30 PM)">🌙 Night (8:30 PM - 11:30 PM)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Delivery Address (Shown only if Home Delivery is active) -->
+          <div class="form-group" id="deliveryAddressGroup" style="display:none;">
+            <label for="custAddress"><i class="fa-solid fa-location-dot"></i> Delivery Address in Dina / پتہ *</label>
+            <input type="text" id="custAddress" class="styled-input" placeholder="House/Shop #, Street, Mohallah or Landmark in Dina">
+          </div>
+
+          <!-- Special Note -->
+          <div class="form-group">
+            <label for="custSpecialNote"><i class="fa-solid fa-pen-to-square"></i> Order Note / ہدایات (Optional)</label>
+            <textarea id="custSpecialNote" class="styled-input" rows="2" placeholder="Any special packaging or pickup requests..."></textarea>
+          </div>
+
+          <!-- Payment Policy Notice -->
+          <div class="payment-policy-box">
+            <div class="policy-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+            <div class="policy-text">
+              <strong>Payment on Pickup / Delivery (ادائیگی وصولی کے وقت)</strong>
+              <p>No online prepayment required. Pay easily via Cash, JazzCash, EasyPaisa, or Counter Card when collecting your order at our Dina shop!</p>
+            </div>
+          </div>
+
+          <!-- Total Summary -->
+          <div class="checkout-grand-total">
+            <span>Total Payable Amount:</span>
+            <strong>Rs. <span id="checkoutTotalAmount">0</span></strong>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-modal-cancel" id="cancelCheckoutBtn">Back to Cart</button>
+          <button type="submit" class="btn-confirm-order-submit" id="submitOrderBtn">
+            <i class="fa-solid fa-check-circle"></i> Confirm Booking Now
           </button>
-          <button type="button" class="btn-send" id="save-settings-btn">
-            محفوظ کریں
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 6. BOOKING CONFIRMATION & LIVE TRACKER MODAL -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="confirmationModal">
+    <div class="modal-card confirmation-modal-card">
+      <div class="modal-header confirmation-header">
+        <div class="success-ring">
+          <i class="fa-solid fa-check"></i>
+        </div>
+        <h2>Booking Confirmed Successfully!</h2>
+        <span class="modal-item-urdu">آپ کا آرڈر موصول ہو چکا ہے اور بکنگ کنفرم ہے</span>
+        <button type="button" class="btn-modal-close" id="closeConfirmationModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body" id="confirmationBody">
+        
+        <!-- Booking Token Card -->
+        <div class="booking-token-card">
+          <div class="token-left">
+            <span class="token-label">Booking Token #</span>
+            <h1 class="token-number" id="confirmTokenNumber">ASD-101</h1>
+            <div class="token-meta" id="confirmTokenMeta">
+              <span><i class="fa-solid fa-user"></i> <strong id="confirmCustName">Ali</strong></span>
+              <span><i class="fa-solid fa-clock"></i> <strong id="confirmTimeSlot">ASAP</strong></span>
+            </div>
+          </div>
+          <div class="token-right">
+            <div id="confirmQrCode" class="qr-box"></div>
+            <small>Show at Counter</small>
+          </div>
+        </div>
+
+        <!-- Live Visual Order Tracker -->
+        <div class="live-tracker-wrap">
+          <h4 class="tracker-heading">
+            <i class="fa-solid fa-satellite-dish"></i> Live Counter Status: 
+            <span class="status-pill-badge" id="confirmStatusBadge">Order Placed</span>
+          </h4>
+          <div class="stepper-track" id="orderStatusStepper">
+            <div class="step-node active" data-step="pending">
+              <div class="step-circle"><i class="fa-solid fa-receipt"></i></div>
+              <span class="step-name">Booked</span>
+            </div>
+            <div class="step-line" id="stepLine1"></div>
+            <div class="step-node" data-step="preparing">
+              <div class="step-circle"><i class="fa-solid fa-blender"></i></div>
+              <span class="step-name">Preparing</span>
+            </div>
+            <div class="step-line" id="stepLine2"></div>
+            <div class="step-node" data-step="ready">
+              <div class="step-circle"><i class="fa-solid fa-bell-concierge"></i></div>
+              <span class="step-name">Ready for Pickup</span>
+            </div>
+            <div class="step-line" id="stepLine3"></div>
+            <div class="step-node" data-step="completed">
+              <div class="step-circle"><i class="fa-solid fa-circle-check"></i></div>
+              <span class="step-name">Completed</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Booking Summary Items List -->
+        <div class="confirm-items-summary">
+          <h5>Ordered Items:</h5>
+          <div class="confirm-items-list" id="confirmItemsList">
+            <!-- Populated by JS -->
+          </div>
+          <div class="confirm-total-row">
+            <span>Total Payable:</span>
+            <strong class="total-badge">Rs. <span id="confirmTotalDisplay">0</span></strong>
+          </div>
+        </div>
+
+        <!-- Auto Dispatch Status Notice -->
+        <div class="whatsapp-auto-banner" id="whatsappAutoBanner">
+          <div class="banner-icon-pulse"><i class="fa-brands fa-whatsapp"></i></div>
+          <div class="banner-text">
+            <strong>WhatsApp Receipt & Dispatch Ready!</strong>
+            <span>Direct receipt ready for Customer Mobile and Shop Counters (<strong>0370-9589018</strong> & <strong>0342-1008375</strong>)</span>
+          </div>
+        </div>
+
+        <!-- Quick Communication Triggers -->
+        <div class="confirmation-cta-actions">
+          <a href="#" target="_blank" class="btn-whatsapp-direct btn-whatsapp-customer" id="sendWhatsAppCustomerReceiptBtn">
+            <i class="fa-brands fa-whatsapp"></i> <span>Send Receipt to Customer WhatsApp (<strong id="confirmCustPhoneDisplay">03XX-XXXXXXX</strong>)</span>
+          </a>
+          <div class="shop-wa-btn-group">
+            <a href="#" target="_blank" class="btn-whatsapp-direct" id="sendWhatsAppOrderBtn1">
+              <i class="fa-brands fa-whatsapp"></i> Send to Shop 1 (0370-9589018)
+            </a>
+            <a href="#" target="_blank" class="btn-whatsapp-direct btn-whatsapp-secondary" id="sendWhatsAppOrderBtn2">
+              <i class="fa-brands fa-whatsapp"></i> Send to Shop 2 (0342-1008375)
+            </a>
+          </div>
+          <button type="button" class="btn-whatsapp-dual" id="sendWhatsAppDualBtn">
+            <i class="fa-solid fa-paper-plane"></i> Send to Both Shop WhatsApps (دونوں پر بھیجیں)
           </button>
+          <button type="button" class="btn-print-slip" id="printCustomerSlipBtn">
+            <i class="fa-solid fa-print"></i> Print Booking Token / Slip
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 7. TRACK ORDER LOOKUP MODAL -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="trackOrderModal">
+    <div class="modal-card track-modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="badge-pill"><i class="fa-solid fa-magnifying-glass"></i> Live Status</span>
+          <h3>Track Your Booking</h3>
+          <span class="modal-item-urdu">اپنا آرڈر یا بکنگ تلاش کریں</span>
+        </div>
+        <button type="button" class="btn-modal-close" id="closeTrackModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="track-search-form">
+          <label for="trackLookupInput">Enter Mobile Number or Booking Token #</label>
+          <div class="track-input-group">
+            <input type="text" id="trackLookupInput" class="styled-input" placeholder="e.g. 03421234567 or ASD-101">
+            <button type="button" class="btn-lookup-search" id="btnExecuteTrack">Search</button>
+          </div>
+        </div>
+
+        <!-- Track Results Container -->
+        <div class="track-results-wrap" id="trackResultsContainer">
+          <div class="track-empty-state">
+            <i class="fa-solid fa-receipt"></i>
+            <p>Enter your phone number or token number above to view active status and history.</p>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Image Lightbox Modal -->
-  <div class="image-lightbox-modal" id="image-lightbox-modal">
-    <div class="lightbox-content">
-      <button type="button" class="lightbox-close" id="lightbox-close-btn" title="بند کریں">&times;</button>
-      <img id="lightbox-img" src="" alt="بڑی تصویر">
+  <!-- ========================================================================= -->
+  <!-- 15. STICKY FLOATING QUICK-CHECKOUT BOTTOM BAR -->
+  <!-- ========================================================================= -->
+  <div class="sticky-bottom-cart-bar" id="stickyBottomCartBar" style="display:none;">
+    <div class="container sticky-cart-inner">
+      <div class="sticky-cart-summary" id="stickyCartSummaryBtn">
+        <div class="sticky-cart-icon-bubble">
+          <i class="fa-solid fa-basket-shopping"></i>
+          <span class="sticky-cart-badge" id="stickyCartBadge">0</span>
+        </div>
+        <div class="sticky-cart-info">
+          <span class="sticky-cart-total-lbl">Total: <strong id="stickyCartTotalPrice">Rs. 0</strong></span>
+          <small class="sticky-cart-items-lbl"><span id="stickyCartItemsText">0 items selected</span></small>
+        </div>
+      </div>
+      <button type="button" class="btn-sticky-proceed" id="stickyProceedCheckoutBtn">
+        <span class="en-text">Proceed to Booking</span>
+        <span class="ur-text">آرڈر مکمل کریں</span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
     </div>
   </div>
 
-  <!-- Scripts -->
-  <script src="remedies-data.js"></script>
-  <script src="feed-data.js"></script>
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Audio Chime Generator Element -->
+  <div id="audioChimeWrapper" style="display:none;"></div>
+
+  <!-- App Logic -->
   <script src="app.js"></script>
 </body>
 </html>
