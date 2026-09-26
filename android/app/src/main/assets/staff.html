@@ -121,6 +121,9 @@
           <button type="button" class="btn-export-orders" id="exportDailySummaryBtn">
             <i class="fa-solid fa-file-invoice"></i> Daily Full Sheet
           </button>
+          <button type="button" class="btn-staff-quick-action" id="openChangePinModalBtn" style="background:#0f172a; color:#fff;" title="Change Staff PIN Code">
+            <i class="fa-solid fa-key"></i> Change PIN (خفیہ پن تبدیل کریں)
+          </button>
           <button type="button" class="btn-staff-quick-action" id="btnLockStaffDashboard" style="background:#475569; color:#fff;" title="Lock Staff Dashboard">
             <i class="fa-solid fa-lock"></i> Lock PIN (لاگ آؤٹ)
           </button>
@@ -1222,6 +1225,54 @@
           <i class="fa-solid fa-lock-open"></i> Unlock Dashboard
         </button>
       </div>
+    </div>
+  <!-- 11. CHANGE STAFF SECURITY PIN MODAL -->
+  <div class="modal-backdrop" id="changePinModal">
+    <div class="modal-card" style="max-width: 440px;">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="badge-pill" style="background:#0f172a; color:#fff;"><i class="fa-solid fa-key"></i> Security</span>
+          <h3>Change Staff PIN Code</h3>
+          <span class="modal-item-urdu" style="color:var(--brand-primary); font-weight:700;">اسٹاف سیکیورٹی پن تبدیل کریں</span>
+        </div>
+        <button type="button" class="btn-modal-close" id="closeChangePinModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form id="changePinForm">
+        <div class="modal-body" style="padding-top:0.75rem;">
+          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.25rem; line-height:1.4;">
+            Set your own private 4 to 6 digit secret code to protect online access to orders, stock registers, and financials.
+          </p>
+
+          <div class="custom-field-group">
+            <label class="field-title"><i class="fa-solid fa-lock"></i> Current PIN Code (موجودہ پن کوڈ) *</label>
+            <input type="password" id="inputCurrentPin" class="styled-input pin-input-box" maxlength="6" placeholder="••••" required autocomplete="off" inputmode="numeric">
+            <small style="font-size:0.75rem; color:var(--text-muted);">پہلی بار تبدیل کرنے کے لیے ڈیفالٹ کوڈ 1234 ہے</small>
+          </div>
+
+          <div class="custom-field-group" style="margin-top:0.85rem;">
+            <label class="field-title"><i class="fa-solid fa-key"></i> New Secret PIN Code (نیا خفیہ پن کوڈ) *</label>
+            <input type="password" id="inputNewPin" class="styled-input pin-input-box" maxlength="6" placeholder="••••" required autocomplete="off" inputmode="numeric">
+            <small style="font-size:0.75rem; color:var(--text-muted);">4 سے 6 ہندسوں کا نیا خفیہ کوڈ درج کریں</small>
+          </div>
+
+          <div class="custom-field-group" style="margin-top:0.85rem;">
+            <label class="field-title"><i class="fa-solid fa-check-double"></i> Confirm New PIN Code (دوبارہ نیا کوڈ درج کریں) *</label>
+            <input type="password" id="inputConfirmPin" class="styled-input pin-input-box" maxlength="6" placeholder="••••" required autocomplete="off" inputmode="numeric">
+          </div>
+
+          <div id="changePinErrorMsg" style="display:none; color:#dc2626; font-weight:700; font-size:0.85rem; margin-top:0.75rem; padding:0.5rem; background:#fee2e2; border-radius:var(--radius-sm);">
+            <i class="fa-solid fa-triangle-exclamation"></i> <span></span>
+          </div>
+        </div>
+
+        <div class="modal-footer" style="justify-content:space-between; margin-top:0.75rem;">
+          <button type="button" class="btn-modal-cancel" id="cancelChangePinBtn">Cancel (منسوخ)</button>
+          <button type="submit" class="btn-save-prices" style="background:#059669; padding:0.65rem 1.25rem;">
+            <i class="fa-solid fa-shield-check"></i> Save New PIN (نیا پن محفوظ کریں)
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 

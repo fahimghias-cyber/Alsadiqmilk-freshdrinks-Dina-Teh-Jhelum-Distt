@@ -749,6 +749,9 @@ class AlSadiqStore {
   saveStaffPin(pin) {
     this.staffPin = pin;
     localStorage.setItem(STORAGE_KEYS.STAFF_PIN, pin);
+    if (typeof cloudSync !== "undefined" && cloudSync.pushPin) {
+      cloudSync.pushPin(pin);
+    }
   }
 
   load(key, fallback) {
@@ -1566,12 +1569,33 @@ class CloudSyncManager {
         }
       }
 
+      // 5. Pull Staff PIN & Sync
+      try {
+        const pinUrl = `${this.getApiBaseUrl()}/settings/staffPin.json`;
+        const cloudPin = await this.httpGet(pinUrl);
+        if (cloudPin && typeof cloudPin === "string" && cloudPin.length >= 4) {
+          if (this.store.staffPin !== cloudPin) {
+            this.store.staffPin = cloudPin;
+            localStorage.setItem(STORAGE_KEYS.STAFF_PIN, cloudPin);
+          }
+        }
+      } catch (pe) {}
+
       this.lastSyncTimestamp = new Date();
       this.updateStatusPill("connected", "Cloud: Live Synced");
     } catch (e) {
       this.updateStatusPill("offline", "Cloud: Local Mode");
     } finally {
       this.isSyncing = false;
+    }
+  }
+
+  async pushPin(pin) {
+    try {
+      const url = `${this.getApiBaseUrl()}/settings/staffPin.json`;
+      await this.httpPut(url, JSON.stringify(pin));
+    } catch (e) {
+      console.warn("Could not sync PIN to cloud:", e);
     }
   }
 
@@ -4242,6 +4266,65 @@ document.addEventListener("DOMContentLoaded", () => {
         if (btn) btn.click();
       });
     }
+
+    // Change Staff Security PIN Modal Handlers
+    const changePinModal = document.getElementById("changePinModal");
+    const openChangePinModal = () => {
+      const curInput = document.getElementById("inputCurrentPin");
+      const newInput = document.getElementById("inputNewPin");
+      const confInput = document.getElementById("inputConfirmPin");
+      const err = document.getElementById("changePinErrorMsg");
+      if (curInput) curInput.value = "";
+      if (newInput) newInput.value = "";
+      if (confInput) confInput.value = "";
+      if (err) err.style.display = "none";
+      if (changePinModal) changePinModal.classList.add("active");
+      if (curInput) setTimeout(() => curInput.focus(), 200);
+    };
+    window.openChangePinModal = openChangePinModal;
+
+    on("openChangePinModalBtn", "click", openChangePinModal);
+    on("closeChangePinModalBtn", "click", () => changePinModal?.classList.remove("active"));
+    on("cancelChangePinBtn", "click", () => changePinModal?.classList.remove("active"));
+
+    on("changePinForm", "submit", (e) => {
+      e.preventDefault();
+      const currentVal = (document.getElementById("inputCurrentPin")?.value || "").trim();
+      const newVal = (document.getElementById("inputNewPin")?.value || "").trim();
+      const confVal = (document.getElementById("inputConfirmPin")?.value || "").trim();
+      const errBox = document.getElementById("changePinErrorMsg");
+      const errText = errBox ? errBox.querySelector("span") : null;
+
+      const showErr = (msg) => {
+        if (errBox && errText) {
+          errText.textContent = msg;
+          errBox.style.display = "block";
+        } else {
+          showToast(msg, "alert");
+        }
+      };
+
+      const actualCurrentPin = store.staffPin || "1234";
+      if (currentVal !== actualCurrentPin) {
+        showErr("موجودہ پن کوڈ درست نہیں ہے! (Current PIN is incorrect)");
+        return;
+      }
+
+      if (!newVal || newVal.length < 4 || newVal.length > 6 || !/^\d+$/.test(newVal)) {
+        showErr("نیا پن کوڈ کم از کم 4 اور زیادہ سے زیادہ 6 ہندسوں کا ہونا چاہیے! (PIN must be 4-6 digits)");
+        return;
+      }
+
+      if (newVal !== confVal) {
+        showErr("نیا پن کوڈ اور کنفرمیشن کوڈ ایک جیسے نہیں ہیں! (New PIN and Confirm PIN do not match)");
+        return;
+      }
+
+      // Save new PIN locally and push to cloud
+      store.saveStaffPin(newVal);
+      changePinModal?.classList.remove("active");
+      showToast(`نیا پن کوڈ (${newVal}) کامیابی سے محفوظ ہو گیا ہے!`, "success");
+    });
 
     // Initial staff renders
     renderDailyRates();
