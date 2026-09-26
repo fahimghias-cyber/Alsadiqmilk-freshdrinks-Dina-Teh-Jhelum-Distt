@@ -709,8 +709,9 @@ class AlSadiqStore {
     this.whatsappSettings = this.load(STORAGE_KEYS.WHATSAPP, {
       num1: "0370-9589018",
       num2: "0342-1008375",
-      autoOpen: true
+      autoOpen: false
     });
+    this.whatsappSettings.autoOpen = false;
     this.activeCategory = "all";
     this.activeFilter = "all";
     this.searchQuery = "";
@@ -2349,15 +2350,9 @@ function openConfirmationModal(order) {
     };
   }
 
-  // Auto dispatch trigger on booking
-  if (store.whatsappSettings.autoOpen) {
-    try {
-      // Prioritize dispatching order slip to shop counter 1
-      dispatchWhatsAppReceipt(num1, shopKitchenSlipMsg);
-    } catch (e) {
-      console.warn("Auto-open WhatsApp blocked by browser:", e);
-    }
-  }
+  // Note: Auto-opening WhatsApp on customer booking is completely disabled.
+  // The customer stays peacefully on the Al Sadiq storefront window without popups or redirects,
+  // while the booking is transmitted in real time via cloudSync to the shop counter & staff mobiles!
 
   updateTrackerStepper(order.status);
 
@@ -3520,6 +3515,7 @@ Pure Milk, Refreshing Life! - خالص دودھ، تازہ دم زندگی!
 
   document.getElementById("dailyReportModal").classList.add("active");
 }
+window.openDailyReportModal = openDailyReportModal;
 
 // =============================================================================
 // 10. EVENT LISTENERS INITIALIZATION
@@ -3671,7 +3667,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const m = document.getElementById("customizationModal");
       if (m) m.classList.remove("active");
 
-      showToast(${activeModalItem.nameEn} ( ) added to order!, "success");
+      showToast(`${activeModalItem.nameEn} added to order!`, "success");
       renderCart();
     });
 
@@ -3767,7 +3763,7 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem(STORAGE_KEYS.SOUND, store.soundEnabled);
         if (soundIcon) soundIcon.className = store.soundEnabled ? "fa-solid fa-volume-high" : "fa-solid fa-volume-xmark";
         if (soundLabel) soundLabel.textContent = store.soundEnabled ? "Sound: ON" : "Sound: OFF";
-        showToast(Staff sound chime turned , "alert");
+        showToast(`Staff sound chime turned ${store.soundEnabled ? "ON" : "OFF"}`, "alert");
       });
     }
 
@@ -3861,11 +3857,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Milk Inward Modal
     const milkInwardModal = document.getElementById("milkInwardModal");
-    const openMilkInwardModal = () => {
+    window.openMilkInwardModal = () => {
       const input = document.getElementById("inwardLiters");
       if (input) input.value = "";
       if (milkInwardModal) milkInwardModal.classList.add("active");
     };
+    const openMilkInwardModal = window.openMilkInwardModal;
 
     on("openMilkInwardModalBtn", "click", openMilkInwardModal);
     on("btnQuickMilkIn", "click", openMilkInwardModal);
@@ -3889,18 +3886,19 @@ document.addEventListener("DOMContentLoaded", () => {
         notes: notes
       });
 
-      showToast(Recorded  L  milk inward!, "success");
+      showToast(`Recorded ${liters} L ${type} milk inward!`, "success");
       milkInwardModal?.classList.remove("active");
       renderMilkLedger();
     });
 
     // Milk Usage / Dahi Modal
     const milkUsageModal = document.getElementById("milkUsageModal");
-    const openMilkUsageModal = () => {
+    window.openMilkUsageModal = () => {
       const input = document.getElementById("usageLiters");
       if (input) input.value = "";
       if (milkUsageModal) milkUsageModal.classList.add("active");
     };
+    const openMilkUsageModal = window.openMilkUsageModal;
 
     on("openMilkUsageModalBtn", "click", openMilkUsageModal);
     on("btnQuickDahiPrep", "click", openMilkUsageModal);
@@ -3919,11 +3917,11 @@ document.addEventListener("DOMContentLoaded", () => {
         milkType: type,
         liters: liters,
         batch: "Dahi / Prep",
-        source: Usage: ,
+        source: `Usage: ${purpose}`,
         notes: notes
       });
 
-      showToast(Deducted  L  milk for !, "success");
+      showToast(`Deducted ${liters} L ${type} milk for ${purpose}!`, "success");
       milkUsageModal?.classList.remove("active");
       renderMilkLedger();
     });
@@ -3954,7 +3952,7 @@ document.addEventListener("DOMContentLoaded", () => {
         type: "walkin",
         category: cat,
         customer: customer,
-        itemsSummary: ${itemName} ( qty),
+        itemsSummary: `${itemName} (${qty})`,
         amount: total,
         paymentMode: "Cash (نقد)"
       });
@@ -3968,12 +3966,12 @@ document.addEventListener("DOMContentLoaded", () => {
           milkType: milkType,
           liters: qty,
           batch: "Counter Cash Sale",
-          source: Counter Sale (),
-          notes: Sold  Liters at counter
+          source: `Counter Sale (${itemName})`,
+          notes: `Sold ${qty} Liters at counter`
         });
       }
 
-      showToast(Recorded Rs.  counter cash sale!, "success");
+      showToast(`Recorded Rs. ${total} counter cash sale!`, "success");
       counterSaleModal?.classList.remove("active");
       renderSalesLedger();
       renderMilkLedger();
@@ -4087,13 +4085,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Expense Modal
     const expenseModal = document.getElementById("expenseModal");
-    on("openExpenseModalBtn", "click", () => {
+    window.openExpenseModal = () => {
       const amtInput = document.getElementById("expenseAmount");
       if (amtInput) amtInput.value = "";
       const descInput = document.getElementById("expenseDesc");
       if (descInput) descInput.value = "";
       if (expenseModal) expenseModal.classList.add("active");
-    });
+    };
+    const openExpenseModal = window.openExpenseModal;
+    on("openExpenseModalBtn", "click", openExpenseModal);
     on("closeExpenseModalBtn", "click", () => expenseModal?.classList.remove("active"));
     on("cancelExpenseBtn", "click", () => expenseModal?.classList.remove("active"));
 
@@ -4129,6 +4129,78 @@ document.addEventListener("DOMContentLoaded", () => {
       cloudPill.addEventListener("click", () => {
         const btn = document.getElementById("openWhatsAppSettingsBtn");
         if (btn) btn.click();
+      });
+    }
+
+    // Staff Security PIN Modal & Keypad
+    let currentEnteredPin = "";
+    window.pressPinKey = function(key) {
+      const pinInput = document.getElementById("staffPinInput");
+      const err = document.getElementById("staffPinErrorMsg");
+      if (err) err.style.display = "none";
+      if (key === "C") {
+        currentEnteredPin = "";
+      } else if (key === "DEL") {
+        currentEnteredPin = currentEnteredPin.slice(0, -1);
+      } else {
+        if (currentEnteredPin.length < 6) {
+          currentEnteredPin += key;
+        }
+      }
+      if (pinInput) pinInput.value = currentEnteredPin;
+    };
+
+    const staffLoginPinModal = document.getElementById("staffLoginPinModal");
+    const staffPinInput = document.getElementById("staffPinInput");
+    const submitStaffPinBtn = document.getElementById("submitStaffPinBtn");
+    const cancelStaffPinBtn = document.getElementById("cancelStaffPinBtn");
+    const btnLockStaffDashboard = document.getElementById("btnLockStaffDashboard");
+
+    function checkStaffPin() {
+      const entered = (staffPinInput?.value || currentEnteredPin || "").trim();
+      const correctPin = store.staffPin || "1234";
+      if (entered === correctPin) {
+        staffLoginPinModal?.classList.remove("active");
+        currentEnteredPin = "";
+        if (staffPinInput) staffPinInput.value = "";
+        sessionStorage.setItem("alsadiq_staff_unlocked", "true");
+        showToast("Staff access granted!", "success");
+      } else {
+        const err = document.getElementById("staffPinErrorMsg");
+        if (err) err.style.display = "block";
+        showToast("Incorrect PIN! Please try again.", "alert");
+        currentEnteredPin = "";
+        if (staffPinInput) staffPinInput.value = "";
+      }
+    }
+
+    if (submitStaffPinBtn) {
+      submitStaffPinBtn.addEventListener("click", checkStaffPin);
+    }
+    if (staffPinInput) {
+      staffPinInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") checkStaffPin();
+      });
+      staffPinInput.addEventListener("input", (e) => {
+        currentEnteredPin = e.target.value;
+      });
+    }
+    if (cancelStaffPinBtn) {
+      cancelStaffPinBtn.addEventListener("click", () => {
+        if (sessionStorage.getItem("alsadiq_staff_unlocked") === "true") {
+          staffLoginPinModal?.classList.remove("active");
+        } else {
+          window.location.href = "index.html";
+        }
+      });
+    }
+    if (btnLockStaffDashboard) {
+      btnLockStaffDashboard.addEventListener("click", () => {
+        sessionStorage.removeItem("alsadiq_staff_unlocked");
+        currentEnteredPin = "";
+        if (staffPinInput) staffPinInput.value = "";
+        staffLoginPinModal?.classList.add("active");
+        showToast("Staff dashboard locked.", "alert");
       });
     }
 
