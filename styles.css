@@ -408,6 +408,20 @@ img {
   background: #e2e8f0;
 }
 
+.staff-portal-btn {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  color: #f8fafc;
+  cursor: pointer;
+}
+
+.staff-portal-btn:hover {
+  background: #059669;
+  border-color: #059669;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
 /* Cart Trigger Button */
 .cart-trigger-btn {
   display: inline-flex;

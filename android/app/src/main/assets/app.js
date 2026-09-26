@@ -3556,6 +3556,87 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // =========================================================================
+  // COMMON: STAFF SECURITY PIN MODAL & KEYPAD (Active on both index & staff!)
+  // =========================================================================
+  let currentEnteredPin = "";
+  window.pressPinKey = function(key) {
+    const pinInput = document.getElementById("staffPinInput");
+    const err = document.getElementById("staffPinErrorMsg");
+    if (err) err.style.display = "none";
+    if (key === "C") {
+      currentEnteredPin = "";
+    } else if (key === "DEL") {
+      currentEnteredPin = currentEnteredPin.slice(0, -1);
+    } else {
+      if (currentEnteredPin.length < 6) {
+        currentEnteredPin += key;
+      }
+    }
+    if (pinInput) pinInput.value = currentEnteredPin;
+  };
+
+  const staffLoginPinModal = document.getElementById("staffLoginPinModal");
+  const staffPinInput = document.getElementById("staffPinInput");
+  const submitStaffPinBtn = document.getElementById("submitStaffPinBtn");
+  const cancelStaffPinBtn = document.getElementById("cancelStaffPinBtn");
+  const btnLockStaffDashboard = document.getElementById("btnLockStaffDashboard");
+
+  function checkStaffPin() {
+    const entered = (staffPinInput?.value || currentEnteredPin || "").trim();
+    const correctPin = store.staffPin || "1234";
+    if (entered === correctPin) {
+      sessionStorage.setItem("alsadiq_staff_unlocked", "true");
+      showToast("Staff access verified! Opening Portal...", "success");
+      currentEnteredPin = "";
+      if (staffPinInput) staffPinInput.value = "";
+      staffLoginPinModal?.classList.remove("active");
+      if (isCustomerPage) {
+        setTimeout(() => {
+          window.location.href = "staff.html";
+        }, 350);
+      }
+    } else {
+      const err = document.getElementById("staffPinErrorMsg");
+      if (err) err.style.display = "block";
+      showToast("Incorrect PIN! Please try again.", "alert");
+      currentEnteredPin = "";
+      if (staffPinInput) staffPinInput.value = "";
+      if (staffPinInput) staffPinInput.focus();
+    }
+  }
+
+  if (submitStaffPinBtn) {
+    submitStaffPinBtn.addEventListener("click", checkStaffPin);
+  }
+  if (staffPinInput) {
+    staffPinInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") checkStaffPin();
+    });
+    staffPinInput.addEventListener("input", (e) => {
+      currentEnteredPin = e.target.value;
+    });
+  }
+  if (cancelStaffPinBtn) {
+    cancelStaffPinBtn.addEventListener("click", () => {
+      staffLoginPinModal?.classList.remove("active");
+      currentEnteredPin = "";
+      if (staffPinInput) staffPinInput.value = "";
+      if (isStaffPage && sessionStorage.getItem("alsadiq_staff_unlocked") !== "true") {
+        window.location.href = "index.html";
+      }
+    });
+  }
+  if (btnLockStaffDashboard) {
+    btnLockStaffDashboard.addEventListener("click", () => {
+      sessionStorage.removeItem("alsadiq_staff_unlocked");
+      currentEnteredPin = "";
+      if (staffPinInput) staffPinInput.value = "";
+      staffLoginPinModal?.classList.add("active");
+      showToast("Staff dashboard locked.", "alert");
+    });
+  }
+
+  // =========================================================================
   // CUSTOMER STOREFRONT PORTAL LOGIC & LISTENERS
   // =========================================================================
   if (isCustomerPage) {
@@ -3744,6 +3825,23 @@ document.addEventListener("DOMContentLoaded", () => {
     renderDailyRates();
     renderProducts();
     renderCart();
+
+    // Staff Portal Access Modal Triggers on Customer Page
+    const openCustomerStaffPinModal = () => {
+      const pinModal = document.getElementById("staffLoginPinModal");
+      const pinInput = document.getElementById("staffPinInput");
+      const err = document.getElementById("staffPinErrorMsg");
+      if (err) err.style.display = "none";
+      if (pinInput) {
+        pinInput.value = "";
+        setTimeout(() => pinInput.focus(), 200);
+      }
+      currentEnteredPin = "";
+      if (pinModal) pinModal.classList.add("active");
+    };
+
+    on("openStaffAuthModalBtn", "click", openCustomerStaffPinModal);
+    on("footerStaffAuthBtn", "click", openCustomerStaffPinModal);
   }
 
   // =========================================================================
@@ -4129,78 +4227,6 @@ document.addEventListener("DOMContentLoaded", () => {
       cloudPill.addEventListener("click", () => {
         const btn = document.getElementById("openWhatsAppSettingsBtn");
         if (btn) btn.click();
-      });
-    }
-
-    // Staff Security PIN Modal & Keypad
-    let currentEnteredPin = "";
-    window.pressPinKey = function(key) {
-      const pinInput = document.getElementById("staffPinInput");
-      const err = document.getElementById("staffPinErrorMsg");
-      if (err) err.style.display = "none";
-      if (key === "C") {
-        currentEnteredPin = "";
-      } else if (key === "DEL") {
-        currentEnteredPin = currentEnteredPin.slice(0, -1);
-      } else {
-        if (currentEnteredPin.length < 6) {
-          currentEnteredPin += key;
-        }
-      }
-      if (pinInput) pinInput.value = currentEnteredPin;
-    };
-
-    const staffLoginPinModal = document.getElementById("staffLoginPinModal");
-    const staffPinInput = document.getElementById("staffPinInput");
-    const submitStaffPinBtn = document.getElementById("submitStaffPinBtn");
-    const cancelStaffPinBtn = document.getElementById("cancelStaffPinBtn");
-    const btnLockStaffDashboard = document.getElementById("btnLockStaffDashboard");
-
-    function checkStaffPin() {
-      const entered = (staffPinInput?.value || currentEnteredPin || "").trim();
-      const correctPin = store.staffPin || "1234";
-      if (entered === correctPin) {
-        staffLoginPinModal?.classList.remove("active");
-        currentEnteredPin = "";
-        if (staffPinInput) staffPinInput.value = "";
-        sessionStorage.setItem("alsadiq_staff_unlocked", "true");
-        showToast("Staff access granted!", "success");
-      } else {
-        const err = document.getElementById("staffPinErrorMsg");
-        if (err) err.style.display = "block";
-        showToast("Incorrect PIN! Please try again.", "alert");
-        currentEnteredPin = "";
-        if (staffPinInput) staffPinInput.value = "";
-      }
-    }
-
-    if (submitStaffPinBtn) {
-      submitStaffPinBtn.addEventListener("click", checkStaffPin);
-    }
-    if (staffPinInput) {
-      staffPinInput.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") checkStaffPin();
-      });
-      staffPinInput.addEventListener("input", (e) => {
-        currentEnteredPin = e.target.value;
-      });
-    }
-    if (cancelStaffPinBtn) {
-      cancelStaffPinBtn.addEventListener("click", () => {
-        if (sessionStorage.getItem("alsadiq_staff_unlocked") === "true") {
-          staffLoginPinModal?.classList.remove("active");
-        } else {
-          window.location.href = "index.html";
-        }
-      });
-    }
-    if (btnLockStaffDashboard) {
-      btnLockStaffDashboard.addEventListener("click", () => {
-        sessionStorage.removeItem("alsadiq_staff_unlocked");
-        currentEnteredPin = "";
-        if (staffPinInput) staffPinInput.value = "";
-        staffLoginPinModal?.classList.add("active");
-        showToast("Staff dashboard locked.", "alert");
       });
     }
 

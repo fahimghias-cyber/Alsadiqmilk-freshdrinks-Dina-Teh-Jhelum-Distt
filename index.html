@@ -75,6 +75,13 @@
           <span class="btn-lbl-ur">آرڈر ٹریک کریں</span>
         </button>
 
+        <!-- Staff Portal Access (Protected with Security PIN) -->
+        <button type="button" class="action-btn staff-portal-btn" id="openStaffAuthModalBtn" title="Staff Portal (اسٹاف لاگ ان)">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span class="btn-lbl-en">Staff Portal</span>
+          <span class="btn-lbl-ur">اسٹاف پورٹل</span>
+        </button>
+
         <!-- Cart Button -->
         <button type="button" class="cart-trigger-btn" id="openCartBtn" aria-label="View Cart">
           <div class="cart-icon-wrap">
@@ -250,9 +257,9 @@
             </div>
           <div class="footer-staff-access" style="text-align:center; padding: 1.5rem 0 0.5rem 0; border-top: 1px solid var(--border-color); margin-top: 2rem;">
             <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:0.4rem;">© 2023 - 2026 Al Sadiq Milk & Fresh Drinks • GT Road, Dina (With Focus College)</p>
-            <a href="staff.html" class="staff-portal-link" style="color:var(--text-muted); font-size:0.75rem; text-decoration:none; opacity:0.6; transition:opacity 0.2s;" title="Authorized Staff Access Only">
-              <i class="fa-solid fa-lock"></i> Staff Portal
-            </a>
+            <button type="button" id="footerStaffAuthBtn" class="staff-portal-link" style="background:transparent; border:1px solid var(--border-color); border-radius:var(--radius-full); padding:0.35rem 0.9rem; color:var(--text-muted); font-size:0.8rem; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s;" title="Authorized Staff Access Only">
+              <i class="fa-solid fa-lock"></i> Staff Portal & POS (اسٹاف لاگ ان)
+            </button>
           </div>
         </div>
       </div>
@@ -656,6 +663,57 @@
         <span class="ur-text">آرڈر مکمل کریں</span>
         <i class="fa-solid fa-arrow-right"></i>
       </button>
+    </div>
+  </div>
+
+  <!-- STAFF SECURITY PIN LOGIN MODAL -->
+  <div class="modal-backdrop" id="staffLoginPinModal">
+    <div class="modal-card" style="max-width: 400px; text-align:center;">
+      <div class="modal-header" style="justify-content:center; flex-direction:column; gap:0.5rem; border-bottom:none; padding-bottom:0.25rem;">
+        <div class="staff-pin-icon-wrap">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h3 style="margin:0; font-size:1.35rem; color:var(--text-heading);">Staff Portal Access</h3>
+        <span class="modal-item-urdu" style="font-size:1rem; color:var(--brand-primary); font-weight:700;">اسٹاف لاگ ان پن کوڈ درج کریں</span>
+      </div>
+
+      <div class="modal-body" style="padding-top:0.5rem;">
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem; line-height:1.4;">
+          Authorized shop staff & management only. Enter your 4-digit PIN code to enter dashboard.
+          <br><strong style="color:var(--brand-primary);">(ڈیفالٹ پن کوڈ: 1234)</strong>
+        </p>
+
+        <div class="pin-display-wrap">
+          <input type="password" id="staffPinInput" class="styled-input pin-input-box" maxlength="6" placeholder="••••" autocomplete="off" inputmode="numeric">
+        </div>
+
+        <div class="pin-error-msg" id="staffPinErrorMsg" style="display:none; color:#dc2626; font-weight:700; font-size:0.85rem; margin-top:0.5rem;">
+          <i class="fa-solid fa-triangle-exclamation"></i> Incorrect PIN. Please try again.
+        </div>
+
+        <!-- On-Screen Numeric Keypad -->
+        <div class="pin-keypad-grid">
+          <button type="button" class="keypad-btn" onclick="pressPinKey('1')">1</button>
+          <button type="button" class="keypad-btn" onclick="pressPinKey('2')">2</button>
+          <button type="button" class="keypad-btn" onclick="pressPinKey('3')">3</button>
+          <button type="button" class="keypad-btn" onclick="pressPinKey('4')">4</button>
+          <button type="button" class="keypad-btn" onclick="pressPinKey('5')">5</button>
+          <button type="button" class="keypad-btn" onclick="pressPinKey('6')">6</button>
+          <button type="button" class="keypad-btn" onclick="pressPinKey('7')">7</button>
+          <button type="button" class="keypad-btn" onclick="pressPinKey('8')">8</button>
+          <button type="button" class="keypad-btn" onclick="pressPinKey('9')">9</button>
+          <button type="button" class="keypad-btn btn-keypad-clear" onclick="pressPinKey('C')">C</button>
+          <button type="button" class="keypad-btn" onclick="pressPinKey('0')">0</button>
+          <button type="button" class="keypad-btn btn-keypad-back" onclick="pressPinKey('DEL')"><i class="fa-solid fa-delete-left"></i></button>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="justify-content:space-between; margin-top:0.75rem;">
+        <button type="button" class="btn-modal-cancel" id="cancelStaffPinBtn">Cancel (منسوخ)</button>
+        <button type="button" class="btn-save-prices" id="submitStaffPinBtn" style="background:#059669; padding:0.65rem 1.25rem;">
+          <i class="fa-solid fa-lock-open"></i> Open Portal (کھولیں)
+        </button>
+      </div>
     </div>
   </div>
 

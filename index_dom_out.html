@@ -1,0 +1,2504 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Al Sadiq Milk &amp; Fresh Drinks | الصادق ملک اینڈ فریش ڈرنکس - Pure Milk &amp; Beverage Booking</title>
+  <meta name="description" content="Online booking and counter orders for Al Sadiq Dairy Farm &amp; Fresh Drinks in Dina. 100% Pure Cow &amp; Buffalo Milk, Dahi, Desi Ghee, Fresh Fruit Milkshakes, Protein Shakes, Mojitos, and Special Drinks.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&amp;family=Noto+Nastaliq+Urdu:wght@400;600;700&amp;family=Outfit:wght@400;500;600;700;800;900&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Canvas Confetti & QR Code Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css">
+<style id="alsadiq-ai-styles">
+        /* --- Al Sadiq AI Agent Widget Styles --- */
+        .ai-fab-container {
+          position: fixed;
+          bottom: 24px;
+          right: 24px;
+          z-index: 9998;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          font-family: var(--font-main, 'Plus Jakarta Sans', sans-serif);
+        }
+
+        /* Adjust on mobile so it doesn't overlap bottom navigation or sticky checkout */
+        @media (max-width: 768px) {
+          .ai-fab-container {
+            bottom: 84px;
+            right: 16px;
+          }
+        }
+
+        .ai-fab-btn {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #059669 0%, #064e3b 50%, #d97706 100%);
+          border: 2px solid rgba(255, 255, 255, 0.4);
+          color: #ffffff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          position: relative;
+          box-shadow: 0 10px 25px -4px rgba(5, 150, 105, 0.5), 0 0 16px rgba(217, 119, 6, 0.35);
+          transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+          outline: none;
+        }
+
+        .ai-fab-btn:hover {
+          transform: scale(1.08) translateY(-2px);
+          box-shadow: 0 14px 30px -4px rgba(5, 150, 105, 0.65), 0 0 24px rgba(217, 119, 6, 0.5);
+        }
+
+        .ai-fab-btn:active {
+          transform: scale(0.96);
+        }
+
+        .ai-fab-icon-wrap {
+          position: relative;
+          font-size: 1.55rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .ai-fab-sparkle {
+          position: absolute;
+          top: -6px;
+          right: -8px;
+          font-size: 0.85rem;
+          color: #fbbf24;
+          animation: aiSparklePulse 2s infinite ease-in-out;
+        }
+
+        @keyframes aiSparklePulse {
+          0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.9; }
+          50% { transform: scale(1.3) rotate(20deg); opacity: 1; }
+        }
+
+        .ai-fab-pulse-dot {
+          position: absolute;
+          top: 2px;
+          right: 2px;
+          width: 14px;
+          height: 14px;
+          border-radius: 50%;
+          background: #10b981;
+          border: 2px solid #ffffff;
+          box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+          animation: aiPulseDot 2s infinite cubic-bezier(0.66, 0, 0, 1);
+        }
+
+        @keyframes aiPulseDot {
+          to { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+        }
+
+        .ai-fab-badge-pill {
+          position: absolute;
+          bottom: -8px;
+          background: #0f172a;
+          color: #f8fafc;
+          font-size: 0.65rem;
+          font-weight: 800;
+          letter-spacing: 0.5px;
+          padding: 2px 7px;
+          border-radius: 10px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          white-space: nowrap;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+        }
+
+        /* --- Chat Window --- */
+        .ai-chat-window {
+          position: fixed;
+          bottom: 96px;
+          right: 24px;
+          width: 410px;
+          max-width: calc(100vw - 32px);
+          height: 590px;
+          max-height: calc(100vh - 120px);
+          background: #ffffff;
+          border-radius: 20px;
+          border: 1px solid rgba(5, 150, 105, 0.2);
+          box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          z-index: 9999;
+          animation: aiWindowSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes aiWindowSlideUp {
+          from { opacity: 0; transform: translateY(20px) scale(0.96); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @media (max-width: 480px) {
+          .ai-chat-window {
+            bottom: 0;
+            right: 0;
+            width: 100vw;
+            max-width: 100vw;
+            height: 100vh;
+            max-height: 100vh;
+            border-radius: 0;
+          }
+        }
+
+        /* Header */
+        .ai-chat-header {
+          background: linear-gradient(135deg, #064e3b 0%, #059669 100%);
+          color: #ffffff;
+          padding: 14px 16px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .ai-header-left {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .ai-avatar {
+          width: 40px;
+          height: 40px;
+          border-radius: 12px;
+          background: rgba(255, 255, 255, 0.18);
+          backdrop-filter: blur(8px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.25rem;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3);
+        }
+
+        .ai-title-wrap h4 {
+          margin: 0;
+          font-size: 0.95rem;
+          font-weight: 800;
+          letter-spacing: -0.2px;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+
+        .ai-header-meta {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          margin-top: 2px;
+        }
+
+        .ai-mode-tag {
+          font-size: 0.68rem;
+          font-weight: 700;
+          padding: 1px 6px;
+          border-radius: 6px;
+          background: rgba(255, 255, 255, 0.22);
+          text-transform: uppercase;
+        }
+
+        .ai-live-indicator {
+          font-size: 0.7rem;
+          color: #a7f3d0;
+          display: flex;
+          align-items: center;
+          gap: 4px;
+        }
+
+        .ai-live-indicator::before {
+          content: "";
+          display: inline-block;
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #34d399;
+        }
+
+        .ai-header-actions {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+
+        .ai-icon-btn {
+          width: 32px;
+          height: 32px;
+          border-radius: 8px;
+          background: rgba(255, 255, 255, 0.12);
+          border: none;
+          color: #ffffff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          font-size: 0.9rem;
+          transition: background 0.15s;
+        }
+
+        .ai-icon-btn:hover {
+          background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* Context Banner */
+        .ai-context-banner {
+          background: #ecfdf5;
+          border-bottom: 1px solid #d1fae5;
+          padding: 8px 14px;
+          font-size: 0.76rem;
+          color: #065f46;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          font-weight: 600;
+        }
+
+        .ai-context-banner i {
+          color: #059669;
+          font-size: 0.85rem;
+          margin-right: 4px;
+        }
+
+        /* Chips Scroll */
+        .ai-chips-wrap {
+          padding: 8px 12px;
+          background: #f8fafc;
+          border-bottom: 1px solid #e2e8f0;
+          display: flex;
+          gap: 6px;
+          overflow-x: auto;
+          white-space: nowrap;
+          scrollbar-width: thin;
+        }
+
+        .ai-chips-wrap::-webkit-scrollbar {
+          height: 4px;
+        }
+
+        .ai-chips-wrap::-webkit-scrollbar-thumb {
+          background: #cbd5e1;
+          border-radius: 4px;
+        }
+
+        .ai-chip {
+          padding: 4px 10px;
+          font-size: 0.74rem;
+          font-weight: 600;
+          background: #ffffff;
+          color: #334155;
+          border: 1px solid #cbd5e1;
+          border-radius: 14px;
+          cursor: pointer;
+          transition: all 0.15s;
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+        }
+
+        .ai-chip:hover {
+          background: #059669;
+          color: #ffffff;
+          border-color: #059669;
+          transform: translateY(-1px);
+        }
+
+        /* Messages Body */
+        .ai-messages-list {
+          flex: 1;
+          overflow-y: auto;
+          padding: 14px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          background: #f8fafc;
+          scrollbar-width: thin;
+        }
+
+        .ai-message {
+          display: flex;
+          flex-direction: column;
+          max-width: 88%;
+          animation: aiMsgFadeIn 0.2s ease-out;
+        }
+
+        @keyframes aiMsgFadeIn {
+          from { opacity: 0; transform: translateY(6px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ai-msg-user {
+          align-self: flex-end;
+          align-items: flex-end;
+        }
+
+        .ai-msg-bot {
+          align-self: flex-start;
+          align-items: flex-start;
+        }
+
+        .ai-bubble {
+          padding: 10px 14px;
+          border-radius: 16px;
+          font-size: 0.86rem;
+          line-height: 1.5;
+          word-break: break-word;
+          position: relative;
+        }
+
+        .ai-msg-user .ai-bubble {
+          background: linear-gradient(135deg, #059669 0%, #047857 100%);
+          color: #ffffff;
+          border-bottom-right-radius: 4px;
+          box-shadow: 0 3px 8px rgba(5, 150, 105, 0.25);
+        }
+
+        .ai-msg-bot .ai-bubble {
+          background: #ffffff;
+          color: #0f172a;
+          border: 1px solid #e2e8f0;
+          border-bottom-left-radius: 4px;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        }
+
+        .ai-msg-time {
+          font-size: 0.68rem;
+          color: #94a3b8;
+          margin-top: 3px;
+          padding: 0 4px;
+        }
+
+        .ai-bubble-urdu {
+          font-family: var(--font-urdu, 'Noto Nastaliq Urdu', serif);
+          direction: rtl;
+          text-align: right;
+          font-size: 0.95rem;
+          line-height: 1.8;
+        }
+
+        /* Markdown styling inside bubbles */
+        .ai-bubble p { margin: 0 0 8px 0; }
+        .ai-bubble p:last-child { margin-bottom: 0; }
+        .ai-bubble strong { font-weight: 700; color: inherit; }
+        .ai-bubble ul, .ai-bubble ol { margin: 4px 0 8px 18px; padding: 0; }
+        .ai-bubble li { margin-bottom: 3px; }
+        .ai-bubble hr { border: none; border-top: 1px solid #e2e8f0; margin: 8px 0; }
+        .ai-bubble table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 6px 0;
+          font-size: 0.8rem;
+        }
+        .ai-bubble th, .ai-bubble td {
+          border: 1px solid #cbd5e1;
+          padding: 4px 8px;
+          text-align: left;
+        }
+        .ai-bubble th {
+          background: #f1f5f9;
+          font-weight: 700;
+        }
+        .ai-bubble code {
+          background: rgba(0, 0, 0, 0.06);
+          padding: 2px 4px;
+          border-radius: 4px;
+          font-family: monospace;
+          font-size: 0.82rem;
+        }
+
+        /* Typing indicator */
+        .ai-typing-indicator {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          padding: 10px 14px;
+          background: #ffffff;
+          border: 1px solid #e2e8f0;
+          border-radius: 16px;
+          border-bottom-left-radius: 4px;
+          width: fit-content;
+        }
+
+        .ai-typing-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #10b981;
+          animation: aiTypingBounce 1.4s infinite ease-in-out both;
+        }
+
+        .ai-typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .ai-typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes aiTypingBounce {
+          0%, 80%, 100% { transform: scale(0); }
+          40% { transform: scale(1); }
+        }
+
+        /* Input Bar */
+        .ai-input-area {
+          padding: 10px 12px;
+          background: #ffffff;
+          border-top: 1px solid #e2e8f0;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .ai-mic-btn {
+          width: 38px;
+          height: 38px;
+          border-radius: 50%;
+          background: #f1f5f9;
+          border: 1px solid #cbd5e1;
+          color: #475569;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          font-size: 1rem;
+          transition: all 0.2s;
+          flex-shrink: 0;
+        }
+
+        .ai-mic-btn:hover {
+          background: #e2e8f0;
+          color: #0f172a;
+        }
+
+        .ai-mic-btn.listening {
+          background: #ef4444;
+          color: #ffffff;
+          border-color: #dc2626;
+          box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.3);
+          animation: aiMicPulse 1s infinite alternate;
+        }
+
+        @keyframes aiMicPulse {
+          from { transform: scale(1); }
+          to { transform: scale(1.12); }
+        }
+
+        .ai-text-input {
+          flex: 1;
+          min-height: 40px;
+          max-height: 90px;
+          border: 1.5px solid #cbd5e1;
+          border-radius: 20px;
+          padding: 9px 14px;
+          font-family: inherit;
+          font-size: 0.88rem;
+          outline: none;
+          resize: none;
+          line-height: 1.4;
+          transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .ai-text-input:focus {
+          border-color: #059669;
+          box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
+        }
+
+        .ai-send-btn {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #059669 0%, #047857 100%);
+          border: none;
+          color: #ffffff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          font-size: 0.95rem;
+          flex-shrink: 0;
+          box-shadow: 0 4px 10px rgba(5, 150, 105, 0.3);
+          transition: transform 0.15s, background 0.2s;
+        }
+
+        .ai-send-btn:hover {
+          transform: scale(1.05);
+          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .ai-send-btn:active {
+          transform: scale(0.95);
+        }
+
+        /* Settings Modal Overlay */
+        .ai-settings-modal {
+          position: absolute;
+          inset: 0;
+          background: rgba(15, 23, 42, 0.6);
+          backdrop-filter: blur(4px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 16px;
+          z-index: 10000;
+          animation: aiMsgFadeIn 0.2s;
+        }
+
+        .ai-settings-box {
+          background: #ffffff;
+          border-radius: 16px;
+          padding: 18px;
+          width: 100%;
+          max-width: 350px;
+          box-shadow: 0 20px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .ai-settings-box h4 {
+          margin: 0 0 12px 0;
+          font-size: 1rem;
+          color: #0f172a;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .ai-settings-field {
+          margin-bottom: 12px;
+        }
+
+        .ai-settings-field label {
+          display: block;
+          font-size: 0.75rem;
+          font-weight: 700;
+          color: #475569;
+          margin-bottom: 4px;
+        }
+
+        .ai-settings-field input, .ai-settings-field select {
+          width: 100%;
+          box-sizing: border-box;
+          padding: 8px 10px;
+          border-radius: 8px;
+          border: 1px solid #cbd5e1;
+          font-size: 0.82rem;
+          outline: none;
+        }
+      </style></head>
+<body class="theme-light" data-lang="en">
+
+  <!-- Top Announcement Header -->
+  <header class="top-announcement">
+    <div class="container announcement-inner">
+      <div class="announcement-left">
+        <span class="live-dot-pulse"></span>
+        <span class="announcement-text" id="topStoreHours">
+          <i class="fa-solid fa-clock"></i> <strong>Open Today:</strong> 6:00 AM – 11:30 PM &nbsp;|&nbsp; 
+          <i class="fa-solid fa-location-dot"></i> GT Road, Dina (With Focus College)
+        </span>
+      </div>
+      <div class="announcement-right">
+        <a href="tel:03709589018" class="contact-pill"><i class="fa-solid fa-phone"></i> 0370-9589018</a>
+        <a href="https://wa.me/923709589018" target="_blank" class="contact-pill whatsapp-pill"><i class="fa-brands fa-whatsapp"></i> 0370-9589018</a>
+        <a href="https://wa.me/923421008375" target="_blank" class="contact-pill whatsapp-pill"><i class="fa-brands fa-whatsapp"></i> 0342-1008375</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Navigation Bar -->
+  <nav class="main-navbar">
+    <div class="container nav-content">
+      <!-- Brand Logo -->
+      <div class="brand-wrapper" id="navBrand">
+        <img src="assets/alsadiq_logo.jpg" alt="Al Sadiq Milk &amp; Fresh Drinks Logo" class="brand-logo-img">
+        <div class="brand-text">
+          <div class="brand-title">
+            <span class="brand-name">Al Sadiq</span>
+            <span class="brand-badge">EST. 2023</span>
+          </div>
+          <div class="brand-subtitle">
+            <span class="en-sub">MILK &amp; FRESH DRINKS</span>
+            <span class="ur-sub">الصادق ملک اینڈ فریش ڈرنکس</span>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Nav Actions -->
+      <div class="nav-actions">
+        <!-- Language Switcher -->
+        <button type="button" class="lang-toggle-btn" id="langToggleBtn" title="Switch Language">
+          <i class="fa-solid fa-globe"></i>
+          <span id="currentLangLabel">اردو</span>
+        </button>
+
+        <!-- Track My Order -->
+        <button type="button" class="action-btn track-btn" id="openTrackModalBtn">
+          <i class="fa-solid fa-magnifying-glass-location"></i>
+          <span class="btn-lbl-en">Track Order</span>
+          <span class="btn-lbl-ur">آرڈر ٹریک کریں</span>
+        </button>
+
+        <!-- Staff Portal Access (Protected with Security PIN) -->
+        <button type="button" class="action-btn staff-portal-btn" id="openStaffAuthModalBtn" title="Staff Portal (اسٹاف لاگ ان)">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span class="btn-lbl-en">Staff Portal</span>
+          <span class="btn-lbl-ur">اسٹاف پورٹل</span>
+        </button>
+
+        <!-- Cart Button -->
+        <button type="button" class="cart-trigger-btn" id="openCartBtn" aria-label="View Cart">
+          <div class="cart-icon-wrap">
+            <i class="fa-solid fa-basket-shopping"></i>
+            <span class="cart-badge" id="cartCountBadge">0</span>
+          </div>
+          <div class="cart-btn-price">
+            <span class="cart-label">Rs.</span>
+            <span id="cartTotalPriceNav">0</span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========================================================================= -->
+  <!-- 1. CUSTOMER VIEW SECTION -->
+  <!-- ========================================================================= -->
+  <main class="view-container active" id="customerView">
+    
+    <!-- Compact Top Rates & Quick Booking Header -->
+    <section class="compact-hero-bar">
+      <div class="container">
+        <div class="compact-hero-inner">
+          <div class="compact-hero-brand">
+            <div class="brand-badge-circle"><i class="fa-solid fa-cow"></i></div>
+            <div>
+              <h1 class="compact-hero-title">
+                <span class="en-heading">Al Sadiq Pure Dairy &amp; Drinks</span>
+                <span class="ur-heading">الصادق ملک اینڈ فریش ڈرنکس • جی ٹی روڈ دینہ</span>
+              </h1>
+              <div class="compact-hero-meta">
+                <span><i class="fa-solid fa-circle-check text-green"></i> 100% Pure Farm Fresh</span>
+                <span><i class="fa-solid fa-location-dot"></i> GT Road, Dina</span>
+                <span><i class="fa-brands fa-whatsapp text-green"></i> 0370-9589018</span>
+              </div>
+            </div>
+          </div>
+          <div class="compact-quick-cta">
+            <a href="tel:03709589018" class="compact-call-btn"><i class="fa-solid fa-phone"></i> Call Order</a>
+            <a href="https://wa.me/923421008375" target="_blank" class="compact-wa-btn"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+          </div>
+        </div>
+
+        <!-- Highlight Live Daily Rates Bar (Compact) -->
+        <div class="rates-strip-wrap">
+          <div class="rates-strip-label">
+            <i class="fa-solid fa-tag"></i> <strong>Live Rates (آج کے ریٹس):</strong>
+          </div>
+          <div class="rates-grid compact-rates-grid" id="dailyRatesGrid">
+      <div class="rate-item-card" onclick="openCustomizeModal('cow_milk')" style="cursor:pointer;" title="Click to Order">
+        <div class="rate-item-info">
+          <strong>Fresh Pure Cow Milk</strong>
+          <small>Bestseller</small>
+        </div>
+        <div class="rate-item-price">
+          Rs. 220 <span class="rate-unit">/Liter</span>
+        </div>
+      </div>
+    
+      <div class="rate-item-card" onclick="openCustomizeModal('buffalo_milk')" style="cursor:pointer;" title="Click to Order">
+        <div class="rate-item-info">
+          <strong>Fresh Pure Buffalo Milk</strong>
+          <small>Rich &amp; Thick</small>
+        </div>
+        <div class="rate-item-price">
+          Rs. 280 <span class="rate-unit">/Liter</span>
+        </div>
+      </div>
+    
+      <div class="rate-item-card" onclick="openCustomizeModal('mixed_milk')" style="cursor:pointer;" title="Click to Order">
+        <div class="rate-item-info">
+          <strong>Mixed Pure Milk</strong>
+          <small>Balanced</small>
+        </div>
+        <div class="rate-item-price">
+          Rs. 240 <span class="rate-unit">/Liter</span>
+        </div>
+      </div>
+    
+      <div class="rate-item-card" onclick="openCustomizeModal('fresh_dahi')" style="cursor:pointer;" title="Click to Order">
+        <div class="rate-item-info">
+          <strong>Fresh Creamy Dahi (Yogurt)</strong>
+          <small>Thick Malai</small>
+        </div>
+        <div class="rate-item-price">
+          Rs. 240 <span class="rate-unit">/KG</span>
+        </div>
+      </div>
+    
+      <div class="rate-item-card" onclick="openCustomizeModal('desi_ghee')" style="cursor:pointer;" title="Click to Order">
+        <div class="rate-item-info">
+          <strong>Pure Desi Ghee</strong>
+          <small>100% Organic</small>
+        </div>
+        <div class="rate-item-price">
+          Rs. 2400 <span class="rate-unit">/KG</span>
+        </div>
+      </div>
+    </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Menu Section (Fast & Direct) -->
+    <section class="menu-section compact-menu-section" id="menuMainSection">
+      <div class="container">
+        
+        <!-- Category Navigation Tabs & Search -->
+        <div class="menu-controls-header">
+          <div class="category-tabs-scroll" id="categoryTabs">
+            <button type="button" class="cat-tab active" data-category="all">
+              <i class="fa-solid fa-border-all"></i>
+              <span class="en-text">All Items</span>
+              <span class="ur-text">تمام آئٹمز</span>
+            </button>
+            <button type="button" class="cat-tab" data-category="dairy">
+              <i class="fa-solid fa-cow"></i>
+              <span class="en-text">Pure Dairy &amp; Milk</span>
+              <span class="ur-text">خالص دودھ و ڈیری</span>
+            </button>
+            <button type="button" class="cat-tab" data-category="milkshakes">
+              <i class="fa-solid fa-blender"></i>
+              <span class="en-text">Milk Shakes</span>
+              <span class="ur-text">ملک شیکس</span>
+            </button>
+            <button type="button" class="cat-tab" data-category="protein">
+              <i class="fa-solid fa-dumbbell"></i>
+              <span class="en-text">Protein &amp; Energy Shakes</span>
+              <span class="ur-text">پروٹین شیکس</span>
+            </button>
+            <button type="button" class="cat-tab" data-category="mojitos">
+              <i class="fa-solid fa-champagne-glasses"></i>
+              <span class="en-text">Mojitos &amp; Fresh Juices</span>
+              <span class="ur-text">موجیتوز و جوسز</span>
+            </button>
+            <button type="button" class="cat-tab" data-category="specials">
+              <i class="fa-solid fa-star"></i>
+              <span class="en-text">Special Drinks</span>
+              <span class="ur-text">اسپیشل مشروبات</span>
+            </button>
+          </div>
+
+          <!-- Search & Filter Row -->
+          <div class="search-filter-row">
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="menuSearchInput" placeholder="Search milk, shakes, mojitos... / تلاش کریں" autocomplete="off">
+              <button type="button" class="search-clear-btn" id="searchClearBtn" style="display:none;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="quick-filter-pills">
+              <button type="button" class="pill-filter active" data-filter="all">All</button>
+              <button type="button" class="pill-filter" data-filter="popular">⭐ Popular</button>
+              <button type="button" class="pill-filter" data-filter="fitness">💪 Gym / Fitness</button>
+              <button type="button" class="pill-filter" data-filter="chilled">🧊 Chilled Mojitos</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Menu Product Cards Grid -->
+        <div class="menu-products-container" id="menuProductsGrid">
+        <div class="category-section-block" id="cat-block-dairy">
+          <div class="cat-section-header">
+            <div class="cat-section-title-wrap">
+              <div class="cat-badge-icon"><i class="fa-solid fa-cow"></i></div>
+              <h2 class="cat-section-title">
+                Pure Farm Dairy &amp; Fresh Milk
+              </h2>
+            </div>
+            <span class="cat-section-count">10 Items</span>
+          </div>
+          <div class="products-grid">
+            
+    <div class="product-card-compact" data-item-id="cow_milk">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/dairy.jpg" alt="Fresh Pure Cow Milk" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Fresh Pure Cow Milk</h3>
+          <span class="card-compact-urdu">گائے کا خالص دودھ</span>
+          <div class="card-price-badge">Rs. 220 / Liter</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('cow_milk', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_cow_milk">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('cow_milk', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('cow_milk')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('cow_milk')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="buffalo_milk">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/dairy.jpg" alt="Fresh Pure Buffalo Milk" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Fresh Pure Buffalo Milk</h3>
+          <span class="card-compact-urdu">بھینس کا خالص دودھ</span>
+          <div class="card-price-badge">Rs. 280 / Liter</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('buffalo_milk', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_buffalo_milk">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('buffalo_milk', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('buffalo_milk')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('buffalo_milk')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="mixed_milk">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/dairy.jpg" alt="Mixed Pure Milk" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Mixed Pure Milk</h3>
+          <span class="card-compact-urdu">مکس خالص دودھ</span>
+          <div class="card-price-badge">Rs. 240 / Liter</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('mixed_milk', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_mixed_milk">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('mixed_milk', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('mixed_milk')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('mixed_milk')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="fresh_dahi">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/dairy.jpg" alt="Fresh Creamy Dahi (Yogurt)" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Fresh Creamy Dahi (Yogurt)</h3>
+          <span class="card-compact-urdu">ملائی دار تازہ دہی</span>
+          <div class="card-price-badge">Rs. 240 / KG</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('fresh_dahi', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_fresh_dahi">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('fresh_dahi', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('fresh_dahi')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('fresh_dahi')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="desi_ghee">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/dairy.jpg" alt="Pure Desi Ghee" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Pure Desi Ghee</h3>
+          <span class="card-compact-urdu">خالص دیسی گھی</span>
+          <div class="card-price-badge">Rs. 2400 / KG</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('desi_ghee', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_desi_ghee">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('desi_ghee', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('desi_ghee')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('desi_ghee')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="fresh_butter">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/dairy.jpg" alt="Fresh Farm Makhan (Butter)" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Fresh Farm Makhan (Butter)</h3>
+          <span class="card-compact-urdu">تازہ مکھن</span>
+          <div class="card-price-badge">Rs. 1400 / KG</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('fresh_butter', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_fresh_butter">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('fresh_butter', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('fresh_butter')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('fresh_butter')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="shahi_kheer">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/dairy.jpg" alt="Shahi Kheer" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Shahi Kheer</h3>
+          <span class="card-compact-urdu">شاہی کھیر</span>
+          <div class="card-price-badge">Rs. 200 / Plate</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('shahi_kheer', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_shahi_kheer">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('shahi_kheer', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('shahi_kheer')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('shahi_kheer')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="doodh_bottle">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/dairy.jpg" alt="Chilled Doodh Bottle (Cardamom)" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Chilled Doodh Bottle (Cardamom)</h3>
+          <span class="card-compact-urdu">ٹھنڈا دودھ بوتل (الائچی)</span>
+          <div class="card-price-badge">Rs. 150 / Bottle</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('doodh_bottle', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_doodh_bottle">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('doodh_bottle', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('doodh_bottle')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('doodh_bottle')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="desi_lassi">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/dairy.jpg" alt="Desi Lassi (Sweet / Salty)" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Desi Lassi (Sweet / Salty)</h3>
+          <span class="card-compact-urdu">روایتی دیسی لسی (میٹھی / نمکین)</span>
+          <div class="card-price-badge">Rs. 150 / Glass</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('desi_lassi', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_desi_lassi">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('desi_lassi', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('desi_lassi')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('desi_lassi')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="special_lassi">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/dairy.jpg" alt="Special Peda Malai Lassi" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Special Peda Malai Lassi</h3>
+          <span class="card-compact-urdu">اسپیشل پیڑا ملائی لسی</span>
+          <div class="card-price-badge">Rs. 250 / Glass</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('special_lassi', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_special_lassi">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('special_lassi', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('special_lassi')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('special_lassi')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+          </div>
+        </div>
+      
+        <div class="category-section-block" id="cat-block-milkshakes">
+          <div class="cat-section-header">
+            <div class="cat-section-title-wrap">
+              <div class="cat-badge-icon"><i class="fa-solid fa-blender"></i></div>
+              <h2 class="cat-section-title">
+                Wholesome Fruit Milkshakes
+              </h2>
+            </div>
+            <span class="cat-section-count">8 Items</span>
+          </div>
+          <div class="products-grid">
+            
+    <div class="product-card-compact" data-item-id="shake_banana">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/milkshakes.jpg" alt="Fresh Banana Milkshake" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Fresh Banana Milkshake</h3>
+          <span class="card-compact-urdu">تازہ کیلا ملک شیک</span>
+          <div class="card-price-badge">Rs. 180 / Glass</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('shake_banana', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_shake_banana">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('shake_banana', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('shake_banana')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('shake_banana')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="shake_strawberry">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/milkshakes.jpg" alt="Strawberry Milkshake" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Strawberry Milkshake</h3>
+          <span class="card-compact-urdu">اسٹرابیری ملک شیک</span>
+          <div class="card-price-badge">Rs. 220 / Glass</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('shake_strawberry', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_shake_strawberry">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('shake_strawberry', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('shake_strawberry')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('shake_strawberry')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="shake_mango">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/milkshakes.jpg" alt="King Mango Milkshake" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">King Mango Milkshake</h3>
+          <span class="card-compact-urdu">کنگ مینگو ملک شیک</span>
+          <div class="card-price-badge">Rs. 250 / Glass</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('shake_mango', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_shake_mango">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('shake_mango', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('shake_mango')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('shake_mango')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="shake_khoya_khajoor">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/milkshakes.jpg" alt="Khoya Khajoor Shake" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Khoya Khajoor Shake</h3>
+          <span class="card-compact-urdu">کھویا کھجور شیک</span>
+          <div class="card-price-badge">Rs. 300 / Glass</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('shake_khoya_khajoor', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_shake_khoya_khajoor">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('shake_khoya_khajoor', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('shake_khoya_khajoor')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('shake_khoya_khajoor')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="shake_oreo">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/milkshakes.jpg" alt="Crunchy Oreo Shake" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Crunchy Oreo Shake</h3>
+          <span class="card-compact-urdu">کرنچی اوریو شیک</span>
+          <div class="card-price-badge">Rs. 250 / Glass</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('shake_oreo', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_shake_oreo">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('shake_oreo', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('shake_oreo')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('shake_oreo')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="shake_chocolate">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/milkshakes.jpg" alt="Velvet Chocolate Shake" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Velvet Chocolate Shake</h3>
+          <span class="card-compact-urdu">چاکلیٹ ملک شیک</span>
+          <div class="card-price-badge">Rs. 240 / Glass</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('shake_chocolate', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_shake_chocolate">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('shake_chocolate', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('shake_chocolate')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('shake_chocolate')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="shake_kulfa">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/milkshakes.jpg" alt="Special Kulfa Ice Cream Shake" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Special Kulfa Ice Cream Shake</h3>
+          <span class="card-compact-urdu">اسپیشل کلفہ آئس کریم شیک</span>
+          <div class="card-price-badge">Rs. 280 / Glass</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('shake_kulfa', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_shake_kulfa">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('shake_kulfa', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('shake_kulfa')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('shake_kulfa')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="shake_apple">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/milkshakes.jpg" alt="Apple Honey Shake" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Apple Honey Shake</h3>
+          <span class="card-compact-urdu">سیب اور شہد شیک</span>
+          <div class="card-price-badge">Rs. 200 / Glass</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('shake_apple', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_shake_apple">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('shake_apple', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('shake_apple')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('shake_apple')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+          </div>
+        </div>
+      
+        <div class="category-section-block" id="cat-block-protein">
+          <div class="cat-section-header">
+            <div class="cat-section-title-wrap">
+              <div class="cat-badge-icon"><i class="fa-solid fa-dumbbell"></i></div>
+              <h2 class="cat-section-title">
+                High Protein &amp; Energy Shakes
+              </h2>
+            </div>
+            <span class="cat-section-count">6 Items</span>
+          </div>
+          <div class="products-grid">
+            
+    <div class="product-card-compact" data-item-id="protein_almond_pista">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/protein_shakes.jpg" alt="Badam Pista Gym Shake" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Badam Pista Gym Shake</h3>
+          <span class="card-compact-urdu">بادام پستہ جم شیک</span>
+          <div class="card-price-badge">Rs. 300 / Glass</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('protein_almond_pista', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_protein_almond_pista">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('protein_almond_pista', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('protein_almond_pista')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('protein_almond_pista')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="protein_peanut_butter">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/protein_shakes.jpg" alt="Peanut Butter Banana Protein" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Peanut Butter Banana Protein</h3>
+          <span class="card-compact-urdu">پینٹ بٹر بنانا پروٹین شیک</span>
+          <div class="card-price-badge">Rs. 320 / Glass</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('protein_peanut_butter', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_protein_peanut_butter">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('protein_peanut_butter', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('protein_peanut_butter')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('protein_peanut_butter')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="protein_dryfruit_power">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/protein_shakes.jpg" alt="Dates &amp; Walnut Power Shake" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Dates &amp; Walnut Power Shake</h3>
+          <span class="card-compact-urdu">کھجور و اخروٹ پاور شیک</span>
+          <div class="card-price-badge">Rs. 350 / Glass</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('protein_dryfruit_power', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_protein_dryfruit_power">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('protein_dryfruit_power', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('protein_dryfruit_power')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('protein_dryfruit_power')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="protein_pehlwani">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/protein_shakes.jpg" alt="Special Wrestler Pehlwani Shake" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Special Wrestler Pehlwani Shake</h3>
+          <span class="card-compact-urdu">اسپیشل پہلوانی شیک</span>
+          <div class="card-price-badge">Rs. 450 / Glass</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('protein_pehlwani', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_protein_pehlwani">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('protein_pehlwani', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('protein_pehlwani')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('protein_pehlwani')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="protein_royal_dryfruit">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/protein_shakes.jpg" alt="Royal Dry Fruit Milk Shake" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Royal Dry Fruit Milk Shake</h3>
+          <span class="card-compact-urdu">شاہی ڈرائی فروٹ شیک</span>
+          <div class="card-price-badge">Rs. 400 / Glass</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('protein_royal_dryfruit', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_protein_royal_dryfruit">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('protein_royal_dryfruit', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('protein_royal_dryfruit')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('protein_royal_dryfruit')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="protein_whey_blend">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/protein_shakes.jpg" alt="100% Whey Protein Milk Blend" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">100% Whey Protein Milk Blend</h3>
+          <span class="card-compact-urdu">وے پروٹین ملک بلینڈ</span>
+          <div class="card-price-badge">Rs. 400 / Glass</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('protein_whey_blend', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_protein_whey_blend">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('protein_whey_blend', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('protein_whey_blend')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('protein_whey_blend')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+          </div>
+        </div>
+      
+        <div class="category-section-block" id="cat-block-mojitos">
+          <div class="cat-section-header">
+            <div class="cat-section-title-wrap">
+              <div class="cat-badge-icon"><i class="fa-solid fa-champagne-glasses"></i></div>
+              <h2 class="cat-section-title">
+                Chilled Mojitos &amp; Fresh Juices
+              </h2>
+            </div>
+            <span class="cat-section-count">6 Items</span>
+          </div>
+          <div class="products-grid">
+            
+    <div class="product-card-compact" data-item-id="mojito_mint_lemon">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/alsadiq_fresh_drink.jpg" alt="Classic Mint Lemonade Mojito" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Classic Mint Lemonade Mojito</h3>
+          <span class="card-compact-urdu">منٹ لیمنیڈ موجیتو</span>
+          <div class="card-price-badge">Rs. 150 / Glass</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('mojito_mint_lemon', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_mojito_mint_lemon">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('mojito_mint_lemon', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('mojito_mint_lemon')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('mojito_mint_lemon')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="mojito_blue_lagoon">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/mojitos.jpg" alt="Blue Lagoon Tropical Mojito" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Blue Lagoon Tropical Mojito</h3>
+          <span class="card-compact-urdu">بلیو لگون موجیتو</span>
+          <div class="card-price-badge">Rs. 180 / Glass</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('mojito_blue_lagoon', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_mojito_blue_lagoon">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('mojito_blue_lagoon', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('mojito_blue_lagoon')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('mojito_blue_lagoon')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="mojito_watermelon">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/mojitos.jpg" alt="Fresh Watermelon Mojito" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Fresh Watermelon Mojito</h3>
+          <span class="card-compact-urdu">تازہ تربوز موجیتو</span>
+          <div class="card-price-badge">Rs. 150 / Glass</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('mojito_watermelon', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_mojito_watermelon">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('mojito_watermelon', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('mojito_watermelon')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('mojito_watermelon')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="mojito_green_apple">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/mojitos.jpg" alt="Green Apple Sparkler" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Green Apple Sparkler</h3>
+          <span class="card-compact-urdu">گرین ایپل اسپارکلر</span>
+          <div class="card-price-badge">Rs. 160 / Glass</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('mojito_green_apple', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_mojito_green_apple">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('mojito_green_apple', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('mojito_green_apple')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('mojito_green_apple')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="mojito_roohafza_lemon">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/mojitos.jpg" alt="Rooh Afza Lemon Chiller" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Rooh Afza Lemon Chiller</h3>
+          <span class="card-compact-urdu">روح افزاء لیمن چلر</span>
+          <div class="card-price-badge">Rs. 130 / Glass</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('mojito_roohafza_lemon', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_mojito_roohafza_lemon">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('mojito_roohafza_lemon', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('mojito_roohafza_lemon')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('mojito_roohafza_lemon')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="mojito_orange_cooler">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/mojitos.jpg" alt="Orange Citrus Fizz" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Orange Citrus Fizz</h3>
+          <span class="card-compact-urdu">اورنج سٹرس فز</span>
+          <div class="card-price-badge">Rs. 150 / Glass</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('mojito_orange_cooler', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_mojito_orange_cooler">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('mojito_orange_cooler', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('mojito_orange_cooler')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('mojito_orange_cooler')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+          </div>
+        </div>
+      
+        <div class="category-section-block" id="cat-block-specials">
+          <div class="cat-section-header">
+            <div class="cat-section-title-wrap">
+              <div class="cat-badge-icon"><i class="fa-solid fa-star"></i></div>
+              <h2 class="cat-section-title">
+                Al Sadiq Signature Special Drinks
+              </h2>
+            </div>
+            <span class="cat-section-count">3 Items</span>
+          </div>
+          <div class="products-grid">
+            
+    <div class="product-card-compact" data-item-id="special_alsadiq_grand">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/protein_shakes.jpg" alt="Al Sadiq Grand Royal Shake" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Al Sadiq Grand Royal Shake</h3>
+          <span class="card-compact-urdu">الصادق گرینڈ رائل شیک</span>
+          <div class="card-price-badge">Rs. 500 / Mega Glass</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('special_alsadiq_grand', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_special_alsadiq_grand">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('special_alsadiq_grand', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('special_alsadiq_grand')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('special_alsadiq_grand')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="special_rabri_falooda">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/dairy.jpg" alt="Rabri Falooda Milkshake" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Rabri Falooda Milkshake</h3>
+          <span class="card-compact-urdu">ربڑی فالودہ ملک شیک</span>
+          <div class="card-price-badge">Rs. 300 / Glass</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('special_rabri_falooda', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_special_rabri_falooda">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('special_rabri_falooda', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('special_rabri_falooda')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('special_rabri_falooda')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="product-card-compact" data-item-id="special_zafran_milk">
+      <div class="card-top-row">
+        <div class="card-mini-thumb">
+          <img src="assets/dairy.jpg" alt="Pure Saffron &amp; Cardamom Milk" loading="lazy">
+        </div>
+        <div class="card-info-col">
+          <h3 class="card-compact-title">Pure Saffron &amp; Cardamom Milk</h3>
+          <span class="card-compact-urdu">خالص زعفرانی دودھ</span>
+          <div class="card-price-badge">Rs. 350 / Glass</div>
+        </div>
+      </div>
+      <div class="card-bottom-actions">
+        <div class="card-qty-stepper">
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('special_zafran_milk', -1)">-</button>
+          <span class="card-qty-value" id="cardQtyVal_special_zafran_milk">1</span>
+          <button type="button" class="card-qty-btn" onclick="stepCardQty('special_zafran_milk', 1)">+</button>
+        </div>
+        <div class="card-action-btns-group">
+          <button type="button" class="btn-card-add-more" onclick="addCardItemToCart('special_zafran_milk')" title="Add to Order">
+            <i class="fa-solid fa-plus"></i> <span>Add</span>
+          </button>
+          <button type="button" class="btn-card-quick-book" onclick="quickBookDirect('special_zafran_milk')" title="Book Now">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Book Now</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+          </div>
+        </div>
+      </div>
+
+      </div>
+    </section>
+
+    <!-- Shop Information & Location Section -->
+    <section class="shop-info-section">
+      <div class="container">
+        <div class="shop-info-card">
+          <div class="shop-info-text">
+            <div class="badge-pill"><i class="fa-solid fa-location-dot"></i> GT Road, Dina</div>
+            <h2>
+              <span class="en-text">Visit Al Sadiq Milk &amp; Fresh Drinks</span>
+              <span class="ur-text">الصادق ملک اینڈ فریش ڈرنکس تشریف لائیں</span>
+            </h2>
+            <p>
+              <span class="en-text">Conveniently located on GT Road, Dina (With Focus College). Experience pure, bacteria-free dairy fresh from farm and enjoy fresh, refreshing fruit shakes and signature mojitos prepared on the spot!</span>
+              <span class="ur-text">جی ٹی روڈ، دینہ (فوکس کالج کے ساتھ)۔ خالص، بیکٹیریا سے پاک دودھ اور تازہ پھلوں کے لذیذ شیکس اور خاص موجیتوز کے لیے تشریف لائیں۔</span>
+            </p>
+            <div class="contact-details-grid">
+              <div class="contact-item">
+                <i class="fa-solid fa-clock"></i>
+                <div>
+                  <strong>Daily Timings</strong>
+                  <span>6:00 AM – 11:30 PM (7 Days a week)</span>
+                </div>
+              </div>
+              <div class="contact-item">
+                <i class="fa-solid fa-phone"></i>
+                <div>
+                  <strong>Phone Booking</strong>
+                  <span>0370-9589018 | 0342-1008375</span>
+                </div>
+              </div>
+              <div class="contact-item">
+                <i class="fa-brands fa-whatsapp"></i>
+                <div>
+                  <strong>WhatsApp Orders</strong>
+                  <span>0370-9589018 | 0342-1008375</span>
+                </div>
+              </div>
+              <div class="contact-item">
+                <i class="fa-solid fa-truck"></i>
+                <div>
+                  <strong>Home Delivery</strong>
+                  <span>Fast delivery across Dina area</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="shop-info-visual">
+            <div class="farm-tag-box" style="padding:1.5rem; text-align:center;">
+              <img src="assets/alsadiq_logo.jpg" alt="Al Sadiq Logo" style="width:100px; height:100px; border-radius:50%; margin:0 auto 0.75rem auto; border:3px solid var(--brand-gold); box-shadow:var(--shadow-md);">
+              <h3>AL SADIQ DAIRY FARM</h3>
+              <p>EST. 2023 • QUALITY ASSURED</p>
+              <div class="pure-quote">
+                "Pure Milk, Refreshing Life! - خالص دودھ، تازہ دم زندگی!"
+              </div>
+            </div>
+          <div class="footer-staff-access" style="text-align:center; padding: 1.5rem 0 0.5rem 0; border-top: 1px solid var(--border-color); margin-top: 2rem;">
+            <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:0.4rem;">© 2023 - 2026 Al Sadiq Milk &amp; Fresh Drinks • GT Road, Dina (With Focus College)</p>
+            <button type="button" id="footerStaffAuthBtn" class="staff-portal-link" style="background:transparent; border:1px solid var(--border-color); border-radius:var(--radius-full); padding:0.35rem 0.9rem; color:var(--text-muted); font-size:0.8rem; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s;" title="Authorized Staff Access Only">
+              <i class="fa-solid fa-lock"></i> Staff Portal &amp; POS (اسٹاف لاگ ان)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div></section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- 3. CART DRAWER (SLIDE OVER) -->
+  <!-- ========================================================================= -->
+  <div class="cart-drawer-overlay" id="cartOverlay">
+    <div class="cart-drawer">
+      
+      <div class="cart-drawer-header">
+        <div class="cart-hdr-title">
+          <i class="fa-solid fa-basket-shopping"></i>
+          <div>
+            <h3>Your Fresh Order</h3>
+            <span class="ur-sub">آپ کا آرڈر اور بکنگ</span>
+          </div>
+        </div>
+        <button type="button" class="btn-close-drawer" id="closeCartBtn" aria-label="Close Cart">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Order Mode Toggle: Shop Pickup vs Home Delivery -->
+      <div class="order-mode-toggle-wrap">
+        <div class="mode-btn-group">
+          <button type="button" class="mode-btn active" id="modePickupBtn">
+            <i class="fa-solid fa-store"></i>
+            <span>Shop Pickup (دکان سے وصولی)</span>
+          </button>
+          <button type="button" class="mode-btn" id="modeDeliveryBtn">
+            <i class="fa-solid fa-motorcycle"></i>
+            <span>Home Delivery (ہوم ڈیلیوری)</span>
+          </button>
+        </div>
+        <div class="mode-hint" id="modeHintText"><i class="fa-solid fa-store"></i> <strong>Counter Pickup at GT Road Dina</strong>. Pay at shop counter upon collection.</div>
+      </div>
+
+      <!-- Cart Items List -->
+      <div class="cart-items-scroll" id="cartItemsList">
+      <div class="cart-empty-box">
+        <i class="fa-solid fa-basket-shopping"></i>
+        <h3>Your Order Cart is Empty</h3>
+        <p>Choose fresh farm milk, shakes, or chilled mojitos from the menu to start your order.</p>
+      </div>
+    </div>
+
+      <!-- Cart Summary & Checkout Trigger -->
+      <div class="cart-drawer-footer" id="cartFooter">
+        <div class="cart-calculations">
+          <div class="calc-row">
+            <span>Items Subtotal:</span>
+            <strong>Rs. <span id="cartSubtotalText">0</span></strong>
+          </div>
+          <div class="calc-row" id="deliveryFeeRow" style="display:none;">
+            <span>Delivery Fee (Dina City):</span>
+            <strong class="delivery-free-badge">FREE / مفت</strong>
+          </div>
+          <div class="calc-row total-row">
+            <span>Total Payable at Pickup:</span>
+            <strong class="total-amount">Rs. <span id="cartTotalText">0</span></strong>
+          </div>
+        </div>
+
+        <button type="button" class="btn-proceed-checkout" id="proceedCheckoutBtn">
+          <span>Proceed to Booking Details</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 4. ITEM CUSTOMIZATION & WEIGHT MODAL -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="customizationModal">
+    <div class="modal-card customize-modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="category-badge" id="modalCategoryBadge">Fresh Dairy</span>
+          <h3 id="modalItemTitle">Pure Cow Milk</h3>
+          <span class="modal-item-urdu" id="modalItemUrdu">گائے کا خالص دودھ</span>
+        </div>
+        <button type="button" class="btn-modal-close" id="closeCustomizeModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-product-summary">
+          <img src="" alt="" id="modalItemImage" class="modal-img-preview">
+          <div class="modal-product-details">
+            <p id="modalItemDesc">100% pure cow milk directly from local dairy farm. Freshly chilled and free from chemicals.</p>
+            <div class="modal-base-price">
+              <span class="rate-label">Unit Rate:</span>
+              <strong id="modalRateDisplay">Rs. 220 / Liter</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Quantity / Weight Selector -->
+        <div class="custom-field-group">
+          <label class="field-title">
+            <i class="fa-solid fa-scale-balanced"></i>
+            <span id="qtySectionTitle">Select Quantity (Liters / KG)</span>
+          </label>
+          <div class="quick-qty-pills" id="quickQtyPills">
+            <!-- Populated dynamically (e.g. 1 L, 2 L, 3 L, 5 L or 1 Glass, 2 Glasses) -->
+          </div>
+          <div class="custom-qty-row">
+            <button type="button" class="qty-btn" id="modalQtyMinus"><i class="fa-solid fa-minus"></i></button>
+            <div class="qty-input-wrap">
+              <input type="number" id="modalQtyInput" value="1" min="1" max="50" step="1">
+              <span class="qty-unit-label" id="modalQtyUnit">Liter</span>
+            </div>
+            <button type="button" class="qty-btn" id="modalQtyPlus"><i class="fa-solid fa-plus"></i></button>
+          </div>
+        </div>
+
+        <!-- Custom Preparation Options (Sugar, Ice, Extra Malai, Khoya, Protein scoop, Packaging) -->
+        <div class="custom-options-container" id="customOptionsContainer">
+          <!-- Populated by JS according to category -->
+        </div>
+
+        <!-- Special Instructions / Counter Note -->
+        <div class="custom-field-group">
+          <label class="field-title" for="modalItemNotes">
+            <i class="fa-regular fa-comment-dots"></i> Special Counter Request / اضافی ہدایات
+          </label>
+          <input type="text" id="modalItemNotes" class="styled-input" placeholder="e.g., Less sweet, extra ice, packing in glass bottle...">
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div class="modal-calc-preview">
+          <span>Item Total:</span>
+          <strong>Rs. <span id="modalItemCalcTotal">220</span></strong>
+        </div>
+        <button type="button" class="btn-add-to-cart-confirm" id="confirmAddToCartBtn">
+          <i class="fa-solid fa-plus"></i> Add to Order
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 5. CHECKOUT & PICKUP SCHEDULING MODAL -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="checkoutModal">
+    <div class="modal-card checkout-modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="badge-pill"><i class="fa-solid fa-calendar-check"></i> Final Step</span>
+          <h3>Complete Your Booking</h3>
+          <span class="modal-item-urdu">بکنگ کی معلومات درج کریں</span>
+        </div>
+        <button type="button" class="btn-modal-close" id="closeCheckoutModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form id="checkoutForm" class="checkout-form">
+        <div class="modal-body">
+          
+          <!-- Order Mode Reminder -->
+          <div class="checkout-mode-banner" id="checkoutModeBanner">
+            <i class="fa-solid fa-store"></i>
+            <div>
+              <strong id="checkoutModeTitle">Shop Counter Pickup</strong>
+              <p id="checkoutModeSub">Al Sadiq Milk &amp; Fresh Drinks, GT Road, Dina</p>
+            </div>
+          </div>
+
+          <!-- Customer Contact Fields -->
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="custName"><i class="fa-solid fa-user"></i> Your Full Name / آپ کا نام *</label>
+              <input type="text" id="custName" class="styled-input" placeholder="e.g. Muhammad Ali" required="">
+            </div>
+            <div class="form-group">
+              <label for="custPhone"><i class="fa-solid fa-phone"></i> Mobile / WhatsApp No. *</label>
+              <input type="tel" id="custPhone" class="styled-input" placeholder="0342-1234567" required="">
+            </div>
+          </div>
+
+          <!-- Date & Time Slot Selection -->
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="custDate"><i class="fa-solid fa-calendar-day"></i> Preferred Date *</label>
+              <select id="custDate" class="styled-input" required="">
+                <!-- Populated by JS: Today, Tomorrow, etc. -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="custTimeSlot"><i class="fa-solid fa-clock"></i> Preferred Time Slot *</label>
+              <select id="custTimeSlot" class="styled-input" required="">
+                <option value="ASAP (Within 15-20 Mins)">⚡ ASAP (Within 15-20 Mins)</option>
+                <option value="Morning (6:30 AM - 9:00 AM)">🌅 Morning (6:30 AM - 9:00 AM)</option>
+                <option value="Noon (12:00 PM - 2:30 PM)">☀️ Noon (12:00 PM - 2:30 PM)</option>
+                <option value="Evening (5:00 PM - 8:00 PM)">🌆 Evening (5:00 PM - 8:00 PM)</option>
+                <option value="Night (8:30 PM - 11:30 PM)">🌙 Night (8:30 PM - 11:30 PM)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Delivery Address (Shown only if Home Delivery is active) -->
+          <div class="form-group" id="deliveryAddressGroup" style="display:none;">
+            <label for="custAddress"><i class="fa-solid fa-location-dot"></i> Delivery Address in Dina / پتہ *</label>
+            <input type="text" id="custAddress" class="styled-input" placeholder="House/Shop #, Street, Mohallah or Landmark in Dina">
+          </div>
+
+          <!-- Special Note -->
+          <div class="form-group">
+            <label for="custSpecialNote"><i class="fa-solid fa-pen-to-square"></i> Order Note / ہدایات (Optional)</label>
+            <textarea id="custSpecialNote" class="styled-input" rows="2" placeholder="Any special packaging or pickup requests..."></textarea>
+          </div>
+
+          <!-- Payment Policy Notice -->
+          <div class="payment-policy-box">
+            <div class="policy-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+            <div class="policy-text">
+              <strong>Payment on Pickup / Delivery (ادائیگی وصولی کے وقت)</strong>
+              <p>No online prepayment required. Pay easily via Cash, JazzCash, EasyPaisa, or Counter Card when collecting your order at our Dina shop!</p>
+            </div>
+          </div>
+
+          <!-- Total Summary -->
+          <div class="checkout-grand-total">
+            <span>Total Payable Amount:</span>
+            <strong>Rs. <span id="checkoutTotalAmount">0</span></strong>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-modal-cancel" id="cancelCheckoutBtn">Back to Cart</button>
+          <button type="submit" class="btn-confirm-order-submit" id="submitOrderBtn">
+            <i class="fa-solid fa-check-circle"></i> Confirm Booking Now
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 6. BOOKING CONFIRMATION & LIVE TRACKER MODAL -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="confirmationModal">
+    <div class="modal-card confirmation-modal-card">
+      <div class="modal-header confirmation-header">
+        <div class="success-ring">
+          <i class="fa-solid fa-check"></i>
+        </div>
+        <h2>Booking Confirmed Successfully!</h2>
+        <span class="modal-item-urdu">آپ کا آرڈر موصول ہو چکا ہے اور بکنگ کنفرم ہے</span>
+        <button type="button" class="btn-modal-close" id="closeConfirmationModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body" id="confirmationBody">
+        
+        <!-- Booking Token Card -->
+        <div class="booking-token-card">
+          <div class="token-left">
+            <span class="token-label">Booking Token #</span>
+            <h1 class="token-number" id="confirmTokenNumber">ASD-101</h1>
+            <div class="token-meta" id="confirmTokenMeta">
+              <span><i class="fa-solid fa-user"></i> <strong id="confirmCustName">Ali</strong></span>
+              <span><i class="fa-solid fa-clock"></i> <strong id="confirmTimeSlot">ASAP</strong></span>
+            </div>
+          </div>
+          <div class="token-right">
+            <div id="confirmQrCode" class="qr-box"></div>
+            <small>Show at Counter</small>
+          </div>
+        </div>
+
+        <!-- Live Visual Order Tracker -->
+        <div class="live-tracker-wrap">
+          <h4 class="tracker-heading">
+            <i class="fa-solid fa-satellite-dish"></i> Live Counter Status: 
+            <span class="status-pill-badge" id="confirmStatusBadge">Order Placed</span>
+          </h4>
+          <div class="stepper-track" id="orderStatusStepper">
+            <div class="step-node active" data-step="pending">
+              <div class="step-circle"><i class="fa-solid fa-receipt"></i></div>
+              <span class="step-name">Booked</span>
+            </div>
+            <div class="step-line" id="stepLine1"></div>
+            <div class="step-node" data-step="preparing">
+              <div class="step-circle"><i class="fa-solid fa-blender"></i></div>
+              <span class="step-name">Preparing</span>
+            </div>
+            <div class="step-line" id="stepLine2"></div>
+            <div class="step-node" data-step="ready">
+              <div class="step-circle"><i class="fa-solid fa-bell-concierge"></i></div>
+              <span class="step-name">Ready for Pickup</span>
+            </div>
+            <div class="step-line" id="stepLine3"></div>
+            <div class="step-node" data-step="completed">
+              <div class="step-circle"><i class="fa-solid fa-circle-check"></i></div>
+              <span class="step-name">Completed</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Booking Summary Items List -->
+        <div class="confirm-items-summary">
+          <h5>Ordered Items:</h5>
+          <div class="confirm-items-list" id="confirmItemsList">
+            <!-- Populated by JS -->
+          </div>
+          <div class="confirm-total-row">
+            <span>Total Payable:</span>
+            <strong class="total-badge">Rs. <span id="confirmTotalDisplay">0</span></strong>
+          </div>
+        </div>
+
+        <!-- Live Shop Received Status Notice -->
+        <div class="whatsapp-auto-banner" id="whatsappAutoBanner">
+          <div class="banner-icon-pulse"><i class="fa-solid fa-circle-check" style="color:#059669;"></i></div>
+          <div class="banner-text">
+            <strong style="color:#065f46;">Booking Received &amp; Alert Sent to Staff!</strong>
+            <span style="color:#047857;">آپ کا آرڈر موصول ہو چکا ہے۔ الصادق شاپ کاؤنٹر و اسٹاف موبائلز (0370-9589018 &amp; 0342-1008375) کو لائیو نوٹیفکیشن پہنچ گیا ہے۔</span>
+          </div>
+        </div>
+
+        <!-- Quick Communication Triggers -->
+        <div class="confirmation-cta-actions">
+          <a href="#" target="_blank" class="btn-whatsapp-direct btn-whatsapp-customer" id="sendWhatsAppCustomerReceiptBtn">
+            <i class="fa-brands fa-whatsapp"></i> <span>Send Receipt to Customer WhatsApp (<strong id="confirmCustPhoneDisplay">03XX-XXXXXXX</strong>)</span>
+          </a>
+          <div class="shop-wa-btn-group">
+            <a href="#" target="_blank" class="btn-whatsapp-direct" id="sendWhatsAppOrderBtn1">
+              <i class="fa-brands fa-whatsapp"></i> Send to Shop 1 (0370-9589018)
+            </a>
+            <a href="#" target="_blank" class="btn-whatsapp-direct btn-whatsapp-secondary" id="sendWhatsAppOrderBtn2">
+              <i class="fa-brands fa-whatsapp"></i> Send to Shop 2 (0342-1008375)
+            </a>
+          </div>
+          <button type="button" class="btn-whatsapp-dual" id="sendWhatsAppDualBtn">
+            <i class="fa-solid fa-paper-plane"></i> Send to Both Shop WhatsApps (دونوں پر بھیجیں)
+          </button>
+          <button type="button" class="btn-print-slip" id="printCustomerSlipBtn">
+            <i class="fa-solid fa-print"></i> Print Booking Token / Slip
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 7. TRACK ORDER LOOKUP MODAL -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="trackOrderModal">
+    <div class="modal-card track-modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="badge-pill"><i class="fa-solid fa-magnifying-glass"></i> Live Status</span>
+          <h3>Track Your Booking</h3>
+          <span class="modal-item-urdu">اپنا آرڈر یا بکنگ تلاش کریں</span>
+        </div>
+        <button type="button" class="btn-modal-close" id="closeTrackModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="track-search-form">
+          <label for="trackLookupInput">Enter Mobile Number or Booking Token #</label>
+          <div class="track-input-group">
+            <input type="text" id="trackLookupInput" class="styled-input" placeholder="e.g. 03421234567 or ASD-101">
+            <button type="button" class="btn-lookup-search" id="btnExecuteTrack">Search</button>
+          </div>
+        </div>
+
+        <!-- Track Results Container -->
+        <div class="track-results-wrap" id="trackResultsContainer">
+          <div class="track-empty-state">
+            <i class="fa-solid fa-receipt"></i>
+            <p>Enter your phone number or token number above to view active status and history.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 15. STICKY FLOATING QUICK-CHECKOUT BOTTOM BAR -->
+  <!-- ========================================================================= -->
+  <div class="sticky-bottom-cart-bar" id="stickyBottomCartBar" style="display:none;">
+    <div class="container sticky-cart-inner">
+      <div class="sticky-cart-summary" id="stickyCartSummaryBtn">
+        <div class="sticky-cart-icon-bubble">
+          <i class="fa-solid fa-basket-shopping"></i>
+          <span class="sticky-cart-badge" id="stickyCartBadge">0</span>
+        </div>
+        <div class="sticky-cart-info">
+          <span class="sticky-cart-total-lbl">Total: <strong id="stickyCartTotalPrice">Rs. 0</strong></span>
+          <small class="sticky-cart-items-lbl"><span id="stickyCartItemsText">0 items selected</span></small>
+        </div>
+      </div>
+      <button type="button" class="btn-sticky-proceed" id="stickyProceedCheckoutBtn">
+        <span class="en-text">Proceed to Booking</span>
+        <span class="ur-text">آرڈر مکمل کریں</span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- STAFF SECURITY PIN LOGIN MODAL -->
+  <div class="modal-backdrop" id="staffLoginPinModal">
+    <div class="modal-card" style="max-width: 400px; text-align:center;">
+      <div class="modal-header" style="justify-content:center; flex-direction:column; gap:0.5rem; border-bottom:none; padding-bottom:0.25rem;">
+        <div class="staff-pin-icon-wrap">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h3 style="margin:0; font-size:1.35rem; color:var(--text-heading);">Staff Portal Access</h3>
+        <span class="modal-item-urdu" style="font-size:1rem; color:var(--brand-primary); font-weight:700;">اسٹاف لاگ ان پن کوڈ درج کریں</span>
+      </div>
+
+      <div class="modal-body" style="padding-top:0.5rem;">
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem; line-height:1.4;">
+          Authorized shop staff &amp; management only. Enter your 4-digit PIN code to enter dashboard.
+          <br><strong style="color:var(--brand-primary);">(ڈیفالٹ پن کوڈ: 1234)</strong>
+        </p>
+
+        <div class="pin-display-wrap">
+          <input type="password" id="staffPinInput" class="styled-input pin-input-box" maxlength="6" placeholder="••••" autocomplete="off" inputmode="numeric">
+        </div>
+
+        <div class="pin-error-msg" id="staffPinErrorMsg" style="display:none; color:#dc2626; font-weight:700; font-size:0.85rem; margin-top:0.5rem;">
+          <i class="fa-solid fa-triangle-exclamation"></i> Incorrect PIN. Please try again.
+        </div>
+
+        <!-- On-Screen Numeric Keypad -->
+        <div class="pin-keypad-grid">
+          <button type="button" class="keypad-btn" onclick="pressPinKey('1')">1</button>
+          <button type="button" class="keypad-btn" onclick="pressPinKey('2')">2</button>
+          <button type="button" class="keypad-btn" onclick="pressPinKey('3')">3</button>
+          <button type="button" class="keypad-btn" onclick="pressPinKey('4')">4</button>
+          <button type="button" class="keypad-btn" onclick="pressPinKey('5')">5</button>
+          <button type="button" class="keypad-btn" onclick="pressPinKey('6')">6</button>
+          <button type="button" class="keypad-btn" onclick="pressPinKey('7')">7</button>
+          <button type="button" class="keypad-btn" onclick="pressPinKey('8')">8</button>
+          <button type="button" class="keypad-btn" onclick="pressPinKey('9')">9</button>
+          <button type="button" class="keypad-btn btn-keypad-clear" onclick="pressPinKey('C')">C</button>
+          <button type="button" class="keypad-btn" onclick="pressPinKey('0')">0</button>
+          <button type="button" class="keypad-btn btn-keypad-back" onclick="pressPinKey('DEL')"><i class="fa-solid fa-delete-left"></i></button>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="justify-content:space-between; margin-top:0.75rem;">
+        <button type="button" class="btn-modal-cancel" id="cancelStaffPinBtn">Cancel (منسوخ)</button>
+        <button type="button" class="btn-save-prices" id="submitStaffPinBtn" style="background:#059669; padding:0.65rem 1.25rem;">
+          <i class="fa-solid fa-lock-open"></i> Open Portal (کھولیں)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Audio Chime Generator Element -->
+  <div id="audioChimeWrapper" style="display:none;"></div>
+
+  <!-- App Logic -->
+  <script src="app.js"></script>
+  <!-- Al Sadiq AI Smart Agent Engine -->
+  <script src="ai-agent.js"></script>
+
+
+<div id="alsadiqAiFabContainer" class="ai-fab-container">
+        <!-- Floating Action Button -->
+        <button type="button" id="aiFabBtn" class="ai-fab-btn" title="Al Sadiq AI Assistant (الصادق سمارٹ ایجنٹ)">
+          <div class="ai-fab-icon-wrap">
+            <i class="fa-solid fa-sparkles ai-fab-sparkle"></i>
+            <i class="fa-solid fa-headset"></i>
+          </div>
+          <span class="ai-fab-pulse-dot"></span>
+          <span class="ai-fab-badge-pill">AI CHAT</span>
+        </button>
+
+        <!-- Chat Window -->
+        <div id="aiChatWindow" class="ai-chat-window" style="display:none;">
+          
+          <!-- Header -->
+          <div class="ai-chat-header">
+            <div class="ai-header-left">
+              <div class="ai-avatar">
+                <i class="fa-solid fa-robot"></i>
+              </div>
+              <div class="ai-title-wrap">
+                <h4>
+                  <span>Al Sadiq AI Assistant</span>
+                </h4>
+                <div class="ai-header-meta">
+                  <span class="ai-mode-tag">Customer Guide</span>
+                  <span class="ai-live-indicator">Groq ⚡ Online</span>
+                </div>
+              </div>
+            </div>
+            <div class="ai-header-actions">
+              <button type="button" class="ai-icon-btn" id="aiBtnSettings" title="API Settings"><i class="fa-solid fa-gear"></i></button>
+              <button type="button" class="ai-icon-btn" id="aiBtnReset" title="Clear Chat / نیا سیشن"><i class="fa-solid fa-arrows-rotate"></i></button>
+              <button type="button" class="ai-icon-btn" id="aiBtnClose" title="Minimize / بند کریں"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+          </div>
+
+          <!-- Context Banner -->
+          <div class="ai-context-banner">
+            <div><i class="fa-solid fa-circle-info"></i> 🥛 Pure Milk, Shakes, Timings &amp; Quick Booking Assistance.</div>
+          </div>
+
+          <!-- Quick Action Chips -->
+          <div class="ai-chips-wrap" id="aiChipsList">
+        <button type="button" class="ai-chip" data-prompt="الصادق کے پاس گائے، بھینس اور مکس خالص دودھ کے تازہ ترین ریٹس کیا ہیں؟">
+          🥛 خالص دودھ کے ریٹس کیا ہیں؟
+        </button>
+      
+        <button type="button" class="ai-chip" data-prompt="دکان کے اوقات اور لوکیشن کا مکمل ایڈریس بتائیں">
+          🕒 دکان کے اوقات اور ایڈریس؟
+        </button>
+      
+        <button type="button" class="ai-chip" data-prompt="آپ کے پاس کون سے اسپیشل ملک شیکس، پروٹین شیکس اور موہیٹوز دستیاب ہیں؟">
+          🥤 اسپیشل شیکس اور موہیٹو؟
+        </button>
+      
+        <button type="button" class="ai-chip" data-prompt="دہی اور خالص دیسی گھی کے ریٹس اور کوالٹی کی تفصیل بتائیں">
+          🥣 ملائی دار دہی اور دیسی گھی؟
+        </button>
+      
+        <button type="button" class="ai-chip" data-prompt="میں آن لائن بکنگ یا آرڈر کیسے کر سکتا ہوں؟">
+          🛵 آن لائن آرڈر کا طریقہ؟
+        </button>
+      
+        <button type="button" class="ai-chip" data-prompt="میں اپنے آرڈر کا لائیو سٹیٹس کیسے چیک کروں؟">
+          📦 آرڈر ٹریک کیسے کریں؟
+        </button>
+      </div>
+
+          <!-- Messages Scroll View -->
+          <div class="ai-messages-list" id="aiMessagesList"><div class="ai-message ai-msg-bot">
+        <div class="ai-bubble ai-bubble-urdu">
+          
+          <p><strong>السلام علیکم! Welcome to Al Sadiq Milk &amp; Fresh Drinks!</strong></p>
+          <p>میں الصادق کا ورچوئل اسسٹنٹ ہوں۔ آپ مجھ سے ہمارے فارم کے خالص گائے و بھینس کے دودھ، ملائی دار دہی، دیسی گھی، فریش شیکس، ریٹس اور بکنگ کے بارے میں کچھ بھی پوچھ سکتے ہیں!</p>
+        
+        </div>
+        <span class="ai-msg-time">01:03</span>
+      </div></div>
+
+          <!-- Input Area -->
+          <div class="ai-input-area">
+            <button type="button" class="ai-mic-btn" id="aiMicBtn" title="Voice Input (بول کر پوچھیں)">
+              <i class="fa-solid fa-microphone"></i>
+            </button>
+            <textarea id="aiTextInput" class="ai-text-input" placeholder="دودھ ریٹ، شیکس یا اوقات پوچھیں... / Ask here..." rows="1"></textarea>
+            <button type="button" class="ai-send-btn" id="aiSendBtn" title="Send (ارسال کریں)">
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </div>
+
+          <!-- Settings Modal (Hidden by default) -->
+          <div id="aiSettingsModal" class="ai-settings-modal" style="display:none;">
+            <div class="ai-settings-box">
+              <h4><i class="fa-solid fa-microchip" style="color:#059669;"></i> AI Agent Configuration</h4>
+              
+              <div class="ai-settings-field">
+                <label>Groq Cloud API Key</label>
+                <input type="password" id="aiSettingApiKey" placeholder="gsk_..." value="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">
+              </div>
+
+              <div class="ai-settings-field">
+                <label>Groq AI Model</label>
+                <select id="aiSettingModel">
+                  <option value="qwen/qwen3.8-27b" selected="">Qwen 3.8 27B (Fastest &amp; Best Urdu - Recommended)</option>
+                  <option value="openai/gpt-oss-120b">GPT OSS 120B (Deep Reasoning)</option>
+                  <option value="openai/gpt-oss-20b">GPT OSS 20B (Compact Fast)</option>
+                </select>
+              </div>
+
+              <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
+                <button type="button" class="btn-modal-cancel" id="aiCancelSettingsBtn" style="padding:6px 12px; font-size:0.8rem;">Cancel</button>
+                <button type="button" class="btn-save-prices" id="aiSaveSettingsBtn" style="background:#059669; padding:6px 14px; font-size:0.8rem;">Save Settings</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div></body></html>
