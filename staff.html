@@ -109,6 +109,9 @@
           <button type="button" class="btn-staff-quick-action" id="openCounterSaleModalBtn" style="background:#f59e0b; color:#fff;">
             <i class="fa-solid fa-cash-register"></i> Quick Counter Sale (کاؤنٹر سیل)
           </button>
+          <button type="button" class="btn-staff-quick-action" id="openExpenseModalBtn" style="background:#dc2626; color:#fff;">
+            <i class="fa-solid fa-wallet"></i> Record Expense (خرچہ درج کریں)
+          </button>
           <button type="button" class="btn-edit-whatsapp" id="openWhatsAppSettingsBtn" style="background:#25d366; color:#fff; border-color:#25d366;">
             <i class="fa-brands fa-whatsapp"></i> WhatsApp & Cloud
           </button>
@@ -118,13 +121,13 @@
           <button type="button" class="btn-export-orders" id="exportDailySummaryBtn">
             <i class="fa-solid fa-file-invoice"></i> Daily Full Sheet
           </button>
-          <button type="button" class="btn-staff-quick-action" id="btnLockStaffDashboard" style="background:#dc2626; color:#fff;" title="Lock Staff Dashboard">
+          <button type="button" class="btn-staff-quick-action" id="btnLockStaffDashboard" style="background:#475569; color:#fff;" title="Lock Staff Dashboard">
             <i class="fa-solid fa-lock"></i> Lock PIN (لاگ آؤٹ)
           </button>
         </div>
       </div>
 
-      <!-- Staff Dashboard Module Tabs (Bookings vs Milk Register vs Sales Register) -->
+      <!-- Staff Dashboard Module Tabs (Bookings vs Milk Register vs Sales Register vs Expenses) -->
       <div class="staff-module-tabs">
         <button type="button" class="module-nav-btn active" id="tabBtnOrders" onclick="switchStaffModule('orders')">
           <i class="fa-solid fa-clipboard-list"></i>
@@ -137,6 +140,10 @@
         <button type="button" class="module-nav-btn" id="tabBtnSales" onclick="switchStaffModule('sales')">
           <i class="fa-solid fa-coins"></i>
           <span>3. Daily Sales & Revenue Register (روزانہ سیلز کھاتہ)</span>
+        </button>
+        <button type="button" class="module-nav-btn" id="tabBtnExpenses" onclick="switchStaffModule('expenses')">
+          <i class="fa-solid fa-wallet"></i>
+          <span>4. Daily Expenses & Profit (روزانہ اخراجات و منافع)</span>
         </button>
       </div>
 
@@ -428,6 +435,87 @@
         </div>
       </div>
 
+      <!-- ========================================================================= -->
+      <!-- MODULE 4: DAILY EXPENSES & PROFIT REGISTER -->
+      <!-- ========================================================================= -->
+      <div class="staff-module-content" id="staffModuleExpenses" style="display:none;">
+        
+        <!-- Expenses KPIs -->
+        <div class="staff-kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background:#fee2e2; color:#dc2626;"><i class="fa-solid fa-wallet"></i></div>
+            <div class="kpi-body">
+              <span class="kpi-label">Today Total Expenses (کل یومیہ خرچہ)</span>
+              <h3 class="kpi-value" id="kpiExpensesTotal" style="color:#dc2626;">Rs. 0</h3>
+              <small class="kpi-sub">All shop & farm expenses</small>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon icon-orange"><i class="fa-solid fa-utensils"></i></div>
+            <div class="kpi-body">
+              <span class="kpi-label">Food & Mess (کھانا پینا و چائے)</span>
+              <h3 class="kpi-value" id="kpiExpensesFood">Rs. 0</h3>
+              <small class="kpi-sub">Staff nashta, lunch & tea</small>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon icon-green"><i class="fa-solid fa-wheat-awn"></i></div>
+            <div class="kpi-body">
+              <span class="kpi-label">Dairy Farm Feed (چارہ و ونڈا)</span>
+              <h3 class="kpi-value" id="kpiExpensesFeed">Rs. 0</h3>
+              <small class="kpi-sub">Fodder & buffalo feed</small>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon icon-blue"><i class="fa-solid fa-chart-line"></i></div>
+            <div class="kpi-body">
+              <span class="kpi-label">Net Profit Today (خالص منافع)</span>
+              <h3 class="kpi-value" id="kpiExpensesNetProfit" style="color:var(--brand-emerald-dark);">Rs. 0</h3>
+              <small class="kpi-sub">Gross Sales - Total Expenses</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Expenses Toolbar & Filter Table -->
+        <div class="staff-orders-section">
+          <div class="orders-toolbar">
+            <div class="orders-status-filters" id="expensesLedgerFilters">
+              <button type="button" class="filter-tab active" data-expense-cat="all">All Expenses (تمام خرچے)</button>
+              <button type="button" class="filter-tab" data-expense-cat="food">Food & Mess (کھانا پینا)</button>
+              <button type="button" class="filter-tab" data-expense-cat="feed">Dairy Feed (چارہ ونڈا)</button>
+              <button type="button" class="filter-tab" data-expense-cat="utilities">Utilities & Ice (برف/بجلی)</button>
+              <button type="button" class="filter-tab" data-expense-cat="wages">Staff Wages (دیہاڑی)</button>
+              <button type="button" class="filter-tab" data-expense-cat="supplies">Supplies (سامان)</button>
+            </div>
+
+            <div style="display:flex; gap:0.5rem;">
+              <button type="button" class="btn-staff-quick-action" onclick="openExpenseModal()" style="background:#dc2626; color:#fff;">
+                <i class="fa-solid fa-plus-circle"></i> + Record Expense (نیا خرچہ)
+              </button>
+            </div>
+          </div>
+
+          <div class="menu-mgr-table-wrap">
+            <table class="menu-mgr-table">
+              <thead>
+                <tr>
+                  <th>Time / Date</th>
+                  <th>Slip ID</th>
+                  <th>Category (شعبہ)</th>
+                  <th>Description / Details & Paid To</th>
+                  <th>Mode</th>
+                  <th>Amount (PKR)</th>
+                  <th style="text-align:center;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="expensesLedgerTableBody">
+                <!-- Populated dynamically by app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
       <!-- Mobile Sticky Bottom Navigation for Staff Mode -->
       <nav class="staff-mobile-nav" id="staffMobileNav">
         <button type="button" class="staff-mob-btn active" id="mobStaffBtnOrders" onclick="switchStaffModule('orders')">
@@ -454,6 +542,12 @@
             <i class="fa-solid fa-coins"></i>
           </div>
           <span>Sales (کھاتہ)</span>
+        </button>
+        <button type="button" class="staff-mob-btn" id="mobStaffBtnExpenses" onclick="switchStaffModule('expenses')">
+          <div class="mob-icon-wrap">
+            <i class="fa-solid fa-wallet"></i>
+          </div>
+          <span>Expenses (خرچہ)</span>
         </button>
       </nav>
 
@@ -1019,7 +1113,68 @@
     </div>
   </div>
 
-  <!-- 9. STAFF SECURITY PIN LOGIN MODAL -->
+  <!-- 9. RECORD EXPENSE MODAL -->
+  <div class="modal-backdrop" id="expenseModal">
+    <div class="modal-card" style="max-width: 540px;">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="badge-pill" style="background:#dc2626; color:#fff;"><i class="fa-solid fa-wallet"></i> Expense</span>
+          <h3>Record Shop Expense (دکان و فارم خرچہ)</h3>
+          <span class="modal-item-urdu">کھانا پینا، چارہ، برف، بل اور اسٹاف اخراجات کا اندراج</span>
+        </div>
+        <button type="button" class="btn-modal-close" id="closeExpenseModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form id="expenseForm">
+        <div class="modal-body">
+          <div class="custom-field-group">
+            <label class="field-title"><i class="fa-solid fa-layer-group"></i> Expense Category (خرچے کی قسم)</label>
+            <select id="expenseCategory" class="styled-input" required>
+              <option value="food" selected>🍲 Staff Food / Khana / Chai (کھانا پینا و چائے)</option>
+              <option value="feed">🌾 Dairy Farm Animal Feed / Chara (چارہ، توڑی، ونڈا)</option>
+              <option value="utilities">⚡ Ice Slabs, Electricity & Fuel (برف، بجلی، پٹرول، گیس)</option>
+              <option value="wages">👥 Staff Daily Wages / Salary (اسٹاف دیہاڑی)</option>
+              <option value="supplies">🛒 Packaging, Bottles & Shoppers (شاپر، بوتلیں، صفائی)</option>
+              <option value="repair">🔧 Repairs & Machine Maintenance (مرمت و دیکھ بھال)</option>
+              <option value="misc">🏷️ Miscellaneous (متفرق دکان خرچہ)</option>
+            </select>
+          </div>
+
+          <div class="custom-field-group">
+            <label class="field-title"><i class="fa-solid fa-money-bill-wave"></i> Expense Amount (رقم روپے میں)</label>
+            <div style="display:flex; gap:0.5rem; margin-bottom:0.5rem; flex-wrap:wrap;">
+              <button type="button" class="btn-quick-qty" dir="ltr" onclick="setExpenseQuickAmt(200)">Rs. 200</button>
+              <button type="button" class="btn-quick-qty" dir="ltr" onclick="setExpenseQuickAmt(500)">Rs. 500</button>
+              <button type="button" class="btn-quick-qty" dir="ltr" onclick="setExpenseQuickAmt(1000)">Rs. 1000</button>
+              <button type="button" class="btn-quick-qty" dir="ltr" onclick="setExpenseQuickAmt(2000)">Rs. 2000</button>
+              <button type="button" class="btn-quick-qty" dir="ltr" onclick="setExpenseQuickAmt(3500)">Rs. 3500</button>
+              <button type="button" class="btn-quick-qty" dir="ltr" onclick="setExpenseQuickAmt(5000)">Rs. 5000</button>
+            </div>
+            <input type="number" id="expenseAmount" class="styled-input" placeholder="e.g. 1200" min="10" step="10" required style="font-size:1.1rem; font-weight:800; color:#dc2626;">
+          </div>
+
+          <div class="custom-field-group">
+            <label class="field-title"><i class="fa-solid fa-file-pen"></i> Description / Purpose (تفصیل)</label>
+            <input type="text" id="expenseDesc" class="styled-input" placeholder="مثلاً: اسٹاف دوپہر کا کھانا، بھینسوں کے لیے سبز چارہ، وغیرہ" required>
+          </div>
+
+          <div class="custom-field-group">
+            <label class="field-title"><i class="fa-solid fa-user-check"></i> Paid To / Person (کس کو ادا کیے - اختیاری)</label>
+            <input type="text" id="expensePaidTo" class="styled-input" placeholder="مثلاً: ہوٹل والا، حاجی چارہ مرچنٹ، دکان ملازم">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-modal-cancel" id="cancelExpenseBtn">Cancel</button>
+          <button type="submit" class="btn-save-prices" style="background:#dc2626;">
+            <i class="fa-solid fa-check"></i> Save Expense (خرچہ محفوظ کریں)
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 10. STAFF SECURITY PIN LOGIN MODAL -->
   <div class="modal-backdrop" id="staffLoginPinModal">
     <div class="modal-card" style="max-width: 400px; text-align:center;">
       <div class="modal-header" style="justify-content:center; flex-direction:column; gap:0.5rem; border-bottom:none; padding-bottom:0.25rem;">
@@ -1078,5 +1233,7 @@
 
   <!-- App Core Logic -->
   <script src="app.js"></script>
+  <!-- Al Sadiq AI Smart Agent Engine -->
+  <script src="ai-agent.js"></script>
 </body>
 </html>

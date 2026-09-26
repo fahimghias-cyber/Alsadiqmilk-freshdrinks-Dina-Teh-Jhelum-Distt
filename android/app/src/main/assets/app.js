@@ -640,6 +640,42 @@ const SAMPLE_SALES_TRANSACTIONS = [
   }
 ];
 
+const SAMPLE_EXPENSES_TRANSACTIONS = [
+  {
+    id: "EXP-101",
+    date: new Date().toLocaleDateString(),
+    time: "08:30 AM",
+    category: "food",
+    categoryLabelUr: "کھانا پینا و چائے (Food)",
+    amount: 1200,
+    paidTo: "Bismillah Hotel & Tea Stall",
+    description: "Shop Staff Morning Nashta & Tea (اسٹاف کا ناشتہ اور چائے)",
+    paymentMode: "Cash"
+  },
+  {
+    id: "EXP-102",
+    date: new Date().toLocaleDateString(),
+    time: "09:45 AM",
+    category: "feed",
+    categoryLabelUr: "چارہ، توڑی و ونڈا (Dairy Feed)",
+    amount: 3500,
+    paidTo: "Haji Chara / Wanda Merchant Dina",
+    description: "Fresh Green Fodder & Wanda for Farm Buffaloes (بھینسوں کے لیے سبز چارہ اور ونڈا)",
+    paymentMode: "Cash"
+  },
+  {
+    id: "EXP-103",
+    date: new Date().toLocaleDateString(),
+    time: "11:20 AM",
+    category: "utilities",
+    categoryLabelUr: "برف و یوٹیلیٹیز (Ice & Utilities)",
+    amount: 600,
+    paidTo: "Dina Ice Factory",
+    description: "2 Ice Blocks for Milk Chiller & Shakes (دودھ اور شیکس کے لیے برف کی سلیاں)",
+    paymentMode: "Cash"
+  }
+];
+
 // =============================================================================
 // 2. STATE CONTROLLER & STORAGE
 // =============================================================================
@@ -652,6 +688,8 @@ const STORAGE_KEYS = {
   WHATSAPP: "alsadiq_whatsapp_settings_v4",
   MILK_LEDGER: "alsadiq_milk_ledger_v4",
   SALES_LEDGER: "alsadiq_sales_ledger_v4",
+  EXPENSES_LEDGER: "alsadiq_expenses_ledger_v4",
+  AI_CONFIG: "alsadiq_ai_config_v4",
   CLOUD_SYNC: "alsadiq_cloud_sync_config_v4",
   STAFF_PIN: "alsadiq_staff_pin_v4"
 };
@@ -663,6 +701,7 @@ class AlSadiqStore {
     this.cart = this.load(STORAGE_KEYS.CART, []);
     this.milkLedger = this.load(STORAGE_KEYS.MILK_LEDGER, SAMPLE_MILK_TRANSACTIONS);
     this.salesLedger = this.load(STORAGE_KEYS.SALES_LEDGER, SAMPLE_SALES_TRANSACTIONS);
+    this.expensesLedger = this.load(STORAGE_KEYS.EXPENSES_LEDGER, SAMPLE_EXPENSES_TRANSACTIONS);
     this.currentLang = localStorage.getItem(STORAGE_KEYS.LANG) || "en";
     this.soundEnabled = localStorage.getItem(STORAGE_KEYS.SOUND) !== "false";
     this.staffPin = localStorage.getItem(STORAGE_KEYS.STAFF_PIN) || "1234";
@@ -722,6 +761,7 @@ class AlSadiqStore {
   saveWhatsAppSettings() { this.save(STORAGE_KEYS.WHATSAPP, this.whatsappSettings); }
   saveMilkLedger() { this.save(STORAGE_KEYS.MILK_LEDGER, this.milkLedger); }
   saveSalesLedger() { this.save(STORAGE_KEYS.SALES_LEDGER, this.salesLedger); }
+  saveExpensesLedger() { this.save(STORAGE_KEYS.EXPENSES_LEDGER, this.expensesLedger); }
 
   resetMenu() {
     this.menu = JSON.parse(JSON.stringify(DEFAULT_MENU_ITEMS));
@@ -979,6 +1019,85 @@ class AlSadiqStore {
       count: this.salesLedger.length
     };
   }
+
+  addExpenseEntry(expense) {
+    const id = expense.id || "EXP-" + Math.floor(100 + Math.random() * 900);
+    const time = expense.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const date = expense.date || new Date().toLocaleDateString();
+
+    const catLabels = {
+      food: "کھانا پینا و چائے (Food)",
+      feed: "چارہ، توڑی و ونڈا (Feed)",
+      utilities: "برف، بجلی و پٹرول (Utilities)",
+      wages: "اسٹاف دیہاڑی (Wages)",
+      supplies: "دکان سامان و شاپر (Supplies)",
+      repair: "مرمت و دیکھ بھال (Repair)",
+      misc: "متفرق اخراجات (Misc)"
+    };
+
+    const newExpense = {
+      id: id,
+      date: date,
+      time: time,
+      category: expense.category || "misc",
+      categoryLabelUr: catLabels[expense.category] || "متفرق خرچہ",
+      amount: parseFloat(expense.amount) || 0,
+      paidTo: expense.paidTo || "Staff Expense",
+      description: expense.description || "General Shop Expense",
+      paymentMode: expense.paymentMode || "Cash (نقد)"
+    };
+
+    this.expensesLedger.unshift(newExpense);
+    this.saveExpensesLedger();
+    if (typeof cloudSync !== "undefined" && cloudSync.pushExpenseEntry) {
+      cloudSync.pushExpenseEntry(newExpense);
+    }
+    return newExpense;
+  }
+
+  deleteExpenseEntry(id) {
+    this.expensesLedger = this.expensesLedger.filter(e => e.id !== id);
+    this.saveExpensesLedger();
+    if (typeof cloudSync !== "undefined" && cloudSync.deleteRemoteExpenseEntry) {
+      cloudSync.deleteRemoteExpenseEntry(id);
+    }
+  }
+
+  getExpensesSummary() {
+    let total = 0;
+    let food = 0;
+    let feed = 0;
+    let utilities = 0;
+    let wages = 0;
+    let supplies = 0;
+    let repair = 0;
+    let misc = 0;
+
+    this.expensesLedger.forEach(e => {
+      const amt = parseFloat(e.amount) || 0;
+      total += amt;
+      const cat = (e.category || "").toLowerCase();
+      if (cat === "food") food += amt;
+      else if (cat === "feed") feed += amt;
+      else if (cat === "utilities") utilities += amt;
+      else if (cat === "wages") wages += amt;
+      else if (cat === "supplies") supplies += amt;
+      else if (cat === "repair") repair += amt;
+      else misc += amt;
+    });
+
+    return {
+      total,
+      food,
+      feed,
+      utilities,
+      wages,
+      supplies,
+      repair,
+      misc,
+      count: this.expensesLedger.length
+    };
+  }
 }
 
 // Global Store Instance
@@ -1063,6 +1182,7 @@ class CloudSyncManager {
     this.knownOrderIds = new Set(this.store.orders.map(o => o.id));
     this.knownMilkIds = new Set(this.store.milkLedger.map(m => m.id));
     this.knownSalesIds = new Set(this.store.salesLedger.map(s => s.id));
+    this.knownExpenseIds = new Set(this.store.expensesLedger.map(e => e.id));
 
     this.initBroadcastChannel();
   }
@@ -1254,6 +1374,27 @@ class CloudSyncManager {
     } catch (e) {}
   }
 
+  // --- Expenses Ledger Cloud Sync ---
+  async pushExpenseEntry(expense) {
+    if (!expense || !expense.id) return;
+    this.knownExpenseIds.add(expense.id);
+    if (!this.config.enabled) return;
+    try {
+      const url = `${this.getApiBaseUrl()}/expensesLedger/${expense.id}.json`;
+      await this.httpPut(url, expense);
+    } catch (e) {
+      console.warn("Failed to push expense entry to cloud:", e);
+    }
+  }
+
+  async deleteRemoteExpenseEntry(id) {
+    if (!this.config.enabled) return;
+    try {
+      const url = `${this.getApiBaseUrl()}/expensesLedger/${id}.json`;
+      await this.httpDelete(url);
+    } catch (e) {}
+  }
+
   handleCustomerOrderUpdate(order, oldStatus, newStatus) {
     if (!order || !newStatus) return;
 
@@ -1384,6 +1525,30 @@ class CloudSyncManager {
         if (salesUpdated) {
           this.store.saveSalesLedger();
           renderSalesLedger();
+        }
+      }
+
+      // 4. Pull Expenses Ledger
+      const expUrl = `${this.getApiBaseUrl()}/expensesLedger.json`;
+      const cloudExp = await this.httpGet(expUrl);
+      if (cloudExp && typeof cloudExp === "object") {
+        let incomingExp = Array.isArray(cloudExp) ? cloudExp.filter(Boolean) : Object.values(cloudExp);
+        let expUpdated = false;
+        incomingExp.forEach(ce => {
+          if (!ce || !ce.id) return;
+          if (!this.knownExpenseIds.has(ce.id)) {
+            this.knownExpenseIds.add(ce.id);
+            if (!this.store.expensesLedger.some(le => le.id === ce.id)) {
+              this.store.expensesLedger.unshift(ce);
+              expUpdated = true;
+            }
+          }
+        });
+        if (expUpdated) {
+          this.store.saveExpensesLedger();
+          if (typeof renderExpensesLedger === "function") {
+            renderExpensesLedger();
+          }
         }
       }
 
@@ -2256,35 +2421,42 @@ window.openQuickCounterSale = function() {
   if (modal) modal.classList.add("active");
 };
 
-// Switch between Staff Tabs (Orders vs Milk Inward vs Sales Register)
+// Switch between Staff Tabs (Orders vs Milk Inward vs Sales Register vs Expenses)
 window.switchStaffModule = function(moduleName) {
   const tabOrders = document.getElementById("tabBtnOrders");
   const tabMilk = document.getElementById("tabBtnMilk");
   const tabSales = document.getElementById("tabBtnSales");
+  const tabExpenses = document.getElementById("tabBtnExpenses");
 
   const mobOrders = document.getElementById("mobStaffBtnOrders");
   const mobMilk = document.getElementById("mobStaffBtnMilk");
   const mobSales = document.getElementById("mobStaffBtnSales");
+  const mobExpenses = document.getElementById("mobStaffBtnExpenses");
 
   const modOrders = document.getElementById("staffModuleOrders");
   const modMilk = document.getElementById("staffModuleMilk");
   const modSales = document.getElementById("staffModuleSales");
+  const modExpenses = document.getElementById("staffModuleExpenses");
 
   if (tabOrders) tabOrders.classList.toggle("active", moduleName === "orders");
   if (tabMilk) tabMilk.classList.toggle("active", moduleName === "milk");
   if (tabSales) tabSales.classList.toggle("active", moduleName === "sales");
+  if (tabExpenses) tabExpenses.classList.toggle("active", moduleName === "expenses");
 
   if (mobOrders) mobOrders.classList.toggle("active", moduleName === "orders");
   if (mobMilk) mobMilk.classList.toggle("active", moduleName === "milk");
   if (mobSales) mobSales.classList.toggle("active", moduleName === "sales");
+  if (mobExpenses) mobExpenses.classList.toggle("active", moduleName === "expenses");
 
   if (modOrders) modOrders.style.display = moduleName === "orders" ? "block" : "none";
   if (modMilk) modMilk.style.display = moduleName === "milk" ? "block" : "none";
   if (modSales) modSales.style.display = moduleName === "sales" ? "block" : "none";
+  if (modExpenses) modExpenses.style.display = moduleName === "expenses" ? "block" : "none";
 
   if (moduleName === "orders") renderStaffOrders();
   else if (moduleName === "milk") renderMilkLedger();
   else if (moduleName === "sales") renderSalesLedger();
+  else if (moduleName === "expenses") renderExpensesLedger();
 };
 
 // --- MODULE 1: Render Customer Bookings Queue ---
@@ -2758,6 +2930,100 @@ window.deleteSalesEntry = function(saleId) {
   }
 };
 
+// --- MODULE 4: Render Daily Expenses & Profit Register ---
+let expensesLedgerFilter = "all";
+
+window.openExpenseModal = function() {
+  const modal = document.getElementById("expenseModal");
+  if (modal) {
+    const amtInput = document.getElementById("expenseAmount");
+    if (amtInput) amtInput.value = "";
+    const descInput = document.getElementById("expenseDesc");
+    if (descInput) descInput.value = "";
+    modal.classList.add("active");
+  }
+};
+
+window.setExpenseQuickAmt = function(amt) {
+  const input = document.getElementById("expenseAmount");
+  if (input) input.value = amt;
+};
+
+function renderExpensesLedger() {
+  const expSummary = store.getExpensesSummary();
+  const salesSummary = store.getSalesSummary();
+  const netProfit = salesSummary.grossTotal - expSummary.total;
+
+  const kpiTotal = document.getElementById("kpiExpensesTotal");
+  const kpiFood = document.getElementById("kpiExpensesFood");
+  const kpiFeed = document.getElementById("kpiExpensesFeed");
+  const kpiNetProfit = document.getElementById("kpiExpensesNetProfit");
+
+  if (kpiTotal) kpiTotal.textContent = `Rs. ${expSummary.total.toLocaleString()}`;
+  if (kpiFood) kpiFood.textContent = `Rs. ${expSummary.food.toLocaleString()}`;
+  if (kpiFeed) kpiFeed.textContent = `Rs. ${expSummary.feed.toLocaleString()}`;
+  if (kpiNetProfit) {
+    kpiNetProfit.textContent = `Rs. ${netProfit.toLocaleString()}`;
+    kpiNetProfit.style.color = netProfit >= 0 ? "var(--brand-emerald-dark)" : "#dc2626";
+  }
+
+  const tableBody = document.getElementById("expensesLedgerTableBody");
+  if (!tableBody) return;
+
+  let displayExpenses = store.expensesLedger.filter(e => {
+    if (expensesLedgerFilter !== "all" && e.category !== expensesLedgerFilter) return false;
+    return true;
+  });
+
+  if (displayExpenses.length === 0) {
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="7" style="text-align:center; padding:2rem; color:var(--text-muted);">
+          No expense records found for this filter.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  const catBadges = {
+    food: '<span class="badge-pill" style="background:#fef3c7; color:#b45309; font-weight:800;"><i class="fa-solid fa-utensils"></i> Food (کھانا پینا)</span>',
+    feed: '<span class="badge-pill" style="background:#ecfdf5; color:#047857; font-weight:800;"><i class="fa-solid fa-wheat-awn"></i> Dairy Feed (چارہ)</span>',
+    utilities: '<span class="badge-pill" style="background:#e0f2fe; color:#0369a1; font-weight:800;"><i class="fa-solid fa-snowflake"></i> Utilities (برف/بجلی)</span>',
+    wages: '<span class="badge-pill" style="background:#f3e8ff; color:#7e22ce; font-weight:800;"><i class="fa-solid fa-user-clock"></i> Wages (دیہاڑی)</span>',
+    supplies: '<span class="badge-pill" style="background:#ffedd5; color:#c2410c; font-weight:800;"><i class="fa-solid fa-boxes-packing"></i> Supplies (سامان)</span>',
+    repair: '<span class="badge-pill" style="background:#f1f5f9; color:#475569; font-weight:800;"><i class="fa-solid fa-wrench"></i> Repair (مرمت)</span>',
+    misc: '<span class="badge-pill" style="background:#fee2e2; color:#b91c1c; font-weight:800;"><i class="fa-solid fa-tags"></i> Misc (متفرق)</span>'
+  };
+
+  tableBody.innerHTML = displayExpenses.map(exp => `
+    <tr>
+      <td><strong>${exp.time}</strong><br><small style="color:var(--text-muted);">${exp.date || ''}</small></td>
+      <td><span class="badge-pill" style="background:#f1f5f9; color:#0f172a; font-weight:800;">${exp.id}</span></td>
+      <td>${catBadges[exp.category] || '<span class="badge-pill">Other</span>'}</td>
+      <td>
+        <strong>${exp.description}</strong>
+        ${exp.paidTo ? `<br><small style="color:var(--text-muted);"><i class="fa-solid fa-user"></i> Paid To: ${exp.paidTo}</small>` : ''}
+      </td>
+      <td><span style="font-weight:700; color:#047857;">${exp.paymentMode || 'Cash'}</span></td>
+      <td><strong style="font-family:var(--font-heading); font-size:1.1rem; color:#dc2626;">Rs. ${exp.amount.toLocaleString()}</strong></td>
+      <td>
+        <button type="button" class="btn-modal-close" style="width:26px; height:26px; font-size:0.75rem;" onclick="deleteExpenseEntry('${exp.id}')" title="Delete Expense">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+window.deleteExpenseEntry = function(expenseId) {
+  if (confirm("Delete this expense record?")) {
+    store.deleteExpenseEntry(expenseId);
+    showToast("Expense record deleted", "alert");
+    renderExpensesLedger();
+  }
+};
+
 // =============================================================================
 // 9. QUICK DIALOGS & ACTION HANDLERS
 // =============================================================================
@@ -3167,6 +3433,8 @@ window.openConfirmationModalFromTrack = function(orderId) {
 function openDailyReportModal() {
   const milkSummary = store.getMilkStockSummary();
   const salesSummary = store.getSalesSummary();
+  const expSummary = store.getExpensesSummary();
+  const netProfit = salesSummary.grossTotal - expSummary.total;
 
   const reportDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
   const reportTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -3206,7 +3474,26 @@ Date: ${reportDate} | Generated at: ${reportTime}
   - Milkshakes & Mojitos Revenue:      Rs. ${salesSummary.drinksTotal.toLocaleString()}
 
 ------------------------------------------------------------
-3. ONLINE BOOKINGS & COUNTER QUEUE STATUS
+3. DAILY EXPENSES SUMMARY (روزانہ اخراجات کھاتہ)
+------------------------------------------------------------
+• Total Daily Expenses (کل خرچہ):     Rs. ${expSummary.total.toLocaleString()} (${expSummary.count} Entries)
+  - Staff Food & Tea (کھانا پینا):    Rs. ${expSummary.food.toLocaleString()}
+  - Dairy Farm Feed & Chara (چارہ):   Rs. ${expSummary.feed.toLocaleString()}
+  - Utilities & Ice (برف/بجلی):        Rs. ${expSummary.utilities.toLocaleString()}
+  - Staff Wages (اسٹاف دیہاڑی):        Rs. ${expSummary.wages.toLocaleString()}
+  - Supplies & Packaging:             Rs. ${expSummary.supplies.toLocaleString()}
+  - Misc & Repairs:                   Rs. ${(expSummary.misc + expSummary.repair).toLocaleString()}
+
+------------------------------------------------------------
+4. NET PROFIT / LOSS SUMMARY (خالص یومیہ منافع)
+------------------------------------------------------------
+• Gross Sales Revenue:                Rs. ${salesSummary.grossTotal.toLocaleString()}
+• Less Total Expenses:              - Rs. ${expSummary.total.toLocaleString()}
+------------------------------------------------------------
+• NET PROFIT (خالص منافع):            Rs. ${netProfit.toLocaleString()} ${netProfit >= 0 ? '(PROFIT / منافع)' : '(LOSS / نقصان)'}
+
+------------------------------------------------------------
+5. ONLINE BOOKINGS & COUNTER QUEUE STATUS
 ------------------------------------------------------------
 • Total Online Bookings:               ${store.orders.length}
 • New / Pending:                       ${store.orders.filter(o => o.status === 'pending').length}
@@ -3788,6 +4075,53 @@ document.addEventListener("DOMContentLoaded", () => {
       whatsappSettingsModal?.classList.remove("active");
     });
 
+    // Expenses Ledger Filters
+    document.querySelectorAll("#expensesLedgerFilters .filter-tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll("#expensesLedgerFilters .filter-tab").forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        expensesLedgerFilter = tab.dataset.expenseCat;
+        renderExpensesLedger();
+      });
+    });
+
+    // Expense Modal
+    const expenseModal = document.getElementById("expenseModal");
+    on("openExpenseModalBtn", "click", () => {
+      const amtInput = document.getElementById("expenseAmount");
+      if (amtInput) amtInput.value = "";
+      const descInput = document.getElementById("expenseDesc");
+      if (descInput) descInput.value = "";
+      if (expenseModal) expenseModal.classList.add("active");
+    });
+    on("closeExpenseModalBtn", "click", () => expenseModal?.classList.remove("active"));
+    on("cancelExpenseBtn", "click", () => expenseModal?.classList.remove("active"));
+
+    on("expenseForm", "submit", (e) => {
+      e.preventDefault();
+      const cat = document.getElementById("expenseCategory")?.value || "food";
+      const amt = parseFloat(document.getElementById("expenseAmount")?.value) || 0;
+      const desc = (document.getElementById("expenseDesc")?.value || "").trim() || "Shop Expense";
+      const paidTo = (document.getElementById("expensePaidTo")?.value || "").trim() || "Staff";
+
+      if (amt <= 0) {
+        showToast("Please enter a valid expense amount", "alert");
+        return;
+      }
+
+      store.addExpenseEntry({
+        category: cat,
+        amount: amt,
+        description: desc,
+        paidTo: paidTo,
+        paymentMode: "Cash"
+      });
+
+      showToast(`Recorded Rs. ${amt.toLocaleString()} expense (${desc})`, "success");
+      expenseModal?.classList.remove("active");
+      renderExpensesLedger();
+    });
+
     // Cloud Status Pill click to open settings
     const cloudPill = document.getElementById("cloudSyncStatusPill");
     if (cloudPill) {
@@ -3803,6 +4137,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderStaffOrders();
     renderMilkLedger();
     renderSalesLedger();
+    renderExpensesLedger();
   }
 
   // Start background Real-Time Cloud Synchronization (Runs on BOTH customer & staff pages!)
