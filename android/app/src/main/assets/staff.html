@@ -100,31 +100,31 @@
             <i class="fa-solid fa-volume-high" id="soundIcon"></i>
             <span id="soundLabel">Sound: ON</span>
           </button>
-          <button type="button" class="btn-staff-quick-action" id="openMilkInwardModalBtn" style="background:#059669; color:#fff;">
+          <button type="button" class="btn-staff-quick-action" id="openMilkInwardModalBtn" onclick="openMilkInwardModal()" style="background:#059669; color:#fff;">
             <i class="fa-solid fa-plus-circle"></i> Record Milk Inward (دودھ آمد)
           </button>
-          <button type="button" class="btn-staff-quick-action" id="openMilkUsageModalBtn" style="background:#8b5cf6; color:#fff;">
+          <button type="button" class="btn-staff-quick-action" id="openMilkUsageModalBtn" onclick="openMilkUsageModal()" style="background:#8b5cf6; color:#fff;">
             <i class="fa-solid fa-blender"></i> Dahi / Usage Prep (دہی میں استعمال)
           </button>
-          <button type="button" class="btn-staff-quick-action" id="openCounterSaleModalBtn" style="background:#f59e0b; color:#fff;">
+          <button type="button" class="btn-staff-quick-action" id="openCounterSaleModalBtn" onclick="openCounterSaleModal()" style="background:#f59e0b; color:#fff;">
             <i class="fa-solid fa-cash-register"></i> Quick Counter Sale (کاؤنٹر سیل)
           </button>
-          <button type="button" class="btn-staff-quick-action" id="openExpenseModalBtn" style="background:#dc2626; color:#fff;">
+          <button type="button" class="btn-staff-quick-action" id="openExpenseModalBtn" onclick="openExpenseModal()" style="background:#dc2626; color:#fff;">
             <i class="fa-solid fa-wallet"></i> Record Expense (خرچہ درج کریں)
           </button>
-          <button type="button" class="btn-edit-whatsapp" id="openWhatsAppSettingsBtn" style="background:#25d366; color:#fff; border-color:#25d366;">
+          <button type="button" class="btn-edit-whatsapp" id="openWhatsAppSettingsBtn" onclick="openWhatsAppSettings()" style="background:#25d366; color:#fff; border-color:#25d366;">
             <i class="fa-brands fa-whatsapp"></i> WhatsApp & Cloud
           </button>
-          <button type="button" class="btn-edit-prices" id="openPriceManagerBtn" style="background:var(--brand-emerald-dark); color:#fff; border-color:var(--brand-emerald-dark);">
+          <button type="button" class="btn-edit-prices" id="openPriceManagerBtn" onclick="openPriceManager()" style="background:var(--brand-emerald-dark); color:#fff; border-color:var(--brand-emerald-dark);">
             <i class="fa-solid fa-utensils"></i> Menu & Price Manager (مینو مینیجر)
           </button>
-          <button type="button" class="btn-export-orders" id="exportDailySummaryBtn">
+          <button type="button" class="btn-export-orders" id="exportDailySummaryBtn" onclick="openDailyReportModal()">
             <i class="fa-solid fa-file-invoice"></i> Daily Full Sheet
           </button>
-          <button type="button" class="btn-staff-quick-action" id="openChangePinModalBtn" style="background:#0f172a; color:#fff;" title="Change Staff PIN Code">
+          <button type="button" class="btn-staff-quick-action" id="openChangePinModalBtn" onclick="openChangePinModal()" style="background:#0f172a; color:#fff;" title="Change Staff PIN Code">
             <i class="fa-solid fa-key"></i> Change PIN (خفیہ پن تبدیل کریں)
           </button>
-          <button type="button" class="btn-staff-quick-action" id="btnLockStaffDashboard" style="background:#475569; color:#fff;" title="Lock Staff Dashboard">
+          <button type="button" class="btn-staff-quick-action" id="btnLockStaffDashboard" onclick="lockStaffDashboard()" style="background:#475569; color:#fff;" title="Lock Staff Dashboard">
             <i class="fa-solid fa-lock"></i> Lock PIN (لاگ آؤٹ)
           </button>
         </div>
@@ -1226,6 +1226,8 @@
         </button>
       </div>
     </div>
+  </div>
+
   <!-- 11. CHANGE STAFF SECURITY PIN MODAL -->
   <div class="modal-backdrop" id="changePinModal">
     <div class="modal-card" style="max-width: 440px;">

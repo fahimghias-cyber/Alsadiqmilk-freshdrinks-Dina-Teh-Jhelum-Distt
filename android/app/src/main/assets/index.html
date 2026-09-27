@@ -76,7 +76,7 @@
         </button>
 
         <!-- Staff Portal Access (Protected with Security PIN) -->
-        <button type="button" class="action-btn staff-portal-btn" id="openStaffAuthModalBtn" title="Staff Portal (اسٹاف لاگ ان)">
+        <button type="button" class="action-btn staff-portal-btn" id="openStaffAuthModalBtn" onclick="openCustomerStaffPinModal()" title="Staff Portal (اسٹاف لاگ ان)">
           <i class="fa-solid fa-shield-halved"></i>
           <span class="btn-lbl-en">Staff Portal</span>
           <span class="btn-lbl-ur">اسٹاف پورٹل</span>
@@ -145,32 +145,32 @@
         <!-- Category Navigation Tabs & Search -->
         <div class="menu-controls-header">
           <div class="category-tabs-scroll" id="categoryTabs">
-            <button type="button" class="cat-tab active" data-category="all">
+            <button type="button" class="cat-tab active" data-category="all" onclick="filterCategoryDirect('all')">
               <i class="fa-solid fa-border-all"></i>
               <span class="en-text">All Items</span>
               <span class="ur-text">تمام آئٹمز</span>
             </button>
-            <button type="button" class="cat-tab" data-category="dairy">
+            <button type="button" class="cat-tab" data-category="dairy" onclick="filterCategoryDirect('dairy')">
               <i class="fa-solid fa-cow"></i>
               <span class="en-text">Pure Dairy & Milk</span>
               <span class="ur-text">خالص دودھ و ڈیری</span>
             </button>
-            <button type="button" class="cat-tab" data-category="milkshakes">
+            <button type="button" class="cat-tab" data-category="milkshakes" onclick="filterCategoryDirect('milkshakes')">
               <i class="fa-solid fa-blender"></i>
               <span class="en-text">Milk Shakes</span>
               <span class="ur-text">ملک شیکس</span>
             </button>
-            <button type="button" class="cat-tab" data-category="protein">
+            <button type="button" class="cat-tab" data-category="protein" onclick="filterCategoryDirect('protein')">
               <i class="fa-solid fa-dumbbell"></i>
               <span class="en-text">Protein & Energy Shakes</span>
               <span class="ur-text">پروٹین شیکس</span>
             </button>
-            <button type="button" class="cat-tab" data-category="mojitos">
+            <button type="button" class="cat-tab" data-category="mojitos" onclick="filterCategoryDirect('mojitos')">
               <i class="fa-solid fa-champagne-glasses"></i>
               <span class="en-text">Mojitos & Fresh Juices</span>
               <span class="ur-text">موجیتوز و جوسز</span>
             </button>
-            <button type="button" class="cat-tab" data-category="specials">
+            <button type="button" class="cat-tab" data-category="specials" onclick="filterCategoryDirect('specials')">
               <i class="fa-solid fa-star"></i>
               <span class="en-text">Special Drinks</span>
               <span class="ur-text">اسپیشل مشروبات</span>
@@ -185,10 +185,10 @@
               <button type="button" class="search-clear-btn" id="searchClearBtn" style="display:none;"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="quick-filter-pills">
-              <button type="button" class="pill-filter active" data-filter="all">All</button>
-              <button type="button" class="pill-filter" data-filter="popular">⭐ Popular</button>
-              <button type="button" class="pill-filter" data-filter="fitness">💪 Gym / Fitness</button>
-              <button type="button" class="pill-filter" data-filter="chilled">🧊 Chilled Mojitos</button>
+              <button type="button" class="pill-filter active" data-filter="all" onclick="filterPillDirect('all')">All</button>
+              <button type="button" class="pill-filter" data-filter="popular" onclick="filterPillDirect('popular')">⭐ Popular</button>
+              <button type="button" class="pill-filter" data-filter="fitness" onclick="filterPillDirect('fitness')">💪 Gym / Fitness</button>
+              <button type="button" class="pill-filter" data-filter="chilled" onclick="filterPillDirect('chilled')">🧊 Chilled Mojitos</button>
             </div>
           </div>
         </div>
@@ -255,9 +255,10 @@
                 "Pure Milk, Refreshing Life! - خالص دودھ، تازہ دم زندگی!"
               </div>
             </div>
+          </div>
           <div class="footer-staff-access" style="text-align:center; padding: 1.5rem 0 0.5rem 0; border-top: 1px solid var(--border-color); margin-top: 2rem;">
             <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:0.4rem;">© 2023 - 2026 Al Sadiq Milk & Fresh Drinks • GT Road, Dina (With Focus College)</p>
-            <button type="button" id="footerStaffAuthBtn" class="staff-portal-link" style="background:transparent; border:1px solid var(--border-color); border-radius:var(--radius-full); padding:0.35rem 0.9rem; color:var(--text-muted); font-size:0.8rem; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s;" title="Authorized Staff Access Only">
+            <button type="button" id="footerStaffAuthBtn" onclick="openCustomerStaffPinModal()" class="staff-portal-link" style="background:transparent; border:1px solid var(--border-color); border-radius:var(--radius-full); padding:0.35rem 0.9rem; color:var(--text-muted); font-size:0.8rem; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s;" title="Authorized Staff Access Only">
               <i class="fa-solid fa-lock"></i> Staff Portal & POS (اسٹاف لاگ ان)
             </button>
           </div>

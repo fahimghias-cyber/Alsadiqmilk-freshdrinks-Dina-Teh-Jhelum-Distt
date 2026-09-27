@@ -2001,11 +2001,29 @@ window.quickBookDirect = function(itemId) {
   openCheckoutModal();
 };
 
-// Global direct jump for hero buttons
+// Global direct jump for hero buttons and category navigation
 window.filterCategoryDirect = function(catKey) {
   store.activeCategory = catKey;
+  store.activeFilter = "all";
+  store.searchQuery = "";
+  const searchInput = document.getElementById("menuSearchInput");
+  if (searchInput) searchInput.value = "";
+  const searchClear = document.getElementById("searchClearBtn");
+  if (searchClear) searchClear.style.display = "none";
+
   document.querySelectorAll(".cat-tab").forEach(tab => {
     tab.classList.toggle("active", tab.dataset.category === catKey);
+  });
+  document.querySelectorAll(".pill-filter").forEach(pill => {
+    pill.classList.toggle("active", pill.dataset.filter === "all");
+  });
+  renderProducts();
+};
+
+window.filterPillDirect = function(filterKey) {
+  store.activeFilter = filterKey;
+  document.querySelectorAll(".pill-filter").forEach(pill => {
+    pill.classList.toggle("active", pill.dataset.filter === filterKey);
   });
   renderProducts();
 };
@@ -3248,6 +3266,8 @@ function savePriceChanges() {
   renderProducts();
   renderStaffOrders();
 }
+window.openPriceManager = openPriceManager;
+window.savePriceChanges = savePriceChanges;
 
 window.openAddItemModal = function() {
   document.getElementById("editItemId").value = "";
@@ -3650,14 +3670,16 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+  const lockStaffDashboard = () => {
+    sessionStorage.removeItem("alsadiq_staff_unlocked");
+    currentEnteredPin = "";
+    if (staffPinInput) staffPinInput.value = "";
+    staffLoginPinModal?.classList.add("active");
+    showToast("Staff dashboard locked.", "alert");
+  };
+  window.lockStaffDashboard = lockStaffDashboard;
   if (btnLockStaffDashboard) {
-    btnLockStaffDashboard.addEventListener("click", () => {
-      sessionStorage.removeItem("alsadiq_staff_unlocked");
-      currentEnteredPin = "";
-      if (staffPinInput) staffPinInput.value = "";
-      staffLoginPinModal?.classList.add("active");
-      showToast("Staff dashboard locked.", "alert");
-    });
+    btnLockStaffDashboard.addEventListener("click", lockStaffDashboard);
   }
 
   // =========================================================================
@@ -3864,6 +3886,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (pinModal) pinModal.classList.add("active");
     };
 
+    window.openCustomerStaffPinModal = openCustomerStaffPinModal;
     on("openStaffAuthModalBtn", "click", openCustomerStaffPinModal);
     on("footerStaffAuthBtn", "click", openCustomerStaffPinModal);
   }
@@ -4054,6 +4077,7 @@ document.addEventListener("DOMContentLoaded", () => {
       updateCounterSaleProducts();
       if (counterSaleModal) counterSaleModal.classList.add("active");
     };
+    window.openCounterSaleModal = openCounterSaleModal;
 
     on("openCounterSaleModalBtn", "click", openCounterSaleModal);
     on("btnOpenWalkinSaleModal", "click", openCounterSaleModal);
@@ -4127,7 +4151,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Open Settings Modal
-    on("openWhatsAppSettingsBtn", "click", () => {
+    const openWhatsAppSettings = () => {
       if (inputWa1) inputWa1.value = store.whatsappSettings.num1 || "0370-9589018";
       if (inputWa2) inputWa2.value = store.whatsappSettings.num2 || "0342-1008375";
       if (checkAutoOpen) checkAutoOpen.checked = store.whatsappSettings.autoOpen !== false;
@@ -4141,7 +4165,9 @@ document.addEventListener("DOMContentLoaded", () => {
         cloudTestStatus.style.color = "var(--text-muted)";
       }
       if (whatsappSettingsModal) whatsappSettingsModal.classList.add("active");
-    });
+    };
+    window.openWhatsAppSettings = openWhatsAppSettings;
+    on("openWhatsAppSettingsBtn", "click", openWhatsAppSettings);
 
     on("closeWhatsAppSettingsBtn", "click", () => {
       whatsappSettingsModal?.classList.remove("active");
